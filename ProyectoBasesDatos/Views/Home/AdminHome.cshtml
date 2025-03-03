@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4 text-center mb-4" style="color: #3f51b5;">Bienvenido al Sistema Médico</h1>
+    <div class="row mt-4">
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #f1f8ff;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #1976d2;">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Citas</h5>
+                    <p class="card-text text-muted">Gestiona y programa las citas médicas.</p>
+                    <a href="/Citas" class="btn btn-primary" style="background-color: #1976d2; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #f0f8f1;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #43a047;">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Doctores</h5>
+                    <p class="card-text text-muted">Lista de doctores disponibles.</p>
+                    <a asp-controller ="Doctores" asp-action="Index" class="btn btn-primary" style="background-color: #43a047; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #fef8f0;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #fb8c00;">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Medicamentos</h5>
+                    <p class="card-text text-muted">Inventario y detalles de medicamentos.</p>
+                    <a href="/Medicamentos" class="btn btn-primary" style="background-color: #fb8c00; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #f4f0f9;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #7b1fa2;">
+                        <i class="fas fa-hospital-user"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Pacientes</h5>
+                    <p class="card-text text-muted">Información y registros de pacientes.</p>
+                    <a asp-controller="Pacientes" asp-action="Index"  class="btn btn-primary" style="background-color: #7b1fa2; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #f1f1f8;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #3949ab;">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Tratamientos</h5>
+                    <p class="card-text text-muted">Historial y administración de tratamientos.</p>
+                    <a href="/Tratamientos" class="btn btn-primary" style="background-color: #3949ab; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+}

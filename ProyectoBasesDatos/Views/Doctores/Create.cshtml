@@ -1,0 +1,115 @@
+﻿@model ProyectoBasesDatos.Models.Doctore
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Doctore</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Cedula" class="control-label"></label>
+                <input asp-for="Cedula" class="form-control" />
+                <span asp-validation-for="Cedula" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Especialidad" class="control-label"></label>
+                <input asp-for="Especialidad" class="form-control" />
+                <span asp-validation-for="Especialidad" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Correo" class="control-label"></label>
+                <input asp-for="Correo" class="form-control" />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="Nombre" class="control-label">Nombre</label>
+                <input name="Nombre" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="PrimerApellido" class="control-label">Primer Apellido</label>
+                <input name="PrimerApellido" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="SegundoApellido" class="control-label">Segundo Apellido</label>
+                <input name="SegundoApellido" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="Telefono" class="control-label">Teléfono</label>
+                <input name="Telefono" class="form-control" />
+            </div>
+
+            <input type="hidden" name="IdHospital" value="@ViewBag.IdHospital" />
+
+            <div class="form-group">
+                <label class="control-label">Días</label>
+                <div class="d-flex flex-wrap">
+                    <div class="form-check mr-3">
+                        <input class="form-check-input" type="checkbox" name="Dias" value="L" id="diaL">
+                        <label class="form-check-label" for="diaL">Lunes</label>
+                    </div>
+                    <div class="form-check mr-3">
+                        <input class="form-check-input" type="checkbox" name="Dias" value="M" id="diaM">
+                        <label class="form-check-label" for="diaM">Martes</label>
+                    </div>
+                    <div class="form-check mr-3">
+                        <input class="form-check-input" type="checkbox" name="Dias" value="K" id="diaK">
+                        <label class="form-check-label" for="diaM">Miércoles</label>
+                    </div>
+                    <div class="form-check mr-3">
+                        <input class="form-check-input" type="checkbox" name="Dias" value="J" id="diaJ">
+                        <label class="form-check-label" for="diaM">Jueves</label>
+                    </div>
+                    <div class="form-check mr-3">
+                        <input class="form-check-input" type="checkbox" name="Dias" value="V" id="diaV">
+                        <label class="form-check-label" for="diaM">Viernes</label>
+                    </div>
+                    <div class="form-check mr-3">
+                        <input class="form-check-input" type="checkbox" name="Dias" value="S" id="diaS">
+                        <label class="form-check-label" for="diaM">Sábado</label>
+                    </div>
+                    <div class="form-check mr-3">
+                        <input class="form-check-input" type="checkbox" name="Dias" value="D" id="diaD">
+                        <label class="form-check-label" for="diaM">Domingo</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="HoraInicio" class="control-label">Hora de Inicio</label>
+                <input type="time" name="HoraInicio" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="HoraFin" class="control-label">Hora de Fin</label>
+                <input type="time" name="HoraFin" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

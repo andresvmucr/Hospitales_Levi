@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ProyectoBasesDatos.Models.Paciente>
+
+@{
+    ViewData["Title"] = "Pacientes";
+}
+
+<h1>Pacientes</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Cédula</th>
+            <th>Nombre Completo</th>
+            <th>Dirección</th>
+            <th>Género</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var paciente in Model)
+        {
+            <tr>
+                <td>@paciente.Cedula</td>
+                <td>@paciente.CorreoNavigation.Nombre @paciente.CorreoNavigation.Primerapellido @paciente.CorreoNavigation.Segundoapellido</td>
+                <td>@paciente.Direccion</td>
+                <td>@paciente.Genero</td>
+                <td>@paciente.Fechanacimiento.ToString("dd/MM/yyyy")</td>
+                <td>@paciente.CorreoNavigation.Correo</td>
+                <td>@paciente.CorreoNavigation.Telefono</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@paciente.Cedula">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@paciente.Cedula">Detalles</a> 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

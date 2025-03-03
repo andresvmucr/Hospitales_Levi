@@ -1,0 +1,55 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\views\\pacientes\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:views\\pacientes\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\controllers\\pacientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:controllers\\pacientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 636,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Pacientes\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Pacientes\\Edit.cshtml",
+              "ToolTip": "Views/Pacientes/Edit.cshtml",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAADgAAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "OverriddenGroupName": "Views\\Pacientes",
+              "OverriddenToolTip": "Views/Pacientes/Edit.cshtml",
+              "WhenOpened": "2025-03-03T00:59:00.232Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PacientesController.cs",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Controllers\\PacientesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PacientesController.cs",
+              "ToolTip": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Controllers\\PacientesController.cs",
+              "RelativeToolTip": "Controllers\\PacientesController.cs",
+              "ViewState": "AgIAAIMAAAAAAAAAAAAuwIoAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-03T00:59:39.797Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

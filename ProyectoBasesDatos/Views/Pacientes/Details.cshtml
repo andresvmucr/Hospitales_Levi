@@ -1,0 +1,73 @@
+﻿@model ProyectoBasesDatos.Models.Paciente
+
+@{
+    ViewData["Title"] = "Detalles del Paciente";
+}
+
+<h1>Detalles del Paciente</h1>
+
+<div>
+    <h4>Paciente</h4>
+    <hr />
+    <dl class="row">
+        <!-- Cédula -->
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cedula)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cedula)
+        </dd>
+
+        <!-- Nombre Completo -->
+        <dt class="col-sm-2">
+            Nombre Completo
+        </dt>
+        <dd class="col-sm-10">
+            @Model.CorreoNavigation.Nombre @Model.CorreoNavigation.Primerapellido @Model.CorreoNavigation.Segundoapellido
+        </dd>
+
+        <!-- Dirección -->
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Direccion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Direccion)
+        </dd>
+
+        <!-- Género -->
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Genero)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Genero)
+        </dd>
+
+        <!-- Fecha de Nacimiento -->
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fechanacimiento)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Fechanacimiento.ToString("dd/MM/yyyy") <!-- Formatear la fecha -->
+        </dd>
+
+        <!-- Correo -->
+        <dt class="col-sm-2">
+            Correo
+        </dt>
+        <dd class="col-sm-10">
+            @Model.CorreoNavigation.Correo
+        </dd>
+
+        <!-- Teléfono -->
+        <dt class="col-sm-2">
+            Teléfono
+        </dt>
+        <dd class="col-sm-10">
+            @Model.CorreoNavigation.Telefono
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Cedula">Editar</a> |
+    <a asp-action="Index">Volver a la lista</a>
+</div>

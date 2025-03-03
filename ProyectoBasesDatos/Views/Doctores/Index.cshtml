@@ -1,0 +1,61 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Doctores";
+}
+
+@{
+    var diasOrdenados = new List<string> { "L", "M", "K", "J", "V", "S", "D" };
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre Completo</th>
+            <th>Especialidad</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Horario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doctor in Model)
+        {
+            <tr>
+                <td>@doctor.NombreCompleto</td>
+                <td>@doctor.Especialidad</td>
+                <td>@doctor.Correo</td>
+                <td>@doctor.Telefono</td>
+                <td>
+                    <ul>
+                        @{
+                            var horarios = ((IEnumerable<dynamic>)doctor.Horarios)
+                            .Select(h => new
+                            {
+                                Dia = (string)h.Dia,
+                                HoraInicio = (string)h.HoraInicio,
+                                HoraFin = (string)h.HoraFin
+                            })
+                            .OrderBy(h => diasOrdenados.IndexOf(h.Dia))
+                            .ToList();
+                        }
+                        @foreach (var horario in horarios)
+                        {
+                            <li>@horario.Dia: @horario.HoraInicio - @horario.HoraFin</li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@doctor.Cedula" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@doctor.Cedula" class="btn btn-info btn-sm">Detalles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
