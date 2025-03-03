@@ -11,9 +11,9 @@ namespace ProyectoBasesDatos.Controllers
 {
     public class DoctoresController : Controller
     {
-        private readonly HospitalesDbContext _context;
+        private readonly dbContext _context;
 
-        public DoctoresController(HospitalesDbContext context)
+        public DoctoresController(dbContext context)
         {
             _context = context;
         }
@@ -22,34 +22,45 @@ namespace ProyectoBasesDatos.Controllers
         public async Task<IActionResult> Index()
         {
             var idHospital = HttpContext.Session.GetString("IdHospital");
+            Console.WriteLine($"idHospital: {idHospital}");
 
-            if (string.IsNullOrEmpty(idHospital))
-            {
-                return RedirectToAction("Error");
-            }
             var doctores = await _context.Doctores
                 .Include(d => d.CorreoNavigation)
                 .Include(d => d.Horarios)
-                .Where(d => d.CorreoNavigation.IdHospital == idHospital) 
+                .Include(d => d.IdEspecialidadNavigation)
+                .Where(d => d.CorreoNavigation.IdHospital == idHospital)
                 .Select(d => new
                 {
                     Cedula = d.Cedula,
-                    NombreCompleto = d.CorreoNavigation.Nombre + " " + d.CorreoNavigation.Primerapellido + " " + d.CorreoNavigation.Segundoapellido,
-                    Especialidad = d.Especialidad,
-                    Horarios = d.Horarios.Select(h => new
+                    NombreCompleto = d.CorreoNavigation.Nombre + " " + d.CorreoNavigation.PrimerApellido + " " + d.CorreoNavigation.SegundoApellido,
+                    Especialidad = d.IdEspecialidadNavigation.Nombre,
+                    Horarios = d.Horarios
+                    .OrderBy(h => h.Dia == "L" ? 1
+                               : h.Dia == "M" ? 2
+                               : h.Dia == "K" ? 3
+                               : h.Dia == "J" ? 4
+                               : h.Dia == "V" ? 5
+                               : h.Dia == "S" ? 6
+                               : 7) // D (domingo)
+                    .Select(h => new
                     {
                         Dia = h.Dia,
                         HoraInicio = h.Horainicio.ToString("HH:mm"),
                         HoraFin = h.Horafin.ToString("HH:mm")
                     }).ToList(),
+
                     Correo = d.CorreoNavigation.Correo,
                     Telefono = d.CorreoNavigation.Telefono
                 })
                 .ToListAsync();
 
-            return View(doctores);
+            Console.WriteLine($"Doctores encontrados: {doctores.Count}");
+            ViewBag.Doctores = doctores.Cast<dynamic>().ToList();
+            return View();
         }
 
+        // GET: Doctores/Details/5
+        // GET: Doctores/Details/5
         // GET: Doctores/Details/5
         public async Task<IActionResult> Details(string id)
         {
@@ -58,21 +69,21 @@ namespace ProyectoBasesDatos.Controllers
                 return NotFound();
             }
 
-            // Obtener el doctor incluyendo el usuario asociado y los horarios
-            var doctore = await _context.Doctores
-                .Include(d => d.CorreoNavigation) // Incluir el usuario asociado
-                .Include(d => d.Horarios) // Incluir los horarios del doctor
-                .FirstOrDefaultAsync(m => m.Cedula == id);
+            var doctor = await _context.Doctores
+                .Include(d => d.CorreoNavigation)
+                .Include(d => d.Horarios)
+                .Include(d => d.IdEspecialidadNavigation)
+                .FirstOrDefaultAsync(d => d.Cedula == id);
 
-            if (doctore == null)
+            if (doctor == null)
             {
                 return NotFound();
             }
 
-            return View(doctore);
+            return View(doctor); // Pasamos el objeto completo, no un anónimo
         }
 
-        // GET: Doctores/Create
+
         // GET: Doctores/Create
         public IActionResult Create()
         {
@@ -83,6 +94,26 @@ namespace ProyectoBasesDatos.Controllers
                 return RedirectToAction("Error");
             }
 
+            // Obtener la lista de especialidades que comienzan con el ID del hospital
+            var especialidades = _context.Especialidades
+                .Where(e => e.Id.StartsWith(idHospital)) // Filtra especialidades que comienzan con "HXXX"
+                .Select(e => new SelectListItem
+                {
+                    Value = e.Id.ToString(), // Valor que se enviará (ID)
+                    Text = e.Nombre // Texto que se mostrará (Nombre)
+                })
+                .ToList();
+
+            // Verificar si hay especialidades
+            if (!especialidades.Any())
+            {
+                ViewBag.NoEspecialidades = true; // Indicar que no hay especialidades
+            }
+            else
+            {
+                ViewBag.Especialidades = especialidades; // Pasar la lista a la vista
+            }
+
             ViewBag.IdHospital = idHospital;
             return View();
         }
@@ -90,23 +121,22 @@ namespace ProyectoBasesDatos.Controllers
         // Reemplazar DateTime por TimeSpan en los lugares correspondientes
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Cedula,Especialidad,Correo")] Doctore doctore,
-                                                 string Nombre,
-                                                 string PrimerApellido,
-                                                 string SegundoApellido,
-                                                 string Telefono,
-                                                 string IdHospital,
-                                                 string[] Dias,
-                                                 TimeSpan HoraInicio,
-                                                 TimeSpan HoraFin)
+        public async Task<IActionResult> Create([Bind("Cedula,IdEspecialidad,Correo")] Doctore doctore,
+                                          string Nombre,
+                                          string PrimerApellido,
+                                          string SegundoApellido,
+                                          string Telefono,
+                                          string IdHospital,
+                                          string[] Dias,
+                                          TimeSpan HoraInicio,
+                                          TimeSpan HoraFin)
         {
-
             var usuario = new Usuario
             {
                 Correo = doctore.Correo,
                 Nombre = Nombre,
-                Primerapellido = PrimerApellido,
-                Segundoapellido = SegundoApellido,
+                PrimerApellido = PrimerApellido,
+                SegundoApellido = SegundoApellido,
                 Contrasenna = "12345678",
                 Rol = "Doctor",
                 Telefono = Telefono,
@@ -136,6 +166,7 @@ namespace ProyectoBasesDatos.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
         // GET: Doctores/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -143,9 +174,12 @@ namespace ProyectoBasesDatos.Controllers
             {
                 return NotFound();
             }
+
+            // Cargar el doctor con todos los datos relacionados
             var doctore = await _context.Doctores
-                .Include(d => d.CorreoNavigation)
-                .Include(d => d.Horarios) 
+                .Include(d => d.CorreoNavigation)  // Cargar los datos del usuario
+                .Include(d => d.Horarios)          // Cargar los horarios
+                .Include(d => d.IdEspecialidadNavigation) // Cargar la especialidad actual
                 .FirstOrDefaultAsync(d => d.Cedula == id);
 
             if (doctore == null)
@@ -153,36 +187,49 @@ namespace ProyectoBasesDatos.Controllers
                 return NotFound();
             }
 
-            
-            var horario = doctore.Horarios.FirstOrDefault();
-            if (horario != null)
-            {
-                ViewBag.HoraInicio = horario.Horainicio.ToString("HH:mm");
-                ViewBag.HoraFin = horario.Horafin.ToString("HH:mm");
-            }
-            else
-            {
-                ViewBag.HoraInicio = "08:00";
-                ViewBag.HoraFin = "17:00";
-            }
+            // Cargar las especialidades disponibles
+            var especialidades = await _context.Especialidades.ToListAsync();
 
-          
-            var diasOrdenados = new List<string> { "L", "M", "K", "J", "V", "S", "D" };
-            ViewBag.Dias = doctore.Horarios
-                .Select(h => h.Dia.Trim().ToUpper()) 
-                .OrderBy(d => diasOrdenados.IndexOf(d))
+            // Crear una lista de SelectListItem para las especialidades
+            var especialidadesSelectList = especialidades
+                .Select(e => new SelectListItem
+                {
+                    Value = e.Id.ToString(),
+                    Text = e.Nombre,
+                    Selected = e.Id == doctore.IdEspecialidad // Marcar la especialidad actual como seleccionada
+                })
                 .ToList();
-            
+
+            // Verificar si hay especialidades registradas
+            ViewBag.NoEspecialidades = especialidades.Count == 0;
+
+            // Pasar las especialidades a la vista
+            ViewBag.Especialidades = especialidadesSelectList;
+
+            // Pasar los datos del doctor a la vista
+            ViewData["Correo"] = doctore.Correo;
+            ViewData["Nombre"] = doctore.CorreoNavigation?.Nombre;
+            ViewData["PrimerApellido"] = doctore.CorreoNavigation?.PrimerApellido;
+            ViewData["SegundoApellido"] = doctore.CorreoNavigation?.SegundoApellido;
+            ViewData["Telefono"] = doctore.CorreoNavigation?.Telefono;
+            ViewData["IdHospital"] = doctore.IdEspecialidadNavigation;
+
+            // Pasar los horarios y días de trabajo
+            if (doctore.Horarios != null)
+            {
+                ViewData["HoraInicio"] = doctore.Horarios.FirstOrDefault()?.Horainicio.ToString("HH:mm");
+                ViewData["HoraFin"] = doctore.Horarios.FirstOrDefault()?.Horafin.ToString("HH:mm");
+                ViewData["Dias"] = doctore.Horarios.Select(h => h.Dia).ToList();
+            }
 
             return View(doctore);
         }
-
         // POST: Doctores/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Cedula,Especialidad,Correo")] Doctore doctore,
+        public async Task<IActionResult> Edit(string id, [Bind("Cedula,IdEspecialidad,Correo")] Doctore doctore,
                                      string[] Dias, TimeSpan HoraInicio, TimeSpan HoraFin, string Nombre, string PrimerApellido, string SegundoApellido, string Telefono)
         {
 
@@ -190,66 +237,45 @@ namespace ProyectoBasesDatos.Controllers
             Console.WriteLine("PrimerApellido: " + PrimerApellido);
             Console.WriteLine("SegundoApellido: " + SegundoApellido);
             Console.WriteLine("Telefono: " + Telefono);
-            // ToDo: si tiene una cita en el horario a eliminar cancelarla
-            ModelState.Remove("CorreoNavigation");
-            if (ModelState.IsValid)
+            Console.WriteLine("Dias: " + string.Join(", ", Dias));
+            Console.WriteLine("HoraInicio: " + HoraInicio);
+            Console.WriteLine("HoraFin: " + HoraFin);
+            Console.WriteLine("Especialidad: " + doctore.IdEspecialidad);
+
+            var usuario = await _context.Usuarios.FindAsync(doctore.Correo);
+            if (usuario != null)
             {
-                try
-                {
-                    var usuario = await _context.Usuarios.FindAsync(doctore.Correo);
-                    if (usuario != null)
-                    {
-                        usuario.Nombre = Nombre;
-                        usuario.Primerapellido = PrimerApellido;
-                        usuario.Segundoapellido = SegundoApellido;
-                        usuario.Telefono = Telefono;
+                usuario.Nombre = Nombre;
+                usuario.PrimerApellido = PrimerApellido;
+                usuario.SegundoApellido = SegundoApellido;
+                usuario.Telefono = Telefono;
 
-                        _context.Update(usuario);
-                    }
-
-                    _context.Update(doctore);
-
-                    var horariosExistentes = await _context.Horarios.Where(h => h.CedulaDoctor == id).ToListAsync();
-                    _context.Horarios.RemoveRange(horariosExistentes);
-
-                    
-                    foreach (var dia in Dias)
-                    {
-                        var horario = new Horario
-                        {
-                            Dia = dia,
-                            Horainicio = DateTime.Today.Add(HoraInicio),
-                            Horafin = DateTime.Today.Add(HoraFin), 
-                            CedulaDoctor = doctore.Cedula
-                        };
-                        _context.Horarios.Add(horario);
-                    }
-
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DoctoreExists(doctore.Cedula))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index)); 
-            } else
-            {
-                var error = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                Console.WriteLine("Errores: " + string.Join(", ", error));
+                _context.Update(usuario);
             }
 
-                ViewData["Correo"] = new SelectList(_context.Usuarios, "Correo", "Correo", doctore.Correo);
-            return View(doctore);
+            _context.Update(doctore);
+
+            var horariosExistentes = await _context.Horarios.Where(h => h.CedulaDoctor == id).ToListAsync();
+            _context.Horarios.RemoveRange(horariosExistentes);
+
+
+            foreach (var dia in Dias)
+            {
+                var horario = new Horario
+                {
+                    Dia = dia,
+                    Horainicio = DateTime.Today.Add(HoraInicio),
+                    Horafin = DateTime.Today.Add(HoraFin),
+                    CedulaDoctor = doctore.Cedula
+                };
+                _context.Horarios.Add(horario);
+            }
+
+            await _context.SaveChangesAsync();
+            // ToDo: si tiene citas cambair el horario de las citas
+            return RedirectToAction(nameof(Index));
         }
 
- 
         private bool DoctoreExists(string id)
         {
             return _context.Doctores.Any(e => e.Cedula == id);

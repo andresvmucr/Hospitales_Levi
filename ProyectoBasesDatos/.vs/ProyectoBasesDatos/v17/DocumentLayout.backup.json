@@ -1,34 +1,34 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\",
+  "WorkspaceRootPath": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\medicamentos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:views\\medicamentos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\models\\hospitalmed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:models\\hospitalmed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\controllers\\medicamentoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:controllers\\medicamentoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\views\\medicamentos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\medicamentos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\medicamentos\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:views\\medicamentos\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\views\\medicamentos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\medicamentos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\models\\hospitalmed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:models\\hospitalmed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\views\\medicamentos\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\medicamentos\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\pacientes\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:views\\pacientes\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\views\\medicamentos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\medicamentos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\controllers\\pacientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:controllers\\pacientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\controllers\\medicamentoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:controllers\\medicamentoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\medicamentos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{010B05BD-0CAE-44F6-8291-52F6BE232BFE}|ProyectoBasesDatos.csproj|solutionrelative:views\\medicamentos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\vique\\onedrive\\desktop\\bases_leviackerman\\proyectobasesdatos\\views\\home\\adminhome.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\home\\adminhome.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -43,97 +43,92 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Medicamentos\\Details.cshtml",
-              "RelativeDocumentMoniker": "Views\\Medicamentos\\Details.cshtml",
-              "ToolTip": "Views/Medicamentos/Details.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "OverriddenGroupName": "Views\\Medicamentos",
-              "OverriddenToolTip": "Views/Medicamentos/Details.cshtml",
-              "WhenOpened": "2025-03-03T04:31:12.358Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "HospitalMed.cs",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Models\\HospitalMed.cs",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Models\\HospitalMed.cs",
               "RelativeDocumentMoniker": "Models\\HospitalMed.cs",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Models\\HospitalMed.cs",
-              "RelativeToolTip": "Models\\HospitalMed.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Models\\HospitalMed.cs*",
+              "RelativeToolTip": "Models\\HospitalMed.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T04:20:06.304Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Edit.cshtml",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Medicamentos\\Edit.cshtml",
-              "RelativeDocumentMoniker": "Views\\Medicamentos\\Edit.cshtml",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Medicamentos\\Edit.cshtml",
-              "RelativeToolTip": "Views\\Medicamentos\\Edit.cshtml",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "OverriddenGroupName": "Views\\Medicamentos",
-              "WhenOpened": "2025-03-03T04:06:49.662Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Medicamentos\\Create.cshtml",
-              "RelativeDocumentMoniker": "Views\\Medicamentos\\Create.cshtml",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Medicamentos\\Create.cshtml",
-              "RelativeToolTip": "Views\\Medicamentos\\Create.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "OverriddenGroupName": "Views\\Medicamentos",
-              "WhenOpened": "2025-03-03T03:04:01.844Z",
+              "WhenOpened": "2025-03-03T20:03:15.53Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MedicamentosController.cs",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Controllers\\MedicamentosController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MedicamentosController.cs",
-              "ToolTip": "Controllers/MedicamentosController.cs",
-              "ViewState": "AgIAAK4AAAAAAAAAAAD4v64AAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "OverriddenGroupName": "Controllers",
-              "OverriddenToolTip": "Controllers/MedicamentosController.cs",
-              "WhenOpened": "2025-03-03T02:53:08.926Z",
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Medicamentos\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Medicamentos\\Create.cshtml",
+              "ToolTip": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Medicamentos\\Create.cshtml*",
+              "RelativeToolTip": "Views\\Medicamentos\\Create.cshtml*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-03T20:02:42.333Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Medicamentos\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Medicamentos\\Details.cshtml",
+              "ToolTip": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Medicamentos\\Details.cshtml*",
+              "RelativeToolTip": "Views\\Medicamentos\\Details.cshtml*",
+              "ViewState": "AgIAABAAAAAAAAAAAAAiwE0AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-03T20:02:26.523Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Medicamentos\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Medicamentos\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Medicamentos\\Edit.cshtml*",
+              "RelativeToolTip": "Views\\Medicamentos\\Edit.cshtml*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-03T20:02:16.756Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Edit.cshtml",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Pacientes\\Edit.cshtml",
-              "RelativeDocumentMoniker": "Views\\Pacientes\\Edit.cshtml",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Pacientes\\Edit.cshtml",
-              "RelativeToolTip": "Views\\Pacientes\\Edit.cshtml",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAAEYAAAASAAAAAAAAAA==",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Medicamentos\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Medicamentos\\Index.cshtml",
+              "ToolTip": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Medicamentos\\Index.cshtml*",
+              "RelativeToolTip": "Views\\Medicamentos\\Index.cshtml*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "OverriddenGroupName": "Views\\Pacientes",
-              "WhenOpened": "2025-03-03T00:59:00.232Z",
+              "WhenOpened": "2025-03-03T20:01:55.571Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "PacientesController.cs",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Controllers\\PacientesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PacientesController.cs",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Controllers\\PacientesController.cs",
-              "RelativeToolTip": "Controllers\\PacientesController.cs",
-              "ViewState": "AgIAAIwAAAAAAAAAAAAuwH8AAAB1AAAAAAAAAA==",
+              "Title": "MedicamentosController.cs",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Controllers\\MedicamentosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MedicamentosController.cs",
+              "ToolTip": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Controllers\\MedicamentosController.cs*",
+              "RelativeToolTip": "Controllers\\MedicamentosController.cs*",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABAAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T00:59:39.797Z",
+              "WhenOpened": "2025-03-03T20:00:38.839Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AdminHome.cshtml",
+              "DocumentMoniker": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Home\\AdminHome.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\AdminHome.cshtml",
+              "ToolTip": "C:\\Users\\vique\\OneDrive\\Desktop\\Bases_LeviAckerman\\ProyectoBasesDatos\\Views\\Home\\AdminHome.cshtml",
+              "RelativeToolTip": "Views\\Home\\AdminHome.cshtml",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-03T18:50:39.196Z",
               "EditorCaption": ""
             }
           ]

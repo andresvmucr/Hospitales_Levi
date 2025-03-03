@@ -1,61 +1,45 @@
 ﻿@model ProyectoBasesDatos.Models.Doctore
 
 @{
-    ViewData["Title"] = "Detalles";
-    var diasOrdenados = new List<string> { "L", "M", "K", "J", "V", "S", "D" };
+    ViewData["Title"] = "Detalles del Doctor";
 }
 
-<h1>Details</h1>
+<h1>Detalles del Doctor</h1>
 
 <div>
-    <h4>Doctore</h4>
+    <h4>Información del Doctor</h4>
     <hr />
     <dl class="row">
-        <!-- Nombre Completo -->
-        <dt class="col-sm-2">
-            Nombre Completo
-        </dt>
+        <dt class="col-sm-2">Cédula</dt>
+        <dd class="col-sm-10">@Model.Cedula</dd>
+
+        <dt class="col-sm-2">Nombre Completo</dt>
         <dd class="col-sm-10">
-            @Model.CorreoNavigation.Nombre @Model.CorreoNavigation.Primerapellido @Model.CorreoNavigation.Segundoapellido
+            @Model.CorreoNavigation.Nombre
+            @Model.CorreoNavigation.PrimerApellido
+            @Model.CorreoNavigation.SegundoApellido
         </dd>
 
-        <!-- Correo -->
-        <dt class="col-sm-2">
-            Correo
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CorreoNavigation.Correo
-        </dd>
+        <dt class="col-sm-2">Especialidad</dt>
+        <dd class="col-sm-10">@Model.IdEspecialidadNavigation.Nombre</dd>
 
-        <!-- Teléfono -->
-        <dt class="col-sm-2">
-            Teléfono
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CorreoNavigation.Telefono
-        </dd>
+        <dt class="col-sm-2">Correo</dt>
+        <dd class="col-sm-10">@Model.CorreoNavigation.Correo</dd>
 
-        <!-- Especialidad -->
-        <dt class="col-sm-2">
-            Especialidad
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Especialidad
-        </dd>
+        <dt class="col-sm-2">Teléfono</dt>
+        <dd class="col-sm-10">@Model.CorreoNavigation.Telefono</dd>
 
-        <!-- Horario de Trabajo -->
-        <dt class="col-sm-2">
-            Horario de Trabajo
-        </dt>
+        <dt class="col-sm-2">Horarios</dt>
         <dd class="col-sm-10">
             <ul>
-                @{
-                    // Ordenar los horarios según el orden de diasOrdenados
-                    var horariosOrdenados = Model.Horarios
-                    .OrderBy(h => diasOrdenados.IndexOf(h.Dia))
-                    .ToList();
-                }
-                @foreach (var horario in horariosOrdenados)
+                @foreach (var horario in Model.Horarios
+                .OrderBy(h => h.Dia == "L" ? 1
+                : h.Dia == "M" ? 2
+                : h.Dia == "K" ? 3
+                : h.Dia == "J" ? 4
+                : h.Dia == "V" ? 5
+                : h.Dia == "S" ? 6
+                : 7)) // Ordena L, M, K, J, V, S, D
                 {
                     <li>@horario.Dia: @horario.Horainicio.ToString("HH:mm") - @horario.Horafin.ToString("HH:mm")</li>
                 }
@@ -63,7 +47,8 @@
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Cedula">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Cedula" class="btn btn-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
 </div>

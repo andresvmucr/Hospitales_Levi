@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using ProyectoBasesDatos.Models;
 
@@ -6,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<HospitalesDbContext>(options =>
+builder.Services.AddDbContext<dbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("connection")));
 
 builder.Services.AddSession();

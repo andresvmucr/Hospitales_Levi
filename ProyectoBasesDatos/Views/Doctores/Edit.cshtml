@@ -20,14 +20,28 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Especialidad" class="control-label"></label>
-                <input asp-for="Especialidad" class="form-control" />
-                <span asp-validation-for="Especialidad" class="text-danger"></span>
+                <label asp-for="IdEspecialidad" class="control-label">Especialidad</label>
+                @if (ViewBag.NoEspecialidades == true)
+                {
+                    <!-- Dropdown deshabilitado con mensaje -->
+                    <select asp-for="IdEspecialidad" class="form-control" disabled>
+                        <option value="">No hay especialidades registradas</option>
+                    </select>
+                }
+                else
+                {
+                    <!-- Dropdown normal -->
+                    <select asp-for="IdEspecialidad" class="form-control" asp-items="ViewBag.Especialidades">
+                        <option value="">Seleccione una especialidad</option>
+                    </select>
+                }
+                <span asp-validation-for="IdEspecialidad" class="text-danger"></span>
             </div>
+
 
             <div class="form-group">
                 <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control" readonly/>
+                <input asp-for="Correo" class="form-control" readonly />
                 <span asp-validation-for="Correo" class="text-danger"></span>
             </div>
 
@@ -38,15 +52,15 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="CorreoNavigation.Primerapellido" class="control-label"></label>
-                <input asp-for="CorreoNavigation.Primerapellido" name="PrimerApellido" class="form-control" />
-                <span asp-validation-for="CorreoNavigation.Primerapellido" class="text-danger"></span>
+                <label asp-for="CorreoNavigation.PrimerApellido" class="control-label"></label>
+                <input asp-for="CorreoNavigation.PrimerApellido" name="PrimerApellido" class="form-control" />
+                <span asp-validation-for="CorreoNavigation.PrimerApellido" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="CorreoNavigation.Segundoapellido" class="control-label"></label>
-                <input asp-for="CorreoNavigation.Segundoapellido" name="SegundoApellido" class="form-control" />
-                <span asp-validation-for="CorreoNavigation.Segundoapellido" class="text-danger"></span>
+                <label asp-for="CorreoNavigation.SegundoApellido" class="control-label"></label>
+                <input asp-for="CorreoNavigation.SegundoApellido" name="SegundoApellido" class="form-control" />
+                <span asp-validation-for="CorreoNavigation.SegundoApellido" class="text-danger"></span>
             </div>
 
             <div class="form-group">

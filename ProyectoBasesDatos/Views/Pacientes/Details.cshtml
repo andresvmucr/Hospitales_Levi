@@ -23,7 +23,7 @@
             Nombre Completo
         </dt>
         <dd class="col-sm-10">
-            @Model.CorreoNavigation.Nombre @Model.CorreoNavigation.Primerapellido @Model.CorreoNavigation.Segundoapellido
+            @Model.CorreoNavigation.Nombre @Model.CorreoNavigation.PrimerApellido @Model.CorreoNavigation.SegundoApellido
         </dd>
 
         <!-- Dirección -->
@@ -44,10 +44,10 @@
 
         <!-- Fecha de Nacimiento -->
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Fechanacimiento)
+            @Html.DisplayNameFor(model => model.FechaNacimiento)
         </dt>
         <dd class="col-sm-10">
-            @Model.Fechanacimiento.ToString("dd/MM/yyyy") <!-- Formatear la fecha -->
+            @Model.FechaNacimiento.ToString("dd/MM/yyyy") <!-- Formatear la fecha -->
         </dd>
 
         <!-- Correo -->

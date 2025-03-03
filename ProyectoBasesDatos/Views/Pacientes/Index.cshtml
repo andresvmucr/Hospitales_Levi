@@ -28,15 +28,15 @@
         {
             <tr>
                 <td>@paciente.Cedula</td>
-                <td>@paciente.CorreoNavigation.Nombre @paciente.CorreoNavigation.Primerapellido @paciente.CorreoNavigation.Segundoapellido</td>
+                <td>@paciente.CorreoNavigation.Nombre @paciente.CorreoNavigation.PrimerApellido @paciente.CorreoNavigation.SegundoApellido</td>
                 <td>@paciente.Direccion</td>
                 <td>@paciente.Genero</td>
-                <td>@paciente.Fechanacimiento.ToString("dd/MM/yyyy")</td>
+                <td>@paciente.FechaNacimiento.ToString("dd/MM/yyyy")</td>
                 <td>@paciente.CorreoNavigation.Correo</td>
                 <td>@paciente.CorreoNavigation.Telefono</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@paciente.Cedula">Editar</a> |
-                    <a asp-action="Details" asp-route-id="@paciente.Cedula">Detalles</a> 
+                    <a asp-action="Details" asp-route-id="@paciente.Cedula">Detalles</a>
                 </td>
             </tr>
         }

@@ -9,6 +9,8 @@ public partial class SuperAdmin
 
     public string Nombre { get; set; } = null!;
 
+    public string Correo { get; set; } = null!;
+
     public string Contrasenna { get; set; } = null!;
 
     public virtual ICollection<Hospitale> Hospitales { get; set; } = new List<Hospitale>();

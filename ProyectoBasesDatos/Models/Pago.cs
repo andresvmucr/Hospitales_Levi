@@ -13,11 +13,11 @@ public partial class Pago
 
     public string MetodoPago { get; set; } = null!;
 
+    public string Estado { get; set; } = null!;
+
     public string CedulaPaciente { get; set; } = null!;
 
     public string IdCita { get; set; } = null!;
-
-    public string Estado { get; set; } = null!;
 
     public virtual Paciente CedulaPacienteNavigation { get; set; } = null!;
 

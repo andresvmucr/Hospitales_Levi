@@ -11,7 +11,7 @@ public partial class Paciente
 
     public string Genero { get; set; } = null!;
 
-    public DateOnly Fechanacimiento { get; set; }
+    public DateOnly FechaNacimiento { get; set; }
 
     public string Correo { get; set; } = null!;
 

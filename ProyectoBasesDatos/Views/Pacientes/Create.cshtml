@@ -17,27 +17,22 @@
                 <input asp-for="Cedula" class="form-control" />
                 <span asp-validation-for="Cedula" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label for="Nombre" class="control-label">Nombre</label>
                 <input name="Nombre" class="form-control" />
             </div>
-
             <div class="form-group">
                 <label for="PrimerApellido" class="control-label">Primer Apellido</label>
                 <input name="PrimerApellido" class="form-control" />
             </div>
-
             <div class="form-group">
                 <label for="SegundoApellido" class="control-label">Segundo Apellido</label>
                 <input name="SegundoApellido" class="form-control" />
             </div>
-
             <div class="form-group">
                 <label for="Telefono" class="control-label">Teléfono</label>
                 <input name="Telefono" class="form-control" />
             </div>
-
             <div class="form-group">
                 <label asp-for="Direccion" class="control-label"></label>
                 <input asp-for="Direccion" class="form-control" />
@@ -49,9 +44,9 @@
                 <span asp-validation-for="Genero" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Fechanacimiento" class="control-label"></label>
-                <input asp-for="Fechanacimiento" class="form-control" />
-                <span asp-validation-for="Fechanacimiento" class="text-danger"></span>
+                <label asp-for="FechaNacimiento" class="control-label"></label>
+                <input asp-for="FechaNacimiento" class="form-control" />
+                <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Correo" class="control-label"></label>
@@ -69,5 +64,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

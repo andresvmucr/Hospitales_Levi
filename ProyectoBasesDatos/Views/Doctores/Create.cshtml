@@ -19,11 +19,6 @@
                 <span asp-validation-for="Cedula" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Especialidad" class="control-label"></label>
-                <input asp-for="Especialidad" class="form-control" />
-                <span asp-validation-for="Especialidad" class="text-danger"></span>
-            </div>
 
             <div class="form-group">
                 <label asp-for="Correo" class="control-label"></label>
@@ -47,6 +42,25 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="IdEspecialidad" class="control-label">Especialidad</label>
+                @if (ViewBag.NoEspecialidades == true)
+                {
+                    <!-- Dropdown deshabilitado con mensaje -->
+                    <select asp-for="IdEspecialidad" class="form-control" disabled>
+                        <option value="">No hay especialidades registradas</option>
+                    </select>
+                }
+                else
+                {
+                    <!-- Dropdown normal -->
+                    <select asp-for="IdEspecialidad" class="form-control" asp-items="ViewBag.Especialidades">
+                        <option value="">Seleccione una especialidad</option>
+                    </select>
+                }
+                <span asp-validation-for="IdEspecialidad" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label for="Telefono" class="control-label">Teléfono</label>
                 <input name="Telefono" class="form-control" />
             </div>
@@ -66,23 +80,23 @@
                     </div>
                     <div class="form-check mr-3">
                         <input class="form-check-input" type="checkbox" name="Dias" value="K" id="diaK">
-                        <label class="form-check-label" for="diaM">Miércoles</label>
+                        <label class="form-check-label" for="diaK">Miércoles</label>
                     </div>
                     <div class="form-check mr-3">
                         <input class="form-check-input" type="checkbox" name="Dias" value="J" id="diaJ">
-                        <label class="form-check-label" for="diaM">Jueves</label>
+                        <label class="form-check-label" for="diaJ">Jueves</label>
                     </div>
                     <div class="form-check mr-3">
                         <input class="form-check-input" type="checkbox" name="Dias" value="V" id="diaV">
-                        <label class="form-check-label" for="diaM">Viernes</label>
+                        <label class="form-check-label" for="diaV">Viernes</label>
                     </div>
                     <div class="form-check mr-3">
                         <input class="form-check-input" type="checkbox" name="Dias" value="S" id="diaS">
-                        <label class="form-check-label" for="diaM">Sábado</label>
+                        <label class="form-check-label" for="diaS">Sábado</label>
                     </div>
                     <div class="form-check mr-3">
                         <input class="form-check-input" type="checkbox" name="Dias" value="D" id="diaD">
-                        <label class="form-check-label" for="diaM">Domingo</label>
+                        <label class="form-check-label" for="diaD">Domingo</label>
                     </div>
                 </div>
             </div>

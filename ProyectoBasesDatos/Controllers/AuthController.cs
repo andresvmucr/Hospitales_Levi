@@ -11,9 +11,9 @@ namespace ProyectoBasesDatos.Controllers
     {
 
         private readonly ILogger<AuthController> _logger;
-        private readonly HospitalesDbContext _context;
+        private readonly dbContext _context;
 
-        public AuthController(ILogger<AuthController> logger, HospitalesDbContext context)
+        public AuthController(ILogger<AuthController> logger, dbContext context)
         {
             _logger = logger;
             _context = context;
@@ -22,8 +22,6 @@ namespace ProyectoBasesDatos.Controllers
         // GET: AuthController
         public ActionResult Login()
         {
-
-
             return View();
         }
 
@@ -35,74 +33,85 @@ namespace ProyectoBasesDatos.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string Correo, string Contrasenna)
         {
-            var user = await _context.Usuarios.FirstOrDefaultAsync(u => u.Correo == Correo && u.Contrasenna == Contrasenna);
-            if (user == null)
+            var superAdmin = await _context.SuperAdmins.FirstOrDefaultAsync(u => u.Correo == Correo && u.Contrasenna == Contrasenna);
+
+            
+            if (superAdmin == null)
             {
-                ViewData["Error"] = "Los credenciales son incorrectos, intente nuevamente";
-                return View("Login");
-            }
-            else
-            {
-                Console.WriteLine("Usuario encontrado");
-                var userRole = await _context.Usuarios
-                    .Where(u => u.Correo == user.Correo)
-                    .Select(u => u.Rol)
-                    .FirstOrDefaultAsync();
-
-                var hospitalName = await _context.Hospitales
-                    .Where(h => h.Id == user.IdHospital)
-                    .Select(h => h.Nombre)
-                    .FirstOrDefaultAsync();
-
-                HttpContext.Session.SetString("Correo", user.Correo);
-                Console.WriteLine("Correo: " + Correo);
-                
-                HttpContext.Session.SetString("Rol", userRole);
-                Console.WriteLine("User role: " + userRole);
-
-                HttpContext.Session.SetString("Nombre", user.Nombre);
-                HttpContext.Session.SetString("PrimerApellido", user.Primerapellido);
-                HttpContext.Session.SetString("SegundoApellido", user.Segundoapellido);
-                Console.WriteLine("Nombre: " + user.Nombre + " " + user.Primerapellido + " " + user.Segundoapellido);
-
-                HttpContext.Session.SetString("Telefono", user.Telefono);
-                Console.WriteLine("Telefono: " + user.Telefono);
-
-                HttpContext.Session.SetString("IdHospital", user.IdHospital);
-                Console.WriteLine("IdHospital: " + user.IdHospital);
-
-                HttpContext.Session.SetString("HospitalName", hospitalName);
-                Console.WriteLine("Hospital name: " + hospitalName);
-
-
-                switch (userRole)
+                var user = await _context.Usuarios.FirstOrDefaultAsync(u => u.Correo == Correo && u.Contrasenna == Contrasenna);
+                if (user == null)
                 {
-                    case "Admin": 
-                        return RedirectToAction("AdminHome", "Home");
-                    case "Doctor":
-                        var doctorId = await _context.Doctores
-                            .Where(d => d.Correo == user.Correo)
-                            .Select(d => d.Cedula)
-                            .FirstOrDefaultAsync();
+                    ViewData["Error"] = "Los credenciales son incorrectos, intente nuevamente";
+                    return View("Login");
+                } else
+                {
+                    Console.WriteLine("Usuario encontrado");
+                    var userRole = await _context.Usuarios
+                        .Where(u => u.Correo == user.Correo)
+                        .Select(u => u.Rol)
+                        .FirstOrDefaultAsync();
 
-                        HttpContext.Session.SetString("DoctorId", doctorId);
-                        Console.WriteLine("DoctorId: " + doctorId);
-                        return RedirectToAction("DoctorHome", "Home");
+                    var hospitalName = await _context.Hospitales
+                        .Where(h => h.Id == user.IdHospital)
+                        .Select(h => h.Nombre)
+                        .FirstOrDefaultAsync();
 
-                    case "Paciente":
-                        var patientId = await _context.Pacientes
-                            .Where(p => p.Correo == user.Correo)
-                            .Select(p => p.Cedula)
-                            .FirstOrDefaultAsync();
+                    HttpContext.Session.SetString("Correo", user.Correo);
+                    Console.WriteLine("Correo: " + Correo);
 
-                        HttpContext.Session.SetString("PatientId", patientId);
-                        Console.WriteLine("PatientId: " + patientId);
-                        return RedirectToAction("PatientHome", "Home");
-                    default:
-                        return RedirectToAction("Login");
-                };
+                    HttpContext.Session.SetString("Rol", userRole);
+                    Console.WriteLine("User role: " + userRole);
+
+                    HttpContext.Session.SetString("Nombre", user.Nombre);
+                    HttpContext.Session.SetString("PrimerApellido", user.PrimerApellido);
+                    HttpContext.Session.SetString("SegundoApellido", user.SegundoApellido);
+                    Console.WriteLine("Nombre: " + user.Nombre + " " + user.PrimerApellido + " " + user.SegundoApellido);
+
+                    HttpContext.Session.SetString("Telefono", user.Telefono);
+                    Console.WriteLine("Telefono: " + user.Telefono);
+
+                    HttpContext.Session.SetString("IdHospital", user.IdHospital);
+                    Console.WriteLine("IdHospital: " + user.IdHospital);
+
+                    HttpContext.Session.SetString("HospitalName", hospitalName);
+                    Console.WriteLine("Hospital name: " + hospitalName);
+
+                    switch (userRole)
+                    {
+                        case "Admin":
+                            return RedirectToAction("AdminHome", "Home");
+                        case "Doctor":
+                            var doctorId = await _context.Doctores
+                                .Where(d => d.Correo == user.Correo)
+                                .Select(d => d.Cedula)
+                                .FirstOrDefaultAsync();
+
+                            HttpContext.Session.SetString("DoctorId", doctorId);
+                            Console.WriteLine("DoctorId: " + doctorId);
+                            return RedirectToAction("DoctorHome", "Home");
+
+                        case "Paciente":
+                            var patientId = await _context.Pacientes
+                                .Where(p => p.Correo == user.Correo)
+                                .Select(p => p.Cedula)
+                                .FirstOrDefaultAsync();
+
+                            HttpContext.Session.SetString("PatientId", patientId);
+                            Console.WriteLine("PatientId: " + patientId);
+                            return RedirectToAction("PatientHome", "Home");
+                        default:
+                            return RedirectToAction("Login");
+                    }
+                }
+
+            } else
+            {
+                HttpContext.Session.SetString("Id", superAdmin.Id);
+                HttpContext.Session.SetString("Correo", superAdmin.Correo);
+                HttpContext.Session.SetString("Rol", "SuperAdmin");
+                HttpContext.Session.SetString("Nombre", superAdmin.Nombre);
+                return RedirectToAction("SuperAdminHome", "Home");
             }
         }
-
     }
 }

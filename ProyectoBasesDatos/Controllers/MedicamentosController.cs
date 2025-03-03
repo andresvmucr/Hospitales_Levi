@@ -12,9 +12,9 @@ namespace ProyectoBasesDatos.Controllers
 {
     public class MedicamentosController : Controller
     {
-        private readonly HospitalesDbContext _context;
+        private readonly dbContext _context;
 
-        public MedicamentosController(HospitalesDbContext context)
+        public MedicamentosController(dbContext context)
         {
             _context = context;
         }
@@ -113,12 +113,12 @@ namespace ProyectoBasesDatos.Controllers
             // Guardar en la base de datos
             _context.Add(hospitalMed);
             await _context.SaveChangesAsync();
-            
+
             medicamento.Id = hospital_med_id.Substring(5);
             Console.WriteLine(medicamento.Id);
             // Asignar el IdHospitalMedicamento al medicamento
             medicamento.IdHospitalMedicamento = hospitalMed.Id;
-            
+
             _context.Add(medicamento);
             await _context.SaveChangesAsync();
 
@@ -165,7 +165,7 @@ namespace ProyectoBasesDatos.Controllers
             }
             ViewBag.Cantidad = medicamento.IdHospitalMedicamentoNavigation.Cantidad;
             ViewBag.Precio = medicamento.IdHospitalMedicamentoNavigation.Precio;
-  
+
             Console.WriteLine("Precio:" + medicamento.IdHospitalMedicamentoNavigation.Precio);
             ViewData["IdHospitalMedicamento"] = new SelectList(_context.HospitalMeds, "Id", "Id", medicamento.IdHospitalMedicamento);
             return View(medicamento);

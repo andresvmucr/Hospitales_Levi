@@ -18,14 +18,6 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult DoctorHome()
-    {
-        return View();
-    }
-    public IActionResult PatientHome()
-    {
-        return View();
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

@@ -13,11 +13,11 @@ public partial class Hospitale
 
     public string Telefono { get; set; } = null!;
 
-    public string Idsuperadim { get; set; } = null!;
+    public string IdSuperAdmin { get; set; } = null!;
 
     public virtual ICollection<HospitalMed> HospitalMeds { get; set; } = new List<HospitalMed>();
 
-    public virtual SuperAdmin IdsuperadimNavigation { get; set; } = null!;
+    public virtual SuperAdmin IdSuperAdminNavigation { get; set; } = null!;
 
     public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 }
