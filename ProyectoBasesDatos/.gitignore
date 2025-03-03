@@ -1,0 +1,63 @@
+# Visual Studio-specific files
+.vs/
+*.suo
+*.user
+*.cache
+*.log
+*.pdb
+*.obj
+*.aps
+*.ncb
+*.opendb
+*.VC.db
+
+# Build output
+bin/
+obj/
+out/
+Debug/
+Release/
+
+# ASP.NET Core and .NET-specific files
+*.dll
+*.exe
+*.log
+*.json.swp
+*.swp
+*.db
+*.bak
+*.mdf
+*.ldf
+
+# NuGet Packages
+*.nupkg
+packages/
+project.lock.json
+project.assets.json
+
+# Entity Framework Migrations
+Migrations/
+
+# User-specific files
+*.rsuser
+*.sln.ide
+*.sln.docstates
+*.sln.cache
+*.swp
+
+# JetBrains Rider / Resharper
+.idea/
+*.dotCover
+*.dotSettings.user
+**/bin/
+**/obj/
+**/.vs/
+
+# Ignore secrets and config files
+appsettings.json
+appsettings.Development.json
+secrets.json
+
+# Ignore logs
+logs/
+*.log

@@ -1,0 +1,78 @@
+﻿@model ProyectoBasesDatos.Models.Medicamento
+
+@{
+    ViewData["Title"] = "Detalles del medicamento";
+}
+
+<h1>Detalles del Medicamento</h1>
+
+<div>
+    <h4>Medicamento</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdHospitalMedicamentoNavigation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdHospitalMedicamentoNavigation.Id)
+        </dd>
+
+        <!-- Precio del medicamento desde HospitalMed -->
+        <dt class="col-sm-2">
+            Precio
+        </dt>
+        <dd class="col-sm-10">
+            @Model.IdHospitalMedicamentoNavigation.Precio.ToString("N0")
+        </dd>
+
+        <!-- Cantidad disponible del medicamento -->
+        <dt class="col-sm-2">
+            Cantidad Disponible
+        </dt>
+        <dd class="col-sm-10">
+            @Model.IdHospitalMedicamentoNavigation.Cantidad
+        </dd>
+
+        <!-- Datos del Hospital -->
+        <dt class="col-sm-2">
+            Nombre del Hospital
+        </dt>
+        <dd class="col-sm-10">
+            @Model.IdHospitalMedicamentoNavigation.IdHospitalNavigation.Nombre
+        </dd>
+
+        <!-- Otros detalles relacionados con el hospital, si es necesario -->
+        <dt class="col-sm-2">
+            Dirección del Hospital
+        </dt>
+        <dd class="col-sm-10">
+            @Model.IdHospitalMedicamentoNavigation.IdHospitalNavigation.Direccion
+        </dd>
+
+        <dt class="col-sm-2">
+            Teléfono del Hospital
+        </dt>
+        <dd class="col-sm-10">
+            @Model.IdHospitalMedicamentoNavigation.IdHospitalNavigation.Telefono
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
+    <a asp-action="Index">Volver a la Lista</a>
+</div>

@@ -7,7 +7,7 @@ public partial class HospitalMed
 {
     public string Id { get; set; } = null!;
 
-    public decimal Precio { get; set; }
+    public int Precio { get; set; }
 
     public int Cantidad { get; set; }
 
