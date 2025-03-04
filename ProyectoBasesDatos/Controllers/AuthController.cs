@@ -27,8 +27,10 @@ namespace ProyectoBasesDatos.Controllers
 
         public ActionResult Logout()
         {
+            HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Login(string Correo, string Contrasenna)

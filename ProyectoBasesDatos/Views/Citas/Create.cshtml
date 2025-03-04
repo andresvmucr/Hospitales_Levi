@@ -1,0 +1,165 @@
+﻿@model ProyectoBasesDatos.Models.Cita
+
+@{
+    ViewData["Title"] = "Crear Cita";
+}
+
+<h1>Crear Cita</h1>
+
+<h4>Detalles de la Cita</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Seleccionar Paciente -->
+            <div class="form-group">
+                <label asp-for="CedulaPaciente" class="control-label"></label>
+                <input asp-for="CedulaPaciente" class="form-control" asp-items="ViewBag.CedulaPaciente">
+            </div>
+
+            <!-- Seleccionar Especialidad -->
+            <div class="form-group">
+                <label class="control-label">Especialidad</label>
+                <select id="Especialidad" class="form-control" asp-items="ViewBag.Especialidad">
+                    <option value="">-- Seleccione una especialidad --</option>
+                </select>
+            </div>
+
+            <!-- Seleccionar Doctor (se actualiza dinámicamente) -->
+            <div class="form-group">
+                <label asp-for="CedulaDoctor" class="control-label">Doctor</label>
+                <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control">
+                    <option value="">-- Seleccione un doctor --</option>
+                </select>
+            </div>
+
+            <!-- Seleccionar Día de la Cita (se actualiza dinámicamente) -->
+            <div class="form-group">
+                <label asp-for="Dia" class="control-label"></label>
+                <select asp-for="Dia" id="Dia" class="form-control">
+                    <option value="">-- Seleccione un día --</option>
+                </select>
+                <span asp-validation-for="Dia" class="text-danger"></span>
+            </div>
+
+            <!-- Seleccionar Hora de la Cita (se actualiza dinámicamente) -->
+            <div class="form-group">
+                <label asp-for="Hora" class="control-label"></label>
+                <select asp-for="Hora" id="Hora" class="form-control">
+                    <option value="">-- Seleccione una hora --</option>
+                </select>
+                <span asp-validation-for="Hora" class="text-danger"></span>
+            </div>
+
+            <!-- Botón para enviar el formulario -->
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Enlace para volver a la lista de citas -->
+<div>
+    <a asp-action="Index">Volver a la lista</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Cargar doctores al seleccionar una especialidad
+            $('#Especialidad').change(function () {
+                var especialidad = $(this).val();
+
+                if (especialidad) {
+                    $.ajax({
+                        url: '@Url.Action("GetDoctoresByEspecialidad", "Citas")',
+                        type: 'GET',
+                        data: { especialidad: especialidad },
+                        success: function (data) {
+                            $('#CedulaDoctor').empty();
+                            $('#CedulaDoctor').append($('<option></option>').val('').text('-- Seleccione un doctor --'));
+
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                $.each(data, function (index, doctor) {
+                                    $('#CedulaDoctor').append($('<option></option>').val(doctor.cedula).text(doctor.nombre));
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert('Ocurrió un error al cargar los doctores.');
+                        }
+                    });
+                } else {
+                    $('#CedulaDoctor').empty().append($('<option></option>').val('').text('-- Seleccione un doctor --'));
+                }
+            });
+
+            // Cargar días de trabajo al seleccionar un doctor
+            $('#CedulaDoctor').change(function () {
+                var cedulaDoctor = $(this).val();
+
+                if (cedulaDoctor) {
+                    $.ajax({
+                        url: '@Url.Action("GetDiasTrabajoDoctor", "Citas")',
+                        type: 'GET',
+                        data: { idDoctor: cedulaDoctor },
+                        success: function (data) {
+                            $('#Dia').empty();
+                            $('#Dia').append($('<option></option>').val('').text('-- Seleccione un día --'));
+
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                $.each(data, function (index, dia) {
+                                    $('#Dia').append($('<option></option>').val(dia.dia).text(dia.diaCompleto));
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert('Ocurrió un error al cargar los días de trabajo.');
+                        }
+                    });
+                } else {
+                    $('#Dia').empty().append($('<option></option>').val('').text('-- Seleccione un día --'));
+                }
+            });
+
+            // Cargar horas disponibles al seleccionar un día
+            $('#Dia').change(function () {
+                var cedulaDoctor = $('#CedulaDoctor').val();
+                var diaSeleccionado = $(this).val();
+
+                if (cedulaDoctor && diaSeleccionado) {
+                    $.ajax({
+                        url: '@Url.Action("GetHorasDisponibles", "Citas")',
+                        type: 'GET',
+                        data: { idDoctor: cedulaDoctor, dia: diaSeleccionado },
+                        success: function (data) {
+                            console.log(data); // Verifica la estructura de los datos
+                            $('#Hora').empty();
+                            $('#Hora').append($('<option></option>').val('').text('-- Seleccione una hora --'));
+
+                            $.each(data, function (index, hora) {
+                                $('#Hora').append($('<option></option>').val(hora).text(hora));
+                            });
+                        },
+                        error: function () {
+                            alert('Error al cargar las horas disponibles.');
+                        }
+                    });
+                } else {
+                    $('#Hora').empty().append($('<option></option>').val('').text('-- Seleccione una hora --'));
+                }
+            });
+        });
+    </script>
+}
