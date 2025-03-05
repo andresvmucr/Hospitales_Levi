@@ -17,8 +17,25 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Citas
         public async Task<IActionResult> Index()
         {
-            var dbContext = _context.Citas.Include(c => c.CedulaDoctorNavigation).Include(c => c.CedulaPacienteNavigation);
-            return View(await dbContext.ToListAsync());
+            // Obtener el IdHospital de la sesión
+            //var hospitalId = HttpContext.Session.GetString("IdHospital");
+            var hospitalId = "H001";
+
+            if (string.IsNullOrEmpty(hospitalId))
+            {
+                return RedirectToAction("Error", "Home"); // Redirigir a una página de error si no hay hospital seleccionado
+            }
+
+            // Filtrar citas por el hospital y cargar la información relacionada
+            var citas = await _context.Citas
+                .Include(c => c.CedulaDoctorNavigation)
+                    .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
+                .Include(c => c.CedulaPacienteNavigation)
+                    .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
+                .Where(c => c.CedulaDoctorNavigation.CorreoNavigation.IdHospital == hospitalId) // Filtrar por hospital
+                .ToListAsync();
+
+            return View(citas);
         }
 
         // GET: Citas/Details/5
@@ -51,7 +68,8 @@ namespace ProyectoBasesDatos.Controllers
         {
             Console.WriteLine("Especialidad: " + especialidad);
             // Obtener el IdHospital de la sesión
-            var hospitalId = HttpContext.Session.GetString("IdHospital");
+            //var hospitalId = HttpContext.Session.GetString("IdHospital");
+            var hospitalId = "H001";
 
             // Validar que el IdHospital no sea nulo o vacío
             if (string.IsNullOrEmpty(hospitalId))
@@ -62,7 +80,11 @@ namespace ProyectoBasesDatos.Controllers
             // Filtrar doctores por especialidad y hospital
             var doctores = await _context.Doctores
                 .Where(d => d.IdEspecialidad == especialidad && d.CorreoNavigation.IdHospital == hospitalId)
-                .Select(d => new { d.CorreoNavigation.Nombre, d.Cedula }) // Seleccionar los campos que necesitas
+                 .Select(d => new
+                 {
+                     d.Cedula,
+                     NombreCompleto = d.CorreoNavigation.Nombre + " " + d.CorreoNavigation.PrimerApellido + " " + d.CorreoNavigation.SegundoApellido
+                 })
                 .ToListAsync();
 
             return Json(doctores);

@@ -1,125 +1,155 @@
 ﻿@model ProyectoBasesDatos.Models.Doctore
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Doctor";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">
+            <i class="fas fa-user-md me-2"></i>Agregar Doctor
+        </h1>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Volver a la lista
+        </a>
+    </div>
 
-<h4>Doctore</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="Cedula" class="control-label"></label>
-                <input asp-for="Cedula" class="form-control" />
-                <span asp-validation-for="Cedula" class="text-danger"></span>
-            </div>
-
-
-            <div class="form-group">
-                <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control" />
-                <span asp-validation-for="Correo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="Nombre" class="control-label">Nombre</label>
-                <input name="Nombre" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <label for="PrimerApellido" class="control-label">Primer Apellido</label>
-                <input name="PrimerApellido" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <label for="SegundoApellido" class="control-label">Segundo Apellido</label>
-                <input name="SegundoApellido" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <label asp-for="IdEspecialidad" class="control-label">Especialidad</label>
-                @if (ViewBag.NoEspecialidades == true)
-                {
-                    <!-- Dropdown deshabilitado con mensaje -->
-                    <select asp-for="IdEspecialidad" class="form-control" disabled>
-                        <option value="">No hay especialidades registradas</option>
-                    </select>
-                }
-                else
-                {
-                    <!-- Dropdown normal -->
-                    <select asp-for="IdEspecialidad" class="form-control" asp-items="ViewBag.Especialidades">
-                        <option value="">Seleccione una especialidad</option>
-                    </select>
-                }
-                <span asp-validation-for="IdEspecialidad" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="Telefono" class="control-label">Teléfono</label>
-                <input name="Telefono" class="form-control" />
-            </div>
-
-            <input type="hidden" name="IdHospital" value="@ViewBag.IdHospital" />
-
-            <div class="form-group">
-                <label class="control-label">Días</label>
-                <div class="d-flex flex-wrap">
-                    <div class="form-check mr-3">
-                        <input class="form-check-input" type="checkbox" name="Dias" value="L" id="diaL">
-                        <label class="form-check-label" for="diaL">Lunes</label>
+                <!-- Sección de información básica -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Cedula" class="form-label">Cédula</label>
+                            <input asp-for="Cedula" class="form-control" />
+                            <span asp-validation-for="Cedula" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="form-check mr-3">
-                        <input class="form-check-input" type="checkbox" name="Dias" value="M" id="diaM">
-                        <label class="form-check-label" for="diaM">Martes</label>
-                    </div>
-                    <div class="form-check mr-3">
-                        <input class="form-check-input" type="checkbox" name="Dias" value="K" id="diaK">
-                        <label class="form-check-label" for="diaK">Miércoles</label>
-                    </div>
-                    <div class="form-check mr-3">
-                        <input class="form-check-input" type="checkbox" name="Dias" value="J" id="diaJ">
-                        <label class="form-check-label" for="diaJ">Jueves</label>
-                    </div>
-                    <div class="form-check mr-3">
-                        <input class="form-check-input" type="checkbox" name="Dias" value="V" id="diaV">
-                        <label class="form-check-label" for="diaV">Viernes</label>
-                    </div>
-                    <div class="form-check mr-3">
-                        <input class="form-check-input" type="checkbox" name="Dias" value="S" id="diaS">
-                        <label class="form-check-label" for="diaS">Sábado</label>
-                    </div>
-                    <div class="form-check mr-3">
-                        <input class="form-check-input" type="checkbox" name="Dias" value="D" id="diaD">
-                        <label class="form-check-label" for="diaD">Domingo</label>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Correo" class="form-label">Correo</label>
+                            <input asp-for="Correo" class="form-control" />
+                            <span asp-validation-for="Correo" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="HoraInicio" class="control-label">Hora de Inicio</label>
-                <input type="time" name="HoraInicio" class="form-control" />
-            </div>
+                <!-- Sección de nombre y apellidos -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label for="Nombre" class="form-label">Nombre</label>
+                            <input name="Nombre" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label for="PrimerApellido" class="form-label">Primer Apellido</label>
+                            <input name="PrimerApellido" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label for="SegundoApellido" class="form-label">Segundo Apellido</label>
+                            <input name="SegundoApellido" class="form-control" />
+                        </div>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label for="HoraFin" class="control-label">Hora de Fin</label>
-                <input type="time" name="HoraFin" class="form-control" />
-            </div>
+                <!-- Sección de especialidad y teléfono -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="IdEspecialidad" class="form-label">Especialidad</label>
+                            @if (ViewBag.NoEspecialidades == true)
+                            {
+                                <select asp-for="IdEspecialidad" class="form-control" disabled>
+                                    <option value="">No hay especialidades registradas</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <select asp-for="IdEspecialidad" class="form-control" asp-items="ViewBag.Especialidades">
+                                    <option value="">Seleccione una especialidad</option>
+                                </select>
+                            }
+                            <span asp-validation-for="IdEspecialidad" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="Telefono" class="form-label">Teléfono</label>
+                            <input name="Telefono" class="form-control" />
+                        </div>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <!-- Campo oculto para el ID del hospital -->
+                <input type="hidden" name="IdHospital" value="@ViewBag.IdHospital" />
+
+                <!-- Sección de horarios -->
+                <div class="form-group mb-4">
+                    <label class="form-label">Días de trabajo</label>
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="Dias" value="L" id="diaL">
+                            <label class="form-check-label" for="diaL">Lunes</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="Dias" value="M" id="diaM">
+                            <label class="form-check-label" for="diaM">Martes</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="Dias" value="K" id="diaK">
+                            <label class="form-check-label" for="diaK">Miércoles</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="Dias" value="J" id="diaJ">
+                            <label class="form-check-label" for="diaJ">Jueves</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="Dias" value="V" id="diaV">
+                            <label class="form-check-label" for="diaV">Viernes</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="Dias" value="S" id="diaS">
+                            <label class="form-check-label" for="diaS">Sábado</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="Dias" value="D" id="diaD">
+                            <label class="form-check-label" for="diaD">Domingo</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de horas de trabajo -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="HoraInicio" class="form-label">Hora de Inicio</label>
+                            <input type="time" name="HoraInicio" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="HoraFin" class="form-label">Hora de Fin</label>
+                            <input type="time" name="HoraFin" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón de envío -->
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Crear Doctor
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

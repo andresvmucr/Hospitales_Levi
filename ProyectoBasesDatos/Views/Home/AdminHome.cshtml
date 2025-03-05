@@ -6,6 +6,7 @@
     <h1 class="display-4 text-center mb-4" style="color: #3f51b5;">Bienvenido al Sistema Médico</h1>
     <div class="row mt-4">
 
+        <!-- Citas -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
                 <div class="card-body text-center p-4" style="background-color: #f1f8ff;">
@@ -21,6 +22,7 @@
             </div>
         </div>
 
+        <!-- Doctores -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
                 <div class="card-body text-center p-4" style="background-color: #f0f8f1;">
@@ -36,6 +38,7 @@
             </div>
         </div>
 
+        <!-- Medicamentos -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
                 <div class="card-body text-center p-4" style="background-color: #fef8f0;">
@@ -51,7 +54,8 @@
             </div>
         </div>
 
-        <div class="col-md-4 mb-4">
+        <!-- Pacientes -->
+        <div class="col-md-6 mb-4">
             <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
                 <div class="card-body text-center p-4" style="background-color: #f4f0f9;">
                     <div class="mb-3" style="font-size: 2.5rem; color: #7b1fa2;">
@@ -66,7 +70,8 @@
             </div>
         </div>
 
-        <div class="col-md-4 mb-4">
+        <!-- Tratamientos -->
+        <div class="col-md-6 mb-4">
             <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
                 <div class="card-body text-center p-4" style="background-color: #f1f1f8;">
                     <div class="mb-3" style="font-size: 2.5rem; color: #3949ab;">
@@ -75,29 +80,11 @@
                     <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Tratamientos</h5>
                     <p class="card-text text-muted">Historial y administración de tratamientos.</p>
                     <a href="/Tratamientos" class="btn btn-primary" style="background-color: #3949ab; border: none; border-radius: 5px;">
-
                         <i class="fas fa-arrow-right me-2"></i>Ver más
                     </a>
                 </div>
             </div>
         </div>
-
-        <!-- Nueva tarjeta para "Especialidades" -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
-                <div class="card-body text-center p-4" style="background-color: #fff3e0;">
-                    <div class="mb-3" style="font-size: 2.5rem; color: #ff9800;">
-                        <i class="fas fa-stethoscope"></i>
-                    </div>
-                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Especialidades</h5>
-                    <p class="card-text text-muted">Lista de especialidades médicas.</p>
-                    <a asp-controller="Especialidades" asp-action="Index" class="btn btn-primary" style="background-color: #ff9800; border: none; border-radius: 5px;">
-                        <i class="fas fa-arrow-right me-2"></i>Ver más
-                    </a>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 

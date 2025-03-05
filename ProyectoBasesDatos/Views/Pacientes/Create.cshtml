@@ -1,70 +1,158 @@
 ﻿@model ProyectoBasesDatos.Models.Paciente
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Paciente";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">Crear Nuevo Paciente</h1>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<h4>Paciente</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Cedula" class="control-label"></label>
-                <input asp-for="Cedula" class="form-control" />
-                <span asp-validation-for="Cedula" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label for="Nombre" class="control-label">Nombre</label>
-                <input name="Nombre" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label for="PrimerApellido" class="control-label">Primer Apellido</label>
-                <input name="PrimerApellido" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label for="SegundoApellido" class="control-label">Segundo Apellido</label>
-                <input name="SegundoApellido" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label for="Telefono" class="control-label">Teléfono</label>
-                <input name="Telefono" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Genero" class="control-label"></label>
-                <input asp-for="Genero" class="form-control" />
-                <span asp-validation-for="Genero" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaNacimiento" class="control-label"></label>
-                <input asp-for="FechaNacimiento" class="form-control" />
-                <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <!-- Cédula -->
+                <div class="mb-3">
+                    <label asp-for="Cedula" class="form-label">Cédula</label>
+                    <input asp-for="Cedula" class="form-control" required />
+                    <span asp-validation-for="Cedula" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, ingresa la cédula.</div>
+                </div>
+
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label for="Nombre" class="form-label">Nombre</label>
+                    <input name="Nombre" class="form-control" required />
+                    <div class="invalid-feedback">Por favor, ingresa el nombre.</div>
+                </div>
+
+                <!-- Primer Apellido -->
+                <div class="mb-3">
+                    <label for="PrimerApellido" class="form-label">Primer Apellido</label>
+                    <input name="PrimerApellido" class="form-control" required />
+                    <div class="invalid-feedback">Por favor, ingresa el primer apellido.</div>
+                </div>
+
+                <!-- Segundo Apellido -->
+                <div class="mb-3">
+                    <label for="SegundoApellido" class="form-label">Segundo Apellido</label>
+                    <input name="SegundoApellido" class="form-control" />
+                </div>
+
+                <!-- Teléfono -->
+                <div class="mb-3">
+                    <label for="Telefono" class="form-label">Teléfono</label>
+                    <input name="Telefono" class="form-control" required />
+                    <div class="invalid-feedback">Por favor, ingresa el teléfono.</div>
+                </div>
+
+                <!-- Dirección -->
+                <div class="mb-3">
+                    <label asp-for="Direccion" class="form-label">Dirección</label>
+                    <input asp-for="Direccion" class="form-control" required />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, ingresa la dirección.</div>
+                </div>
+
+                <!-- Género -->
+                <div class="mb-3">
+                    <label asp-for="Genero" class="form-label">Género</label>
+                    <select asp-for="Genero" class="form-control" required>
+                        <option value="">Selecciona un género</option>
+                        <option value="f">Femenino</option>
+                        <option value="m">Masculino</option>
+                    </select>
+                    <span asp-validation-for="Genero" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, selecciona un género.</div>
+                </div>
+
+                <!-- Fecha de Nacimiento -->
+                <div class="mb-3">
+                    <label asp-for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input asp-for="FechaNacimiento" class="form-control" type="date" required />
+                    <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, ingresa la fecha de nacimiento.</div>
+                </div>
+
+                <!-- Correo -->
+                <div class="mb-3">
+                    <label asp-for="Correo" class="form-label">Correo Electrónico</label>
+                    <input asp-for="Correo" class="form-control" type="email" required />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, ingresa un correo electrónico válido.</div>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Volver a la Lista
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Crear Paciente
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <!-- Script para validación del formulario -->
+    <script>
+        (function () {
+            'use strict';
+
+            // Selecciona todos los formularios con la clase 'needs-validation'
+            var forms = document.querySelectorAll('.needs-validation');
+
+            // Itera sobre los formularios y previene el envío si no son válidos
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
 }
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-footer {
+        border-top: none;
+    }
+
+    .btn {
+        min-width: 120px;
+    }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    .card-title i {
+        font-size: 1.2em;
+    }
+</style>
+
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

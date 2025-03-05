@@ -4,51 +4,80 @@
     ViewData["Title"] = "Detalles del Doctor";
 }
 
-<h1>Detalles del Doctor</h1>
-
-<div>
-    <h4>Información del Doctor</h4>
+<div class="container mt-4">
+    <h1 class="display-4">Detalles del Doctor</h1>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Cédula</dt>
-        <dd class="col-sm-10">@Model.Cedula</dd>
 
-        <dt class="col-sm-2">Nombre Completo</dt>
-        <dd class="col-sm-10">
-            @Model.CorreoNavigation.Nombre
-            @Model.CorreoNavigation.PrimerApellido
-            @Model.CorreoNavigation.SegundoApellido
-        </dd>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="card-title mb-0">Información del Doctor</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Cédula</dt>
+                <dd class="col-sm-9">@Model.Cedula</dd>
 
-        <dt class="col-sm-2">Especialidad</dt>
-        <dd class="col-sm-10">@Model.IdEspecialidadNavigation.Nombre</dd>
+                <dt class="col-sm-3">Nombre Completo</dt>
+                <dd class="col-sm-9">
+                    @Model.CorreoNavigation.Nombre
+                    @Model.CorreoNavigation.PrimerApellido
+                    @Model.CorreoNavigation.SegundoApellido
+                </dd>
 
-        <dt class="col-sm-2">Correo</dt>
-        <dd class="col-sm-10">@Model.CorreoNavigation.Correo</dd>
+                <dt class="col-sm-3">Especialidad</dt>
+                <dd class="col-sm-9">@Model.IdEspecialidadNavigation.Nombre</dd>
 
-        <dt class="col-sm-2">Teléfono</dt>
-        <dd class="col-sm-10">@Model.CorreoNavigation.Telefono</dd>
+                <dt class="col-sm-3">Correo</dt>
+                <dd class="col-sm-9">@Model.CorreoNavigation.Correo</dd>
 
-        <dt class="col-sm-2">Horarios</dt>
-        <dd class="col-sm-10">
-            <ul>
-                @foreach (var horario in Model.Horarios
-                .OrderBy(h => h.Dia == "L" ? 1
-                : h.Dia == "M" ? 2
-                : h.Dia == "K" ? 3
-                : h.Dia == "J" ? 4
-                : h.Dia == "V" ? 5
-                : h.Dia == "S" ? 6
-                : 7)) // Ordena L, M, K, J, V, S, D
-                {
-                    <li>@horario.Dia: @horario.Horainicio.ToString("HH:mm") - @horario.Horafin.ToString("HH:mm")</li>
-                }
-            </ul>
-        </dd>
-    </dl>
+                <dt class="col-sm-3">Teléfono</dt>
+                <dd class="col-sm-9">@Model.CorreoNavigation.Telefono</dd>
+
+                <dt class="col-sm-3">Horarios</dt>
+                <dd class="col-sm-9">
+                    <ul class="list-unstyled">
+                        @foreach (var horario in Model.Horarios
+                        .OrderBy(h => h.Dia == "L" ? 1
+                        : h.Dia == "M" ? 2
+                        : h.Dia == "K" ? 3
+                        : h.Dia == "J" ? 4
+                        : h.Dia == "V" ? 5
+                        : h.Dia == "S" ? 6
+                        : 7)) // Ordena L, M, K, J, V, S, D
+                        {
+                            <li class="mb-2">
+                                <span class="badge bg-secondary">@horario.Dia</span>
+                                @horario.Horainicio.ToString("HH:mm") - @horario.Horafin.ToString("HH:mm")
+                            </li>
+                        }
+                    </ul>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.Cedula" class="btn btn-primary">Editar</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Volver a la Lista</a>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Cedula" class="btn btn-primary">Editar</a>
-    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
-</div>
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.75em;
+    }
+
+    .list-unstyled li {
+        padding: 0.25em 0;
+    }
+</style>

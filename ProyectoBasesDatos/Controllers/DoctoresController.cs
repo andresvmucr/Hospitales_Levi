@@ -19,36 +19,50 @@ namespace ProyectoBasesDatos.Controllers
         }
 
         // GET: Doctores
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var idHospital = HttpContext.Session.GetString("IdHospital");
+            var idHospital = "H001"; // Obtén el ID del hospital desde la sesión o donde corresponda
+            //var idHospital = HttpContext.Session.GetString("IdHospital");
             Console.WriteLine($"idHospital: {idHospital}");
 
-            var doctores = await _context.Doctores
+            // Consulta base
+            var doctoresQuery = _context.Doctores
                 .Include(d => d.CorreoNavigation)
                 .Include(d => d.Horarios)
                 .Include(d => d.IdEspecialidadNavigation)
-                .Where(d => d.CorreoNavigation.IdHospital == idHospital)
+                .Where(d => d.CorreoNavigation.IdHospital == idHospital);
+
+            // Filtrar por nombre o especialidad si se proporciona un término de búsqueda
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                doctoresQuery = doctoresQuery.Where(d =>
+                    d.CorreoNavigation.Nombre.Contains(searchString) ||
+                    d.CorreoNavigation.PrimerApellido.Contains(searchString) ||
+                    d.CorreoNavigation.SegundoApellido.Contains(searchString) ||
+                    d.IdEspecialidadNavigation.Nombre.Contains(searchString));
+            }
+
+            // Proyectar los resultados
+            var doctores = await doctoresQuery
                 .Select(d => new
                 {
                     Cedula = d.Cedula,
                     NombreCompleto = d.CorreoNavigation.Nombre + " " + d.CorreoNavigation.PrimerApellido + " " + d.CorreoNavigation.SegundoApellido,
                     Especialidad = d.IdEspecialidadNavigation.Nombre,
                     Horarios = d.Horarios
-                    .OrderBy(h => h.Dia == "L" ? 1
-                               : h.Dia == "M" ? 2
-                               : h.Dia == "K" ? 3
-                               : h.Dia == "J" ? 4
-                               : h.Dia == "V" ? 5
-                               : h.Dia == "S" ? 6
-                               : 7) // D (domingo)
-                    .Select(h => new
-                    {
-                        Dia = h.Dia,
-                        HoraInicio = h.Horainicio.ToString("HH:mm"),
-                        HoraFin = h.Horafin.ToString("HH:mm")
-                    }).ToList(),
-
+                        .OrderBy(h => h.Dia == "L" ? 1
+                                   : h.Dia == "M" ? 2
+                                   : h.Dia == "K" ? 3
+                                   : h.Dia == "J" ? 4
+                                   : h.Dia == "V" ? 5
+                                   : h.Dia == "S" ? 6
+                                   : 7) // D (domingo)
+                        .Select(h => new
+                        {
+                            Dia = h.Dia,
+                            HoraInicio = h.Horainicio.ToString("HH:mm"),
+                            HoraFin = h.Horafin.ToString("HH:mm")
+                        }).ToList(),
                     Correo = d.CorreoNavigation.Correo,
                     Telefono = d.CorreoNavigation.Telefono
                 })
@@ -56,6 +70,7 @@ namespace ProyectoBasesDatos.Controllers
 
             Console.WriteLine($"Doctores encontrados: {doctores.Count}");
             ViewBag.Doctores = doctores.Cast<dynamic>().ToList();
+            ViewBag.CurrentFilter = searchString; // Pasar el término de búsqueda a la vista
             return View();
         }
 
@@ -88,15 +103,7 @@ namespace ProyectoBasesDatos.Controllers
         public IActionResult Create()
         {
             var idHospital = HttpContext.Session.GetString("IdHospital");
-
-            if (string.IsNullOrEmpty(idHospital))
-            {
-                return RedirectToAction("Error");
-            }
-
-            // Obtener la lista de especialidades que comienzan con el ID del hospital
-            var especialidades = _context.Especialidades
-                .Where(e => e.Id.StartsWith(idHospital)) // Filtra especialidades que comienzan con "HXXX"
+            var especialidades = _context.Especialidades   
                 .Select(e => new SelectListItem
                 {
                     Value = e.Id.ToString(), // Valor que se enviará (ID)

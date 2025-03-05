@@ -4,62 +4,79 @@
     ViewData["Title"] = "Crear Cita";
 }
 
-<h1>Crear Cita</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">Crear Nueva Cita</h1>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<h4>Detalles de la Cita</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <!-- Seleccionar Paciente -->
+                <div class="mb-3">
+                    <label asp-for="CedulaPaciente" class="form-label">Paciente</label>
+                    <input asp-for="CedulaPaciente" class="form-control" required />
+                    <span asp-validation-for="CedulaPaciente" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, seleccione un paciente.</div>
+                </div>
 
-            <!-- Seleccionar Paciente -->
-            <div class="form-group">
-                <label asp-for="CedulaPaciente" class="control-label"></label>
-                <input asp-for="CedulaPaciente" class="form-control" asp-items="ViewBag.CedulaPaciente">
-            </div>
+                <!-- Seleccionar Especialidad -->
+                <div class="mb-3">
+                    <label class="form-label">Especialidad</label>
+                    <select id="Especialidad" class="form-control" required>
+                        <option value="">-- Seleccione una especialidad --</option>
+                        @if (ViewBag.Especialidad != null)
+                        {
+                            foreach (var especialidad in ViewBag.Especialidad)
+                            {
+                                <option value="@especialidad.Value">@especialidad.Text</option>
+                            }
+                        }
+                    </select>
+                    <div class="invalid-feedback">Por favor, seleccione una especialidad.</div>
+                </div>
 
-            <!-- Seleccionar Especialidad -->
-            <div class="form-group">
-                <label class="control-label">Especialidad</label>
-                <select id="Especialidad" class="form-control" asp-items="ViewBag.Especialidad">
-                    <option value="">-- Seleccione una especialidad --</option>
-                </select>
-            </div>
+                <!-- Seleccionar Doctor (se actualiza dinámicamente) -->
+                <div class="mb-3">
+                    <label asp-for="CedulaDoctor" class="form-label">Doctor</label>
+                    <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control" required>
+                        <option value="">-- Seleccione un doctor --</option>
+                    </select>
+                    <span asp-validation-for="CedulaDoctor" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, seleccione un doctor.</div>
+                </div>
 
-            <!-- Seleccionar Doctor (se actualiza dinámicamente) -->
-            <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control"
-                    asp-items="@(ViewBag.CedulaDoctor ?? new SelectList(new List<SelectListItem>()))">
-                <option value="">-- Seleccione un doctor --</option>
-            </select>
+                <!-- Seleccionar Día de la Cita (se actualiza dinámicamente) -->
+                <div class="mb-3">
+                    <label asp-for="Dia" class="form-label">Día de la Cita</label>
+                    <input asp-for="Dia" id="Dia" type="date" class="form-control" required />
+                    <span asp-validation-for="Dia" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, seleccione un día.</div>
+                </div>
 
-            <!-- Seleccionar Día de la Cita (se actualiza dinámicamente) -->
-            <div class="form-group">
-                <label asp-for="Dia" class="control-label"></label>
-                <input asp-for="Dia" id="Dia" type="date" class="form-control" />
-                <span asp-validation-for="Dia" class="text-danger"></span>
-            </div>
+                <!-- Seleccionar Hora de la Cita (se actualiza dinámicamente) -->
+                <div class="mb-3">
+                    <label asp-for="Hora" class="form-label">Hora de la Cita</label>
+                    <select asp-for="Hora" id="Hora" class="form-control" required>
+                        <option value="">-- Seleccione una hora --</option>
+                    </select>
+                    <span asp-validation-for="Hora" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, seleccione una hora.</div>
+                </div>
 
-            <!-- Seleccionar Hora de la Cita (se actualiza dinámicamente) -->
-            <div class="form-group">
-                <label asp-for="Hora" class="control-label"></label>
-                <select asp-for="Hora" id="Hora" class="form-control">
-                    <option value="">-- Seleccione una hora --</option>
-                </select>
-                <span asp-validation-for="Hora" class="text-danger"></span>
-            </div>
-
-            <!-- Botón para enviar el formulario -->
-            <div class="form-group">
-                <input type="submit" value="Crear" class="btn btn-primary" />
-            </div>
-        </form>
+                <!-- Botón para enviar el formulario -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i> Volver a la lista
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i> Crear Cita
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<!-- Enlace para volver a la lista de citas -->
-<div>
-    <a asp-action="Index">Volver a la lista</a>
 </div>
 
 @section Scripts {
@@ -86,7 +103,7 @@
                                 alert(data.error);
                             } else {
                                 $.each(data, function (index, doctor) {
-                                    $('#CedulaDoctor').append($('<option></option>').val(doctor.cedula).text(doctor.nombre));
+                                    $('#CedulaDoctor').append($('<option></option>').val(doctor.cedula).text(doctor.nombreCompleto));
                                 });
                             }
                         },
@@ -172,3 +189,34 @@
         });
     </script>
 }
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-footer {
+        border-top: none;
+    }
+
+    .btn {
+        min-width: 120px;
+    }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    .card-title i {
+        font-size: 1.2em;
+    }
+</style>
+
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

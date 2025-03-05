@@ -21,7 +21,8 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Pacientes
         public async Task<IActionResult> Index()
         {
-            var idHospital = HttpContext.Session.GetString("IdHospital");
+            var idHospital = "H001";
+            //var idHospital = HttpContext.Session.GetString("IdHospital");
 
             if (string.IsNullOrEmpty(idHospital))
             {
@@ -99,7 +100,8 @@ namespace ProyectoBasesDatos.Controllers
             paciente.CorreoNavigation.Telefono = Telefono;
             paciente.CorreoNavigation.Contrasenna = "1234"; // Default password
             paciente.CorreoNavigation.Rol = "Paciente";
-            paciente.CorreoNavigation.IdHospital = HttpContext.Session.GetString("IdHospital");
+            paciente.CorreoNavigation.IdHospital = "H001";
+            //paciente.CorreoNavigation.IdHospital = HttpContext.Session.GetString("IdHospital");
 
             _context.Usuarios.Add(paciente.CorreoNavigation);
             await _context.SaveChangesAsync();

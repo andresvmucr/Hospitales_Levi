@@ -1,0 +1,87 @@
+﻿@model ProyectoBasesDatos.Models.Usuario
+@{
+    ViewData["Title"] = "Editar Administrador";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="card-title mb-0">
+                <i class="fas fa-user-edit me-2"></i>Editar Administrador
+            </h2>
+        </div>
+        <div class="card-body">
+         
+            <!-- Formulario de edición -->
+            <form asp-action="Edit" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Correo" />
+
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label">
+                        <i class="fas fa-user me-1"></i>Nombre
+                    </label>
+                    <input asp-for="Nombre" class="form-control" required />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <!-- Primer Apellido -->
+                <div class="mb-3">
+                    <label asp-for="PrimerApellido" class="form-label">
+                        <i class="fas fa-user me-1"></i>Primer Apellido
+                    </label>
+                    <input asp-for="PrimerApellido" class="form-control" required />
+                    <span asp-validation-for="PrimerApellido" class="text-danger"></span>
+                </div>
+
+                <!-- Segundo Apellido -->
+                <div class="mb-3">
+                    <label asp-for="SegundoApellido" class="form-label">
+                        <i class="fas fa-user me-1"></i>Segundo Apellido
+                    </label>
+                    <input asp-for="SegundoApellido" class="form-control" />
+                    <span asp-validation-for="SegundoApellido" class="text-danger"></span>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="mb-3">
+                    <label asp-for="Telefono" class="form-label">
+                        <i class="fas fa-phone me-1"></i>Teléfono
+                    </label>
+                    <input asp-for="Telefono" class="form-control" required />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+
+                <!-- Hospital (Dropdown) -->
+                <div class="mb-3">
+                    <label asp-for="IdHospital" class="form-label">
+                        <i class="fas fa-hospital me-1"></i>Hospital
+                    </label>
+                    <select asp-for="IdHospital" class="form-select" asp-items="ViewBag.Hospitales" required>
+                        <option value="">Seleccione un hospital</option>
+                    </select>
+                    <span asp-validation-for="IdHospital" class="text-danger"></span>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="d-flex justify-content-between mt-4">
+                     <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Volver a la lista
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i>Guardar Cambios
+                    </button>
+                   
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

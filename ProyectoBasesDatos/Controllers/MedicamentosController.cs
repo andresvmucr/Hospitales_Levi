@@ -22,8 +22,8 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Medicamentos
         public async Task<IActionResult> Index()
         {
-            // Obtener el IdHospital de la sesión
-            var idHospital = HttpContext.Session.GetString("IdHospital");
+            var idHospital = "H001"; // Obtén el ID del hospital desde la sesión o donde corresponda
+            //var idHospital = HttpContext.Session.GetString("IdHospital");
 
             if (string.IsNullOrEmpty(idHospital))
             {

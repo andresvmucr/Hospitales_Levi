@@ -13,6 +13,10 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    public IActionResult SuperAdminHome()
+    {
+        return View();
+    }
     public IActionResult AdminHome()
     {
         return View();

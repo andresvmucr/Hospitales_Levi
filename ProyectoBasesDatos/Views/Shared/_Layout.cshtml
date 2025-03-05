@@ -8,11 +8,37 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProyectoBasesDatos.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Styles", required: false)
 </head>
 <body>
 
-    @await Html.PartialAsync("_AdminNavBar")
+    @{
+        var userRole = ViewContext.HttpContext.Session.GetString("Rol");
+
+        if (userRole == "SuperAdmin")
+        {
+            @await Html.PartialAsync("_SuperAdminNavBar")
+        }
+        else if (userRole == "Admin")
+        {
+            @await Html.PartialAsync("_AdminNavBar")
+        }
+        else if (userRole == "Doctor")
+        {
+            @await Html.PartialAsync("_DoctorNavBar")
+        }
+        else if (userRole == "Cliente")
+        {
+            @await Html.PartialAsync("_ClientNavBar")
+        }
+        else
+        {
+            // Opcional: Renderizar una barra de navegación por defecto o no renderizar ninguna
+            @await Html.PartialAsync("_DefaultNavBar")
+        }
+    }
 
     <div class="container">
         <main role="main" class="pb-3">

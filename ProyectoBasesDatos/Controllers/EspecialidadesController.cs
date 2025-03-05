@@ -19,18 +19,18 @@ namespace ProyectoBasesDatos.Controllers
         }
 
         // GET: Especialidades
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var hospId = HttpContext.Session.GetString("IdHospital");
-            if (string.IsNullOrEmpty(hospId))
+            var especialidadesQuery = _context.Especialidades.AsQueryable();
+
+            // Filtrar por nombre si se proporciona un término de búsqueda
+            if (!string.IsNullOrEmpty(searchString))
             {
-                return NotFound("No se encontró el ID del hospital en la sesión.");
+                especialidadesQuery = especialidadesQuery.Where(e => e.Nombre.Contains(searchString));
             }
 
-            var especialidades = await _context.Especialidades
-                .Where(e => e.Id.StartsWith(hospId))
-                .ToListAsync();
-
+            var especialidades = await especialidadesQuery.ToListAsync();
+            ViewBag.CurrentFilter = searchString; // Pasar el término de búsqueda a la vista
             return View(especialidades);
         }
 
@@ -66,7 +66,6 @@ namespace ProyectoBasesDatos.Controllers
                 .OrderByDescending(x => x.Id)
                 .FirstOrDefaultAsync();
             var nextID = 0;
-            var hospId = HttpContext.Session.GetString("IdHospital");
             if (specialty != null)
             {
                 string lastID = specialty.Id;
@@ -74,7 +73,7 @@ namespace ProyectoBasesDatos.Controllers
                 if (lastID.Contains("ESP"))
                 {
                         
-                    string number = lastID.Substring(8);
+                    string number = lastID.Substring(3);
                     if (int.TryParse(number, out int lastNumber))
                     {
                         nextID = lastNumber + 1;
@@ -82,7 +81,7 @@ namespace ProyectoBasesDatos.Controllers
                 }
             }
 
-            string newId = $"{hospId}-ESP{nextID:D3}";
+            string newId = $"ESP{nextID:D3}";
             Console.WriteLine("NEW ID:" + newId);
             return newId;
         }

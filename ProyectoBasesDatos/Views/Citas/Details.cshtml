@@ -1,66 +1,114 @@
 ﻿@model ProyectoBasesDatos.Models.Cita
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles de la Cita";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">Detalles de la Cita</h1>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Información de la Cita</h4>
+            <hr />
 
-<div>
-    <h4>Cita</h4>
-    <hr />
-    <dl class="row">
-        <!-- Mostrar el día de la cita -->
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Dia)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Dia)
-        </dd>
+            <dl class="row">
+                <!-- Día de la cita -->
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Dia)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Dia)
+                </dd>
 
-        <!-- Mostrar la hora de la cita -->
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Hora)
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Hora.ToString(@"hh\:mm")
-        </dd>
+                <!-- Hora de la cita -->
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Hora)
+                </dt>
+                <dd class="col-sm-9">
+                    @Model.Hora.ToString(@"hh\:mm")
+                </dd>
 
-        <!-- Mostrar el estado de la cita -->
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
+                <!-- Estado de la cita -->
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Estado)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Estado)
+                </dd>
 
-        <!-- Mostrar el nombre del doctor -->
-        <dt class="col-sm-2">
-            Doctor
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CedulaDoctorNavigation?.CorreoNavigation?.Nombre
-        </dd>
+                <!-- Nombre del doctor -->
+                <dt class="col-sm-3">
+                    Doctor
+                </dt>
+                <dd class="col-sm-9">
+                    @Model.CedulaDoctorNavigation?.CorreoNavigation?.Nombre @Model.CedulaDoctorNavigation?.CorreoNavigation.PrimerApellido  @Model.CedulaDoctorNavigation?.CorreoNavigation.SegundoApellido
+                </dd>
 
-        <!-- Mostrar la especialidad del doctor -->
-        <dt class="col-sm-2">
-            Especialidad
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CedulaDoctorNavigation?.IdEspecialidadNavigation?.Nombre
-        </dd>
+                <!-- Especialidad del doctor -->
+                <dt class="col-sm-3">
+                    Especialidad
+                </dt>
+                <dd class="col-sm-9">
+					@Model.CedulaDoctorNavigation?.IdEspecialidadNavigation?.Nombre 
+                </dd>
 
-        <!-- Mostrar el nombre del paciente -->
-        <dt class="col-sm-2">
-            Paciente
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CedulaPacienteNavigation?.CorreoNavigation?.Nombre
-        </dd>
-    </dl>
+                <!-- Nombre del paciente -->
+                <dt class="col-sm-3">
+                    Paciente
+                </dt>
+                <dd class="col-sm-9">
+					@Model.CedulaPacienteNavigation?.CorreoNavigation?.Nombre @Model.CedulaPacienteNavigation?.CorreoNavigation?.PrimerApellido  @Model.CedulaPacienteNavigation?.CorreoNavigation?.SegundoApellido
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer bg-light">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
+                    <i class="fas fa-edit me-2"></i> Editar
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Volver a la lista
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-footer {
+        border-top: none;
+    }
+
+    .btn {
+        min-width: 120px;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    dt {
+        font-weight: 500;
+        color: #6c757d; /* Color gris para las etiquetas */
+    }
+
+    dd {
+        color: #212529; /* Color oscuro para los valores */
+    }
+</style>
+
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

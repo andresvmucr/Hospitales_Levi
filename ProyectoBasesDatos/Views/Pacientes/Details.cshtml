@@ -4,70 +4,89 @@
     ViewData["Title"] = "Detalles del Paciente";
 }
 
-<h1>Detalles del Paciente</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">Detalles del Paciente</h1>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title text-primary mb-3">
+                <i class="fas fa-user-injured me-2"></i>Información del Paciente
+            </h5>
+            <hr />
 
-<div>
-    <h4>Paciente</h4>
-    <hr />
-    <dl class="row">
-        <!-- Cédula -->
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Cedula)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Cedula)
-        </dd>
+            <dl class="row">
+                <!-- Cédula -->
+                <dt class="col-sm-3">Cédula</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Cedula)</dd>
 
-        <!-- Nombre Completo -->
-        <dt class="col-sm-2">
-            Nombre Completo
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CorreoNavigation.Nombre @Model.CorreoNavigation.PrimerApellido @Model.CorreoNavigation.SegundoApellido
-        </dd>
+                <!-- Nombre Completo -->
+                <dt class="col-sm-3">Nombre Completo</dt>
+                <dd class="col-sm-9">
+                    @Model.CorreoNavigation.Nombre @Model.CorreoNavigation.PrimerApellido @Model.CorreoNavigation.SegundoApellido
+                </dd>
 
-        <!-- Dirección -->
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Direccion)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Direccion)
-        </dd>
+                <!-- Dirección -->
+                <dt class="col-sm-3">Dirección</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Direccion)</dd>
 
-        <!-- Género -->
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Genero)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Genero)
-        </dd>
+                <!-- Género -->
+                <dt class="col-sm-3">Género</dt>
+                <dd class="col-sm-9">@(Model.Genero == "f" ? "Femenino" : "Masculino")</dd>
 
-        <!-- Fecha de Nacimiento -->
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaNacimiento)
-        </dt>
-        <dd class="col-sm-10">
-            @Model.FechaNacimiento.ToString("dd/MM/yyyy") <!-- Formatear la fecha -->
-        </dd>
+                <!-- Fecha de Nacimiento -->
+                <dt class="col-sm-3">Fecha de Nacimiento</dt>
+                <dd class="col-sm-9">@Model.FechaNacimiento.ToString("dd/MM/yyyy")</dd>
 
-        <!-- Correo -->
-        <dt class="col-sm-2">
-            Correo
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CorreoNavigation.Correo
-        </dd>
+                <!-- Correo -->
+                <dt class="col-sm-3">Correo</dt>
+                <dd class="col-sm-9">@Model.CorreoNavigation.Correo</dd>
 
-        <!-- Teléfono -->
-        <dt class="col-sm-2">
-            Teléfono
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CorreoNavigation.Telefono
-        </dd>
-    </dl>
+                <!-- Teléfono -->
+                <dt class="col-sm-3">Teléfono</dt>
+                <dd class="col-sm-9">@Model.CorreoNavigation.Telefono</dd>
+            </dl>
+        </div>
+        <div class="card-footer bg-transparent">
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Edit" asp-route-id="@Model?.Cedula" class="btn btn-warning">
+                    <i class="fas fa-edit me-1"></i> Editar
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Volver a la Lista
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Cedula">Editar</a> |
-    <a asp-action="Index">Volver a la lista</a>
-</div>
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-footer {
+        border-top: none;
+    }
+
+    .btn {
+        min-width: 120px;
+    }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    .card-title i {
+        font-size: 1.2em;
+    }
+</style>
+
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

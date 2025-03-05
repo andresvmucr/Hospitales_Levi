@@ -1,17 +1,16 @@
-﻿@model IEnumerable<ProyectoBasesDatos.Models.Especialidade>
+﻿@model IEnumerable<ProyectoBasesDatos.Models.Hospitale>
+
 @{
-    ViewData["Title"] = "Listado de Especialidades";
+    ViewData["Title"] = "Hospitales";
     var currentFilter = ViewBag.CurrentFilter as string;
 }
 
 <div class="container mt-4">
-
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2">
-            <i class="fas fa-stethoscope me-2"></i>Especialidades
-        </h1>
-        <a asp-action="Create" class="btn btn-success d-flex align-items-center">
-            <i class="fas fa-plus me-2"></i>Crear Especialidad
+        <h1 class="h2">Lista de Hospitales</h1>
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center">
+            <i class="fas fa-plus me-2"></i>
+            Agregar Nuevo Hospital
         </a>
     </div>
 
@@ -25,30 +24,33 @@
         </div>
     </form>
 
-    <!-- Listado de especialidades en cards -->
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="especialidadList">
+    <!-- Listado de hospitales -->
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="hospitalList">
         @foreach (var item in Model)
         {
-            <div class="col especialidad-card" data-name="@item.Nombre.ToLower()">
+            <div class="col hospital-card" data-name="@item.Nombre.ToLower()">
                 <div class="card h-100 shadow-sm border-0 d-flex flex-column">
                     <div class="card-body flex-grow-1">
                         <div class="d-flex align-items-center mb-3">
                             <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                <i class="fas fa-stethoscope"></i>
+                                <i class="fas fa-hospital"></i>
                             </div>
                             <div>
                                 <h5 class="card-title mb-0">@item.Nombre</h5>
-                                <small class="text-muted">ID: @item.Id</small>
+                                <small class="text-muted">@item.Direccion</small>
                             </div>
                         </div>
-                        <p class="card-text">@item.Descripcion</p>
+                        <div class="mb-3">
+                            <small class="text-muted">Teléfono</small>
+                            <p class="mb-0">@item.Telefono</p>
+                        </div>
                     </div>
                     <div class="card-footer bg-transparent border-0">
-                        <div class="d-flex justify-content-between">
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-success btn-sm">
                                 <i class="fas fa-edit me-1"></i>Editar
                             </a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-info-circle me-1"></i>Detalles
                             </a>
                         </div>
@@ -58,13 +60,13 @@
         }
     </div>
 
-    <!-- Mensaje si no hay especialidades -->
+    <!-- Mensaje si no hay hospitales -->
     @if (!Model.Any())
     {
         <div class="text-center mt-5">
-            <i class="fas fa-clipboard-list fa-4x text-muted mb-3"></i>
-            <h3 class="h4">No hay especialidades registradas</h3>
-            <p class="text-muted">Comience agregando una nueva especialidad.</p>
+            <i class="fas fa-hospital-slash fa-4x text-muted mb-3"></i>
+            <h2 class="h4">No hay hospitales</h2>
+            <p class="text-muted">Aún no se han registrado hospitales en el sistema.</p>
         </div>
     }
 </div>
@@ -73,7 +75,7 @@
 <script>
     document.getElementById("searchBox").addEventListener("keyup", function () {
         let searchValue = this.value.toLowerCase();
-        let cards = document.querySelectorAll(".especialidad-card");
+        let cards = document.querySelectorAll(".hospital-card");
 
         cards.forEach(card => {
             let name = card.getAttribute("data-name");

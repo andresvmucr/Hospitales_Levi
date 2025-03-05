@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ProyectoBasesDatos.Models.Usuario>
+@{
+    ViewData["Title"] = "Listado de Administradores";
+    var currentFilter = ViewBag.CurrentFilter as string;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Administradores</h1>
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center">
+            <i class="fas fa-plus me-2"></i>
+            Añadir administrador
+        </a>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" id="searchBox" name="searchString" value="@currentFilter" class="form-control" placeholder="Buscar por nombre o correo..." />
+            <button type="submit" class="btn btn-outline-secondary">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
+
+    <!-- Listado de administradores -->
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="adminList">
+        @foreach (var item in Model)
+        {
+            <div class="col admin-card" data-name="@item.Nombre.ToLower() @item.PrimerApellido.ToLower() @item.SegundoApellido.ToLower()" data-email="@item.Correo.ToLower()">
+                <div class="card h-100 shadow-sm border-0 d-flex flex-column">
+                    <div class="card-body flex-grow-1">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0">@item.Nombre @item.PrimerApellido @item.SegundoApellido</h5>
+                                <small class="text-muted">@item.Correo</small>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <small class="text-muted">Teléfono</small>
+                                <p class="mb-0">@item.Telefono</p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Hospital</small>
+                                <p class="mb-0">@item.IdHospitalNavigation?.Nombre</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Edit" asp-route-id="@item.Correo" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-edit me-1"></i>Editar
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Correo" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-info-circle me-1"></i>Detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Mensaje si no hay usuarios -->
+    @if (!Model.Any())
+    {
+        <div class="text-center mt-5">
+            <i class="fas fa-users-slash fa-4x text-muted mb-3"></i>
+            <h2 class="h4">No hay usuarios</h2>
+            <p class="text-muted">Aún no se han registrado usuarios en el sistema.</p>
+        </div>
+    }
+</div>
+
+<!-- Script para búsqueda en tiempo real -->
+<script>
+    document.getElementById("searchBox").addEventListener("keyup", function () {
+        let searchValue = this.value.toLowerCase();
+        let cards = document.querySelectorAll(".admin-card");
+
+        cards.forEach(card => {
+            let name = card.getAttribute("data-name");
+            let email = card.getAttribute("data-email");
+
+            if (name.includes(searchValue) || email.includes(searchValue)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+</script>
