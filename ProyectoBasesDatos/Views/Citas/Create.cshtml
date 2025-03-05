@@ -28,19 +28,15 @@
             </div>
 
             <!-- Seleccionar Doctor (se actualiza dinámicamente) -->
-            <div class="form-group">
-                <label asp-for="CedulaDoctor" class="control-label">Doctor</label>
-                <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control">
-                    <option value="">-- Seleccione un doctor --</option>
-                </select>
-            </div>
+            <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control"
+                    asp-items="@(ViewBag.CedulaDoctor ?? new SelectList(new List<SelectListItem>()))">
+                <option value="">-- Seleccione un doctor --</option>
+            </select>
 
             <!-- Seleccionar Día de la Cita (se actualiza dinámicamente) -->
             <div class="form-group">
                 <label asp-for="Dia" class="control-label"></label>
-                <select asp-for="Dia" id="Dia" class="form-control">
-                    <option value="">-- Seleccione un día --</option>
-                </select>
+                <input asp-for="Dia" id="Dia" type="date" class="form-control" />
                 <span asp-validation-for="Dia" class="text-danger"></span>
             </div>
 
@@ -144,22 +140,35 @@
                         type: 'GET',
                         data: { idDoctor: cedulaDoctor, dia: diaSeleccionado },
                         success: function (data) {
-                            console.log(data); // Verifica la estructura de los datos
                             $('#Hora').empty();
-                            $('#Hora').append($('<option></option>').val('').text('-- Seleccione una hora --'));
 
-                            $.each(data, function (index, hora) {
-                                $('#Hora').append($('<option></option>').val(hora).text(hora));
-                            });
+                            if (data.length > 0) {
+                                $('#Hora').append($('<option></option>').val('').text('-- Seleccione una hora --'));
+                                $.each(data, function (index, hora) {
+                                    $('#Hora').append($('<option></option>').val(hora).text(hora));
+                                });
+                                $('#Hora').removeAttr('readonly'); // Habilitar el campo
+                                $('#Hora').prop('disabled', false); // Asegurarse de que no esté deshabilitado
+                            } else {
+                                $('#Hora').append($('<option></option>').val('').text('-- No hay horas disponibles --'));
+                                $('#Hora').prop('readonly', true); // Deshabilitar el campo
+                                $('#Hora').prop('disabled', true); // Deshabilitar el campo
+                            }
                         },
                         error: function () {
                             alert('Error al cargar las horas disponibles.');
                         }
                     });
                 } else {
-                    $('#Hora').empty().append($('<option></option>').val('').text('-- Seleccione una hora --'));
+                    $('#Hora').empty().append($('<option></option>').val('').text('-- No hay horas disponibles --'));
+                    $('#Hora').prop('readonly', true); // Deshabilitar el campo
+                    $('#Hora').prop('disabled', true); // Deshabilitar el campo
                 }
             });
+
+            // Establecer la fecha mínima para el campo de fecha
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementById("Dia").setAttribute("min", today);
         });
     </script>
 }

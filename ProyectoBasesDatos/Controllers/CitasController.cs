@@ -29,10 +29,16 @@ namespace ProyectoBasesDatos.Controllers
                 return NotFound();
             }
 
+            // Obtener la cita con la información relacionada del doctor y el paciente
             var cita = await _context.Citas
-                .Include(c => c.CedulaDoctorNavigation)
-                .Include(c => c.CedulaPacienteNavigation)
+                .Include(c => c.CedulaDoctorNavigation) // Incluir la información del doctor
+                    .ThenInclude(d => d.CorreoNavigation) // Incluir la información del usuario (correo)
+                .Include(c => c.CedulaDoctorNavigation) // Incluir la información del doctor
+                    .ThenInclude(d => d.IdEspecialidadNavigation) // Incluir la información de la especialidad
+                .Include(c => c.CedulaPacienteNavigation) // Incluir la información del paciente
+                    .ThenInclude(p => p.CorreoNavigation) // Incluir la información del usuario (correo)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (cita == null)
             {
                 return NotFound();
@@ -94,8 +100,14 @@ namespace ProyectoBasesDatos.Controllers
         {
             Console.WriteLine($"Doctor: {idDoctor}, Día: {dia}");
 
+            DateTime fecha = DateTime.Parse(dia);
+            string[] diasSemana = { "D", "L", "K", "M", "J", "V", "S" };
+            string diaSemana = diasSemana[(int)fecha.DayOfWeek];
+
+            Console.WriteLine("DIA: " + diaSemana);
+
             var horarios = await _context.Horarios
-                .Where(h => h.CedulaDoctor == idDoctor && h.Dia == dia)
+                .Where(h => h.CedulaDoctor == idDoctor && h.Dia == diaSemana)
                 .Select(h => new { h.Horainicio, h.Horafin })
                 .ToListAsync();
 
@@ -140,7 +152,30 @@ namespace ProyectoBasesDatos.Controllers
         }
 
 
+        public async Task<string> GenerateNextIDApp()
+        {
+            var app = await _context.Citas
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefaultAsync();
+            var nextID = 0;
+            var hospId = HttpContext.Session.GetString("IdHospital");
+            if (app != null)
+            {
+                string lastID = app.Id;
+                if (lastID.StartsWith($"{hospId}_APP-"))
+                {
+                    string number = lastID.Substring(9);
+                    if (int.TryParse(number, out int lastNumber))
+                    {
+                        nextID = lastNumber + 1;
+                    }
+                }
+            }
 
+            string newId = $"{hospId}_APP-{nextID:D3}";
+            Console.WriteLine("NEW ID:" + newId);
+            return newId;
+        }
 
 
         // GET: Citas/Create
@@ -157,106 +192,87 @@ namespace ProyectoBasesDatos.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Dia,Hora,Estado,CedulaPaciente,CedulaDoctor")] Cita cita)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(cita);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CedulaDoctor"] = new SelectList(_context.Doctores, "Cedula", "Cedula", cita.CedulaDoctor);
-            ViewData["CedulaPaciente"] = new SelectList(_context.Pacientes, "Cedula", "Cedula", cita.CedulaPaciente);
-            return View(cita);
+            Console.WriteLine("DIA: " + cita.Dia);
+            Console.WriteLine("Hora: " + cita.Hora);
+            Console.WriteLine("CedulaPaciente: " + cita.CedulaPaciente);
+            Console.WriteLine("CedulaDoctor: " + cita.CedulaDoctor);
+
+
+            cita.Id = await GenerateNextIDApp();
+            _context.Add(cita);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Citas/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
+            Console.WriteLine("Id: " + id);
             if (id == null)
             {
                 return NotFound();
             }
 
-            var cita = await _context.Citas.FindAsync(id);
-            if (cita == null)
-            {
-                return NotFound();
-            }
-            ViewData["CedulaDoctor"] = new SelectList(_context.Doctores, "Cedula", "Cedula", cita.CedulaDoctor);
-            ViewData["CedulaPaciente"] = new SelectList(_context.Pacientes, "Cedula", "Cedula", cita.CedulaPaciente);
+            // Obtain the appointment with related doctor and patient information
+            var cita = await _context.Citas
+                .Include(c => c.CedulaDoctorNavigation)
+                    .ThenInclude(d => d.IdEspecialidadNavigation)
+                .Include(c => c.CedulaPacienteNavigation)
+                    .ThenInclude(p => p.CorreoNavigation)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            // Get the specialization ID of the doctor associated with the selected appointment
+            var especialidadId = cita.CedulaDoctorNavigation.IdEspecialidad;
+
+            // Fetch doctors based on the specialization ID
+            var doctores = _context.Doctores
+                .Where(d => d.IdEspecialidad == especialidadId)
+                .Select(d => new { d.Cedula, d.CorreoNavigation.Nombre })
+                .ToList();
+
+            // Create SelectLists
+            ViewBag.CedulaDoctor = new SelectList(doctores, "Cedula", "Nombre", cita.CedulaDoctor);
+            ViewBag.CedulaPaciente = new SelectList(_context.Pacientes, "Cedula", "Nombre", cita.CedulaPaciente);
+            ViewBag.Especialidad = new SelectList(_context.Especialidades, "Id", "Nombre", cita.CedulaDoctorNavigation?.IdEspecialidad);
+
+            // Convert DateOnly to string
+            string diaString = cita.Dia.ToString("yyyy-MM-dd");
+
+            // Await the GetHorasDisponibles method and extract the hours
+            var availableHoursResult = await GetHorasDisponibles(cita.CedulaDoctor, diaString);
+            var availableHours = (availableHoursResult as JsonResult)?.Value as List<string> ?? new List<string>();
+
+            ViewBag.AvailableHours = new SelectList(availableHours);
+
             return View(cita);
         }
 
-        // POST: Citas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Dia,Hora,Estado,CedulaPaciente,CedulaDoctor")] Cita cita)
         {
-            if (id != cita.Id)
+            try
             {
-                return NotFound();
+                
+                _context.Update(cita);
+                await _context.SaveChangesAsync();
             }
-
-            if (ModelState.IsValid)
+            catch (DbUpdateConcurrencyException)
             {
-                try
+                if (!_context.Citas.Any(e => e.Id == cita.Id))
                 {
-                    _context.Update(cita);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!CitaExists(cita.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["CedulaDoctor"] = new SelectList(_context.Doctores, "Cedula", "Cedula", cita.CedulaDoctor);
-            ViewData["CedulaPaciente"] = new SelectList(_context.Pacientes, "Cedula", "Cedula", cita.CedulaPaciente);
-            return View(cita);
-        }
-
-        // GET: Citas/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cita = await _context.Citas
-                .Include(c => c.CedulaDoctorNavigation)
-                .Include(c => c.CedulaPacienteNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cita == null)
-            {
-                return NotFound();
-            }
-
-            return View(cita);
-        }
-
-        // POST: Citas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var cita = await _context.Citas.FindAsync(id);
-            if (cita != null)
-            {
-                _context.Citas.Remove(cita);
-            }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool CitaExists(string id)
         {
