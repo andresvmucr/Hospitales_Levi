@@ -65,9 +65,12 @@
         </div>
         <div class="card-footer bg-light">
             <div class="d-flex justify-content-between">
-                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
-                    <i class="fas fa-edit me-2"></i> Editar
-                </a>
+                @if (ViewContext.HttpContext.Session.GetString("Rol") == "Admin")
+                {
+                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
+                        <i class="fas fa-edit me-2"></i> Editar
+                    </a>
+                }
                 <a asp-action="Index" class="btn btn-secondary">
                     <i class="fas fa-arrow-left me-2"></i> Volver a la lista
                 </a>

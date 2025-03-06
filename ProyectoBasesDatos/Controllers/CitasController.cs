@@ -14,6 +14,9 @@ namespace ProyectoBasesDatos.Controllers
             _context = context;
         }
 
+        
+
+
         // GET: Citas
         public async Task<IActionResult> Index()
         {
@@ -89,6 +92,8 @@ namespace ProyectoBasesDatos.Controllers
 
             return Json(doctores);
         }
+
+
 
         public async Task<IActionResult> GetDiasTrabajoDoctor(string idDoctor)
         {
@@ -250,11 +255,15 @@ namespace ProyectoBasesDatos.Controllers
             // Fetch doctors based on the specialization ID
             var doctores = _context.Doctores
                 .Where(d => d.IdEspecialidad == especialidadId)
-                .Select(d => new { d.Cedula, d.CorreoNavigation.Nombre })
+                .Select(d => new { d.Cedula,
+                    NombreCompleto = d.CorreoNavigation.Nombre + " " +
+                         d.CorreoNavigation.PrimerApellido + " " +
+                         d.CorreoNavigation.SegundoApellido
+                })
                 .ToList();
 
             // Create SelectLists
-            ViewBag.CedulaDoctor = new SelectList(doctores, "Cedula", "Nombre", cita.CedulaDoctor);
+            ViewBag.CedulaDoctor = new SelectList(doctores, "Cedula", "NombreCompleto", cita.CedulaDoctor);
             ViewBag.CedulaPaciente = new SelectList(_context.Pacientes, "Cedula", "Nombre", cita.CedulaPaciente);
             ViewBag.Especialidad = new SelectList(_context.Especialidades, "Id", "Nombre", cita.CedulaDoctorNavigation?.IdEspecialidad);
 
@@ -293,6 +302,20 @@ namespace ProyectoBasesDatos.Controllers
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpGet("Citas/Attend/{id}")]
+        public IActionResult Attend(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            ViewBag.IdCita = id; // Pasamos el ID de la cita a la vista
+
+            return View();
         }
 
 

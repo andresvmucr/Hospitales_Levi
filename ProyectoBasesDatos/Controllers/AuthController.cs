@@ -82,6 +82,7 @@ namespace ProyectoBasesDatos.Controllers
                     {
                         case "Admin":
                             return RedirectToAction("AdminHome", "Home");
+                      
                         case "Doctor":
                             var doctorId = await _context.Doctores
                                 .Where(d => d.Correo == user.Correo)
@@ -101,6 +102,7 @@ namespace ProyectoBasesDatos.Controllers
                             HttpContext.Session.SetString("PatientId", patientId);
                             Console.WriteLine("PatientId: " + patientId);
                             return RedirectToAction("PatientHome", "Home");
+
                         default:
                             return RedirectToAction("Login");
                     }

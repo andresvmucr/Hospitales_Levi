@@ -4,77 +4,85 @@
     ViewData["Title"] = "Editar Cita";
 }
 
-<h1>Editar Cita</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">Editar Cita</h1>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Detalles de la Cita</h4>
+            <hr />
+            <form asp-action="Edit" class="needs-validation" novalidate>
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<h4>Detalles de la Cita</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <!-- Seleccionar Paciente -->
+                <div class="mb-3">
+                    <label asp-for="CedulaPaciente" class="form-label">Paciente</label>
+                    <input asp-for="CedulaPaciente" class="form-control" asp-items="ViewBag.CedulaPaciente" />
+                    <span asp-validation-for="CedulaPaciente" class="text-danger"></span>
+                </div>
 
-            <!-- Seleccionar Paciente -->
-            <div class="form-group">
-                <label asp-for="CedulaPaciente" class="control-label"></label>
-                <input asp-for="CedulaPaciente" class="form-control" asp-items="ViewBag.CedulaPaciente">
-            </div>
+                <!-- Seleccionar Especialidad -->
+                <div class="mb-3">
+                    <label class="form-label">Especialidad</label>
+                    <select id="Especialidad" class="form-control" asp-items="ViewBag.Especialidad" required>
+                        <option value="">-- Seleccione una especialidad --</option>
+                    </select>
+                    <div class="invalid-feedback">Por favor, seleccione una especialidad.</div>
+                </div>
 
-            <!-- Seleccionar Especialidad -->
-            <div class="form-group">
-                <label class="control-label">Especialidad</label>
-                <select id="Especialidad" class="form-control" asp-items="ViewBag.Especialidad">
-                    <option value="">-- Seleccione una especialidad --</option>
-                </select>
-            </div>
+                <!-- Seleccionar Doctor -->
+                <div class="form-group">
+                    <label asp-for="CedulaDoctor" class="control-label">Doctor</label>
+                    <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control" asp-items="ViewBag.CedulaDoctor">
+                        <option value="">-- Seleccione un doctor --</option>
+                    </select>
+                    <span asp-validation-for="CedulaDoctor" class="text-danger"></span>
+                </div>
 
-            <!-- Seleccionar Doctor -->
-            <div class="form-group">
-                <label asp-for="CedulaDoctor" class="control-label">Doctor</label>
-                <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control" asp-items="ViewBag.CedulaDoctor">
-                    <option value="">-- Seleccione un doctor --</option>
-                </select>
-                <span asp-validation-for="CedulaDoctor" class="text-danger"></span>
-            </div>
+                <!-- Seleccionar Día -->
+                <div class="mb-3">
+                    <label asp-for="Dia" class="form-label">Día</label>
+                    <input asp-for="Dia" id="Dia" type="date" class="form-control" required />
+                    <span asp-validation-for="Dia" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, seleccione un día.</div>
+                </div>
 
-            <!-- Seleccionar Día -->
-            <div class="form-group">
-                <label asp-for="Dia" class="control-label">Día</label>
-                <input asp-for="Dia" id="Dia" type="date" class="form-control" />
-                <span asp-validation-for="Dia" class="text-danger"></span>
-            </div>
+                <!-- Seleccionar Hora -->
+                <div class="mb-3">
+                    <label asp-for="Hora" class="form-label">Hora</label>
+                    <select asp-for="Hora" id="Hora" class="form-control" required>
+                        <option value="">-- Seleccione una hora --</option>
+                    </select>
+                    <span asp-validation-for="Hora" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, seleccione una hora.</div>
+                </div>
 
-            <!-- Seleccionar Hora -->
-            <div class="form-group">
-                <label asp-for="Hora" class="control-label">Hora</label>
-                <select asp-for="Hora" id="Hora" class="form-control" asp-items="ViewBag.AvailableHours">
-                    >
-                    <option value="">-- Seleccione una hora --</option>
-                </select>
-                <span asp-validation-for="Hora" class="text-danger"></span>
-            </div>
+                <!-- Estado de la Cita -->
+                <div class="mb-3">
+                    <label asp-for="Estado" class="form-label">Estado de la Cita</label>
+                    <select asp-for="Estado" class="form-control" required>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Cancelado">Cancelado</option>
+                        <option value="Ausente">Ausente</option>
+                    </select>
+                    <span asp-validation-for="Estado" class="text-danger"></span>
+                    <div class="invalid-feedback">Por favor, seleccione un estado.</div>
+                </div>
 
-            <!-- Estado de la Cita -->
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label">Estado de la Cita</label>
-                <select asp-for="Estado" class="form-control">
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="Cancelado">Cancelado</option>
-                    <option value="Ausente">Ausente</option>
-                </select>
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-
-            <!-- Botón para enviar el formulario -->
-            <div class="form-group">
-                <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
-            </div>
-        </form>
+                <!-- Botones de Acción -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i> Volver a la lista
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Volver a la lista</a>
 </div>
 
 @section Scripts {
@@ -119,7 +127,7 @@
                                 alert(data.error);
                             } else {
                                 $.each(data, function (index, doctor) {
-                                    $('#CedulaDoctor').append($('<option></option>').val(doctor.cedula).text(doctor.nombre));
+                                    $('#CedulaDoctor').append($('<option></option>').val(doctor.cedula).text(doctor.nombreCompleto));
                                 });
                                 // Seleccionar el doctor actual después de cargar la lista
                                 if (cedulaDoctorActual) {
@@ -206,3 +214,34 @@
         });
     </script>
 }
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-footer {
+        border-top: none;
+    }
+
+    .btn {
+        min-width: 120px;
+    }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    .card-title i {
+        font-size: 1.2em;
+    }
+</style>
+
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
