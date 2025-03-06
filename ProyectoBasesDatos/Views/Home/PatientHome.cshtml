@@ -1,0 +1,117 @@
+﻿@model IEnumerable<ProyectoBasesDatos.Models.Cita>
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="container mt-4">
+    <!-- Jumbotron de bienvenida -->
+    <div class="jumbotron text-center bg-primary text-white p-5 rounded-3 shadow">
+        <h1 class="display-4 fw-bold">Bienvenido al Hospital</h1>
+        <p class="lead">Cuidando tu salud con profesionalismo y compromiso.</p>
+    </div>
+
+    <!-- Tarjeta de acción rápida -->
+    <div class="card border-0 shadow-sm h-100 mt-4">
+        <div class="card-body text-center">
+            <h5 class="card-title fw-bold">Citas</h5>
+            <p class="card-text">Agenda tu cita médica de manera rápida y sencilla.</p>
+            <a asp-controller="Citas" asp-action="Create" class="btn btn-primary btn-lg">
+                <i class="fas fa-calendar-plus me-2"></i>Agendar
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Listado de citas -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <!-- Estado de la cita -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge @(item.Estado == "Pendiente" ? "bg-warning" : item.Estado == "Completada" ? "bg-success" : "bg-secondary") fs-6">
+                                @item.Estado
+                            </span>
+                        </div>
+
+                        <!-- Información de la cita -->
+                        <h5 class="card-title fw-bold mb-3">Cita Médica</h5>
+                        <div class="mb-3">
+                            <p class="card-text">
+                                <i class="fas fa-calendar-day me-2 text-primary"></i>
+                                <strong>Día:</strong> @item.Dia.ToString("dd/MM/yyyy")
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-clock me-2 text-primary"></i>
+                                <strong>Hora:</strong> @item.Hora.ToString(@"hh\:mm")
+                            </p>
+                        </div>
+
+                        <!-- Información del doctor -->
+                        <h6 class="card-subtitle mb-2 text-muted fw-bold">Doctor</h6>
+                        <p class="card-text mb-3">
+                            @if (item.CedulaDoctorNavigation != null && item.CedulaDoctorNavigation.CorreoNavigation != null)
+                            {
+                                <i class="fas fa-user-md me-2 text-primary"></i>
+                                @($"{item.CedulaDoctorNavigation.CorreoNavigation.Nombre} {item.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido} {item.CedulaDoctorNavigation.CorreoNavigation.SegundoApellido}")
+                            }
+                            else
+                            {
+                                <span class="text-muted">No disponible</span>
+                            }
+                        </p>
+
+                        <!-- Botones de acción -->
+                        <div class="d-flex justify-content-between mt-auto">
+                            @if (item.Estado == "Pendiente")
+                            {
+                                <a asp-controller="Citas" asp-action="Attend" asp-route-id="@item.Id" class="btn btn-primary">
+                                    <i class="fas fa-user-md me-2"></i>Cancelar
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+
+    .btn-outline-info {
+        border-color: #0dcaf0;
+        color: #0dcaf0;
+    }
+
+        .btn-outline-info:hover {
+            background-color: #0dcaf0;
+            color: #fff;
+        }
+</style>

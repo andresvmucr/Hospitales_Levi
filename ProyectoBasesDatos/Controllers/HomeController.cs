@@ -27,13 +27,8 @@ public class HomeController : Controller
 
     public async Task<IActionResult> DoctorHome()
     {
-        var hospitalId = "H001";
+        var doctorId = HttpContext.Session.GetString("DoctorId");
 
-
-        if (string.IsNullOrEmpty(hospitalId))
-        {
-            return RedirectToAction("Error", "Home"); // Redirigir a una página de error si no hay hospital seleccionado
-        }
 
         // Filtrar citas por el hospital y cargar la información relacionada
         var citas = await _context.Citas
@@ -41,7 +36,21 @@ public class HomeController : Controller
                 .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
             .Include(c => c.CedulaPacienteNavigation)
                 .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
-            .Where(c => c.CedulaDoctorNavigation.CorreoNavigation.IdHospital == hospitalId) // Filtrar por hospital
+            .Where(c => c.CedulaDoctor == doctorId) // Filtrar por hospital
+            .ToListAsync();
+
+        return View(citas);
+    }
+
+    public async Task<IActionResult> PatientHome()
+    {
+        var patientId = "333333333"; // HttpContext.Session.GetString("PatientId");
+        var citas = await _context.Citas
+            .Include(c => c.CedulaDoctorNavigation)
+                .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
+            .Include(c => c.CedulaPacienteNavigation)
+                .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
+            .Where(c => c.CedulaPaciente == patientId) // Filtrar por hospital
             .ToListAsync();
 
         return View(citas);

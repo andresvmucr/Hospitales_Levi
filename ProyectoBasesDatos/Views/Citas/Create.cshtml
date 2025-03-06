@@ -2,7 +2,11 @@
 
 @{
     ViewData["Title"] = "Crear Cita";
+    var cedulaPaciente = ViewContext.HttpContext.Session.GetString("PatientId");
+    var userRole = ViewContext.HttpContext.Session.GetString("Rol");
 }
+
+
 
 <div class="container mt-4">
     <div class="card shadow-sm">
@@ -13,13 +17,24 @@
             <form asp-action="Create" class="needs-validation" novalidate>
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-                <!-- Seleccionar Paciente -->
-                <div class="mb-3">
-                    <label asp-for="CedulaPaciente" class="form-label">Paciente</label>
-                    <input asp-for="CedulaPaciente" class="form-control" required />
-                    <span asp-validation-for="CedulaPaciente" class="text-danger"></span>
-                    <div class="invalid-feedback">Por favor, seleccione un paciente.</div>
-                </div>
+                @if (userRole == "Admin") {
+                    <!-- Seleccionar Paciente -->
+                    <div class="mb-3">
+                        <label asp-for="CedulaPaciente" class="form-label">Paciente</label>
+                        <input asp-for="CedulaPaciente" class="form-control" required />
+                        <span asp-validation-for="CedulaPaciente" class="text-danger"></span>
+                        <div class="invalid-feedback">Por favor, seleccione un paciente.</div>
+                    </div>
+                } else {
+                    <!-- Campo oculto con el valor de la cédula del paciente (no Admin) -->
+                    <div class="mb-3">
+                        <label asp-for="CedulaPaciente" class="form-label">Paciente</label>
+                        <input asp-for="CedulaPaciente" value="@cedulaPaciente" class="form-control" readonly />
+                        <span asp-validation-for="CedulaPaciente" class="text-danger"></span>
+                    </div>
+
+                }
+
 
                 <!-- Seleccionar Especialidad -->
                 <div class="mb-3">
@@ -67,9 +82,17 @@
 
                 <!-- Botón para enviar el formulario -->
                 <div class="d-flex justify-content-end gap-2 mt-4">
-                    <a asp-action="Index" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i> Volver a la lista
-                    </a>
+                    @if (userRole == "Admin")
+                    {
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Volver a la lista
+                        </a>
+                    }else 
+                    {
+                        <a asp-controller="Home" asp-action="PatientHome" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Volver a inicio
+                        </a>
+                    }
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-2"></i> Crear Cita
                     </button>

@@ -29,13 +29,12 @@
         {
             @await Html.PartialAsync("_DoctorNavBar")
         }
-        else if (userRole == "Cliente")
+        else if (userRole == "Paciente")
         {
-            @await Html.PartialAsync("_ClientNavBar")
+            @await Html.PartialAsync("_PatientNavBar")
         }
         else
         {
-            // Opcional: Renderizar una barra de navegación por defecto o no renderizar ninguna
             @await Html.PartialAsync("_DefaultNavBar")
         }
     }
