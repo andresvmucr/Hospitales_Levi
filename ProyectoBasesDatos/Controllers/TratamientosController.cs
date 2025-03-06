@@ -77,32 +77,49 @@ namespace ProyectoBasesDatos.Controllers
             return View(tratamiento);
         }
 
-        public IActionResult Create()
+        public async Task<string> GenerateNextTreatmentID()
         {
-            Console.WriteLine("Método create");
-            //// Obtén el hospitalId de la sesión
-            //var hospitalId = HttpContext.Session.GetString("IdHospital");
-            var hospitalId = "H001";
+            var tratamientos = await _context.Tratamientos
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefaultAsync();
+            var nextID = 0;
 
-            if (string.IsNullOrEmpty(hospitalId))
+            if (tratamientos != null)
             {
-                // Si no hay hospitalId en la sesión, redirige o muestra un error
-                return RedirectToAction("Error", "Home");
+                string lastID = tratamientos.Id;
+                string number = lastID.Substring(3);
+                if (int.TryParse(number, out int lastNumber))
+                {
+                    nextID = lastNumber + 1;
+                }
+
             }
 
-            // Filtra los medicamentos donde el Id comience con el hospitalId
-            var medicamentos = _context.Medicamentos
-                .Where(m => m.Id.StartsWith(hospitalId)) // Filtra por Id que comience con hospitalId
-                .ToList();
+            string newId = $"TRM{nextID:D3}";
+            Console.WriteLine("NEW ID:" + newId);
+            return newId;
+        }
 
-            // Pasa los medicamentos a la vista usando ViewBag
-            ViewBag.Medicamentos = new SelectList(medicamentos, "Id", "Nombre");
-            Console.WriteLine(string.Join(", ", medicamentos));
+        public async Task<string> GenerateNextID()
+        {
+            var tratamientoMed = await _context.TratamientosMeds
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefaultAsync();
+            var nextID = 0;
 
-            // Si necesitas otras listas desplegables, como citas, también las puedes cargar aquí
-            ViewData["IdCita"] = new SelectList(_context.Citas, "Id", "Id");
+            if (tratamientoMed != null)
+            {
+                string lastID = tratamientoMed.Id;
+                string number = lastID.Substring(3);
+                if (int.TryParse(number, out int lastNumber))
+                {
+                    nextID = lastNumber + 1;
+                }
 
-            return View();
+            }
+            string newId = $"TMD{nextID:D3}";
+            Console.WriteLine("NEW ID:" + newId);
+            return newId;
         }
 
         // POST: Tratamientoes/Create
@@ -110,16 +127,54 @@ namespace ProyectoBasesDatos.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Precio,IdCita")] Tratamiento tratamiento)
+        public async Task<IActionResult> Create(string IdCita, List<string> TratamientosMeds, List<int> Cantidad, List<string> Frecuencia)
         {
-            if (ModelState.IsValid)
+            var cita = await _context.Citas.FindAsync(IdCita);
+
+            var tratamientos = TratamientosMeds.Zip(Cantidad, (med, cant) => new { Medicamento = med, Cantidad = cant })
+                                                .Zip(Frecuencia, (trat, frec) => new { trat.Medicamento, trat.Cantidad, Frecuencia = frec });
+
+            int index = 1;
+            var precioTotal = 0;
+            foreach (var medicinas in tratamientos)
             {
-                _context.Add(tratamiento);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Console.WriteLine($"Medicamento {index++}:");
+                Console.WriteLine($"  - ID Medicamento: {medicinas.Medicamento}");
+                Console.WriteLine($"  - Cantidad: {medicinas.Cantidad}");
+                Console.WriteLine($"  - Frecuencia: {medicinas.Frecuencia}");
+                var medicamento  = await _context.Medicamentos.FindAsync(medicinas.Medicamento);
+                var hospital_med = await _context.HospitalMeds.FindAsync(medicamento.IdHospitalMedicamento);
+                precioTotal += medicamento.IdHospitalMedicamentoNavigation.Precio * medicinas.Cantidad;
             }
-            ViewData["IdCita"] = new SelectList(_context.Citas, "Id", "Id", tratamiento.IdCita);
-            return View(tratamiento);
+
+            
+            Console.WriteLine($"Precio total: {precioTotal}");
+            var tratamiento = new Tratamiento
+            {
+                Id = await GenerateNextTreatmentID(),
+                Precio = precioTotal,
+                IdCita = IdCita,
+            };
+            _context.Tratamientos.Add(tratamiento);
+            await _context.SaveChangesAsync();
+
+            index = 1;
+            foreach (var meds_tratamiento in tratamientos)
+            {
+                var tratamientoMed = new TratamientosMed
+                {
+                    Id = await GenerateNextID(),
+                    Dosis = meds_tratamiento.Cantidad.ToString(),
+                    Frecuencia = meds_tratamiento.Frecuencia,
+                    Fecha = cita.Dia,
+                    IdTratamiento = tratamiento.Id,
+                    IdMedicamento = meds_tratamiento.Medicamento
+                };
+                _context.TratamientosMeds.Add(tratamientoMed);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("DoctorHome", "Home");
         }
 
         // GET: Tratamientoes/Edit/5
@@ -173,40 +228,6 @@ namespace ProyectoBasesDatos.Controllers
             }
             ViewData["IdCita"] = new SelectList(_context.Citas, "Id", "Id", tratamiento.IdCita);
             return View(tratamiento);
-        }
-
-        // GET: Tratamientoes/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tratamiento = await _context.Tratamientos
-                .Include(t => t.IdCitaNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tratamiento == null)
-            {
-                return NotFound();
-            }
-
-            return View(tratamiento);
-        }
-
-        // POST: Tratamientoes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var tratamiento = await _context.Tratamientos.FindAsync(id);
-            if (tratamiento != null)
-            {
-                _context.Tratamientos.Remove(tratamiento);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool TratamientoExists(string id)

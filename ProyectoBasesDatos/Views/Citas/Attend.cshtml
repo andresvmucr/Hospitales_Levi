@@ -5,28 +5,62 @@
     var idCita = ViewBag.IdCita;
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-gradient-primary text-black">
             <h1 class="h4 mb-0">Atender Cita</h1>
+            <p class="mb-0">Complete los detalles del tratamiento para la cita.</p>
         </div>
         <div class="card-body">
-            <form asp-controller="Tratamientos" asp-action="Create" method="post" class="needs-validation" novalidate>
+            <form asp-controller="Tratamientos" asp-action="Create" method="post" class="needs-validation" novalidate onsubmit="return validarFormulario()">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                 <input type="hidden" name="IdCita" value="@idCita" />
 
-                <!-- Dropdown de medicamentos cargados desde AJAX -->
-                <div class="form-group">
-                    <label asp-for="TratamientosMeds" class="control-label">Medicamentos</label>
-                    <select id="TratamientosMeds" asp-for="TratamientosMeds" class="form-control">
-                        <option value="">-- Cargando medicamentos... --</option>
-                    </select>
-                    <span asp-validation-for="TratamientosMeds" class="text-danger"></span>
+                <!-- Contenedor para los grupos de medicamentos -->
+                <div id="medicamentosContainer">
+                    <div class="form-group mb-4 medicamento-group">
+                        <div class="input-group gap-4">
+                            <div class="flex-grow-1">
+                                <label class="form-label">Medicamento</label>
+                                <select name="TratamientosMeds[0]" class="form-select" required>
+                                    <option value="">-- Seleccione un medicamento --</option>
+                                </select>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" name="Cantidad[0]" class="form-control" min="1" required>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <label class="form-label">Frecuencia</label>
+                                <input type="text" name="Frecuencia[0]" class="form-control" required>
+                            </div>
+
+                            <div class="flex-grow-0 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger btn-eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Atender</button>
+                <div id="mensajeSinTratamientos" class="alert alert-info" style="display: none;">
+                    No se han incluido tratamientos.
+                </div>
+
+                <div class="form-group mb-4">
+                    <button type="button" id="agregarMedicamento" class="btn btn-secondary">
+                        <i class="fas fa-plus me-2"></i>Agregar Medicamento
+                    </button>
+                </div>
+
+                <div class="form-group text-end">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-check-circle me-2"></i>Atender
+                    </button>
                 </div>
             </form>
         </div>
@@ -38,23 +72,93 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let idCita = "@idCita"; // Obtener el ID de la cita desde ViewBag
-            let url = `/Citas/Attend/${idCita}/GetMeds`; // Nueva URL con el ID de la cita
+            let idCita = "@idCita";
+            let medicamentosContainer = document.getElementById("medicamentosContainer");
+            let mensajeSinTratamientos = document.getElementById("mensajeSinTratamientos");
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    let select = document.getElementById("TratamientosMeds");
-                    select.innerHTML = '<option value="">-- Seleccione un medicamento --</option>';
-
-                    data.forEach(med => {
-                        let option = document.createElement("option");
-                        option.value = med.id;
-                        option.textContent = med.nombre;
-                        select.appendChild(option);
+            function cargarMedicamentos(select) {
+                let url = `/Citas/Attend/${idCita}/GetMeds`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        select.innerHTML = '<option value="">-- Seleccione un medicamento --</option>';
+                        data.forEach(med => {
+                            let option = document.createElement("option");
+                            option.value = med.id;
+                            option.textContent = med.nombre;
+                            select.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Error al cargar los medicamentos:", error);
+                        select.innerHTML = '<option value="">Error al cargar medicamentos</option>';
                     });
-                })
-                .catch(error => console.error("Error al cargar los medicamentos:", error));
+            }
+
+            let primerSelect = medicamentosContainer.querySelector("select");
+            cargarMedicamentos(primerSelect);
+
+            document.getElementById("agregarMedicamento").addEventListener("click", function() {
+                let nuevoGrupo = medicamentosContainer.firstElementChild.cloneNode(true);
+                let index = medicamentosContainer.querySelectorAll(".medicamento-group").length;
+
+                nuevoGrupo.querySelector("select").name = `TratamientosMeds[${index}]`;
+                nuevoGrupo.querySelector("input[type='number']").name = `Cantidad[${index}]`;
+                nuevoGrupo.querySelector("input[type='text']").name = `Frecuencia[${index}]`;
+
+                nuevoGrupo.querySelector("select").selectedIndex = 0;
+                nuevoGrupo.querySelector("input[type='number']").value = "";
+                nuevoGrupo.querySelector("input[type='text']").value = "";
+
+                cargarMedicamentos(nuevoGrupo.querySelector("select"));
+                medicamentosContainer.appendChild(nuevoGrupo);
+                mensajeSinTratamientos.style.display = "none";
+            });
+
+            medicamentosContainer.addEventListener("click", function(e) {
+                if (e.target.closest(".btn-eliminar")) {
+                    e.target.closest(".medicamento-group").remove();
+                    let grupos = medicamentosContainer.querySelectorAll(".medicamento-group");
+
+                    grupos.forEach((grupo, index) => {
+                        grupo.querySelector("select").name = `TratamientosMeds[${index}]`;
+                        grupo.querySelector("input[type='number']").name = `Cantidad[${index}]`;
+                        grupo.querySelector("input[type='text']").name = `Frecuencia[${index}]`;
+                    });
+
+                    if (grupos.length === 0) {
+                        mensajeSinTratamientos.style.display = "block";
+                    }
+                }
+            });
         });
+
+        function validarFormulario() {
+            let grupos = document.querySelectorAll(".medicamento-group");
+            for (let grupo of grupos) {
+                let select = grupo.querySelector("select");
+                let cantidad = grupo.querySelector("input[type='number']");
+                let frecuencia = grupo.querySelector("input[type='text']");
+
+                if (!select.value) {
+                    alert("Seleccione un medicamento.");
+                    select.focus();
+                    return false;
+                }
+
+                if (!cantidad.value) {
+                    alert("Ingrese la cantidad.");
+                    cantidad.focus();
+                    return false;
+                }
+
+                if (!frecuencia.value) {
+                    alert("Ingrese la frecuencia.");
+                    frecuencia.focus();
+                    return false;
+                }
+            }
+            return true;
+        }
     </script>
 }
