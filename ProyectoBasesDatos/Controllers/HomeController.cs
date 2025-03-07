@@ -44,13 +44,17 @@ public class HomeController : Controller
 
     public async Task<IActionResult> PatientHome()
     {
-        var patientId = "333333333"; // HttpContext.Session.GetString("PatientId");
+        var patientId = HttpContext.Session.GetString("PatientId");
         var citas = await _context.Citas
             .Include(c => c.CedulaDoctorNavigation)
                 .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
             .Include(c => c.CedulaPacienteNavigation)
                 .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
-            .Where(c => c.CedulaPaciente == patientId) // Filtrar por hospital
+            .Where(c => c.CedulaPaciente == patientId)
+            .OrderBy(c => c.Estado == "Cancelado" ? 1 : 0) // Canceladas al final
+            .ThenBy(c => c.Hora) // Ordenar por hora
+            .ThenBy(c => c.Dia) // Ordenar por fecha
+            
             .ToListAsync();
 
         return View(citas);

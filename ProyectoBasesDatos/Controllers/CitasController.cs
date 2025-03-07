@@ -36,7 +36,10 @@ namespace ProyectoBasesDatos.Controllers
                 .Include(c => c.CedulaPacienteNavigation)
                     .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
                 .Where(c => c.CedulaDoctorNavigation.CorreoNavigation.IdHospital == hospitalId) // Filtrar por hospital
+                .OrderBy(c => c.Dia) // Ordenar por fecha (las más cercanas primero)
+                .ThenBy(c => c.Estado == "Pendiente" ? 0 : 1) // Ordenar por estado (pendientes primero)
                 .ToListAsync();
+
 
             return View(citas);
         }
@@ -228,7 +231,14 @@ namespace ProyectoBasesDatos.Controllers
             cita.Id = await GenerateNextIDApp();
             _context.Add(cita);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (HttpContext.Session.GetString("Rol") == "Admin")
+            {
+                return RedirectToAction(nameof(Index));
+            } else
+            {
+                return RedirectToAction("PatientHome", "Home");
+            }
+                
         }
 
         // GET: Citas/Edit/5
@@ -318,6 +328,21 @@ namespace ProyectoBasesDatos.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Cancelar(string id)
+        {
+            var cita = await _context.Citas.FindAsync(id);
+            if (cita == null)
+            {
+                return NotFound();
+            }
+
+            cita.Estado = "Cancelado";
+            _context.Update(cita);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
 
         private bool CitaExists(string id)
         {

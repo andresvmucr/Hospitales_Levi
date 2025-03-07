@@ -4,13 +4,11 @@
 }
 
 <div class="container mt-4">
-    <!-- Jumbotron de bienvenida -->
     <div class="jumbotron text-center bg-primary text-white p-5 rounded-3 shadow">
         <h1 class="display-4 fw-bold">Bienvenido al Hospital</h1>
         <p class="lead">Cuidando tu salud con profesionalismo y compromiso.</p>
     </div>
 
-    <!-- Tarjeta de acción rápida -->
     <div class="card border-0 shadow-sm h-100 mt-4">
         <div class="card-body text-center">
             <h5 class="card-title fw-bold">Citas</h5>
@@ -21,22 +19,17 @@
         </div>
     </div>
 
-
-    <!-- Listado de citas -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-4">
         @foreach (var item in Model)
         {
             <div class="col">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="card-body">
-                        <!-- Estado de la cita -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <span class="badge @(item.Estado == "Pendiente" ? "bg-warning" : item.Estado == "Completada" ? "bg-success" : "bg-secondary") fs-6">
                                 @item.Estado
                             </span>
                         </div>
-
-                        <!-- Información de la cita -->
                         <h5 class="card-title fw-bold mb-3">Cita Médica</h5>
                         <div class="mb-3">
                             <p class="card-text">
@@ -48,8 +41,6 @@
                                 <strong>Hora:</strong> @item.Hora.ToString(@"hh\:mm")
                             </p>
                         </div>
-
-                        <!-- Información del doctor -->
                         <h6 class="card-subtitle mb-2 text-muted fw-bold">Doctor</h6>
                         <p class="card-text mb-3">
                             @if (item.CedulaDoctorNavigation != null && item.CedulaDoctorNavigation.CorreoNavigation != null)
@@ -62,14 +53,12 @@
                                 <span class="text-muted">No disponible</span>
                             }
                         </p>
-
-                        <!-- Botones de acción -->
                         <div class="d-flex justify-content-between mt-auto">
                             @if (item.Estado == "Pendiente")
                             {
-                                <a asp-controller="Citas" asp-action="Attend" asp-route-id="@item.Id" class="btn btn-primary">
-                                    <i class="fas fa-user-md me-2"></i>Cancelar
-                                </a>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="@item.Id">
+                                    Cancelar Cita
+                                </button>
                             }
                         </div>
                     </div>
@@ -79,39 +68,47 @@
     </div>
 </div>
 
-<!-- Estilos adicionales -->
-<style>
-    .card {
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmar Cancelación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas cancelar esta cita?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="confirmCancel">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var confirmModal = document.getElementById("confirmModal");
+        var confirmButton = document.getElementById("confirmCancel");
 
-    .badge {
-        font-size: 0.9rem;
-        padding: 0.5rem 0.75rem;
-    }
+        confirmModal.addEventListener("show.bs.modal", function (event) {
+            var button = event.relatedTarget; // Botón que activó el modal
+            var idCita = button.getAttribute("data-id"); // Obtener el ID de la cita
 
-    .btn-primary {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    }
+            // Asegurarse de que el botón existe antes de asignar el evento
+            if (confirmButton) {
+                confirmButton.onclick = function () {
+                    fetch(`/Citas/Cancelar/${idCita}`, {
+                        method: "POST"
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.reload(); // Recargar la página para actualizar el estado
+                        }
+                    }).catch(error => console.error("Error:", error));
+                };
+            }
+        });
+    });
+</script>
 
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            border-color: #0a58ca;
-        }
-
-    .btn-outline-info {
-        border-color: #0dcaf0;
-        color: #0dcaf0;
-    }
-
-        .btn-outline-info:hover {
-            background-color: #0dcaf0;
-            color: #fff;
-        }
-</style>

@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Atender Cita";
     var idCita = ViewBag.IdCita;
+    var errorMessage = TempData["ErrorMessage"] as string; // Obtener el mensaje de error
 }
 
 <div class="container mt-5">
@@ -12,6 +13,12 @@
             <p class="mb-0">Complete los detalles del tratamiento para la cita.</p>
         </div>
         <div class="card-body">
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger">
+                    @errorMessage
+                </div>
+            }
             <form asp-controller="Tratamientos" asp-action="Create" method="post" class="needs-validation" novalidate onsubmit="return validarFormulario()">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 

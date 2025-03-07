@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProyectoBasesDatos.Models;
@@ -129,52 +130,87 @@ namespace ProyectoBasesDatos.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string IdCita, List<string> TratamientosMeds, List<int> Cantidad, List<string> Frecuencia)
         {
-            var cita = await _context.Citas.FindAsync(IdCita);
+            using var transaction = await _context.Database.BeginTransactionAsync(); // Iniciamos una transacción para seguridad
 
-            var tratamientos = TratamientosMeds.Zip(Cantidad, (med, cant) => new { Medicamento = med, Cantidad = cant })
-                                                .Zip(Frecuencia, (trat, frec) => new { trat.Medicamento, trat.Cantidad, Frecuencia = frec });
-
-            int index = 1;
-            var precioTotal = 0;
-            foreach (var medicinas in tratamientos)
+            try
             {
-                Console.WriteLine($"Medicamento {index++}:");
-                Console.WriteLine($"  - ID Medicamento: {medicinas.Medicamento}");
-                Console.WriteLine($"  - Cantidad: {medicinas.Cantidad}");
-                Console.WriteLine($"  - Frecuencia: {medicinas.Frecuencia}");
-                var medicamento  = await _context.Medicamentos.FindAsync(medicinas.Medicamento);
-                var hospital_med = await _context.HospitalMeds.FindAsync(medicamento.IdHospitalMedicamento);
-                precioTotal += medicamento.IdHospitalMedicamentoNavigation.Precio * medicinas.Cantidad;
-            }
-
-            
-            Console.WriteLine($"Precio total: {precioTotal}");
-            var tratamiento = new Tratamiento
-            {
-                Id = await GenerateNextTreatmentID(),
-                Precio = precioTotal,
-                IdCita = IdCita,
-            };
-            _context.Tratamientos.Add(tratamiento);
-            await _context.SaveChangesAsync();
-
-            index = 1;
-            foreach (var meds_tratamiento in tratamientos)
-            {
-                var tratamientoMed = new TratamientosMed
+                var cita = await _context.Citas.FindAsync(IdCita);
+                if (cita == null)
                 {
-                    Id = await GenerateNextID(),
-                    Dosis = meds_tratamiento.Cantidad.ToString(),
-                    Frecuencia = meds_tratamiento.Frecuencia,
-                    Fecha = cita.Dia,
-                    IdTratamiento = tratamiento.Id,
-                    IdMedicamento = meds_tratamiento.Medicamento
-                };
-                _context.TratamientosMeds.Add(tratamientoMed);
-                await _context.SaveChangesAsync();
-            }
+                    return NotFound();
+                }
 
-            return RedirectToAction("DoctorHome", "Home");
+                var tratamientos = TratamientosMeds.Zip(Cantidad, (med, cant) => new { Medicamento = med, Cantidad = cant })
+                                                   .Zip(Frecuencia, (trat, frec) => new { trat.Medicamento, trat.Cantidad, Frecuencia = frec });
+
+                int precioTotal = 0;
+
+                foreach (var medicinas in tratamientos)
+                {
+                    var medicamento = await _context.Medicamentos.FindAsync(medicinas.Medicamento);
+                    if (medicamento == null)
+                    {
+                        return BadRequest($"El medicamento con ID {medicinas.Medicamento} no existe.");
+                    }
+
+                    var hospitalMed = await _context.HospitalMeds.FindAsync(medicamento.IdHospitalMedicamento);
+                    precioTotal += hospitalMed.Precio * medicinas.Cantidad;
+                }
+
+                var tratamiento = new Tratamiento
+                {
+                    Id = await GenerateNextTreatmentID(),
+                    Precio = precioTotal,
+                    IdCita = IdCita,
+                };
+
+                _context.Tratamientos.Add(tratamiento);
+                await _context.SaveChangesAsync();
+
+                foreach (var meds_tratamiento in tratamientos)
+                {
+                    var tratamientoMed = new TratamientosMed
+                    {
+                        Id = await GenerateNextID(),
+                        Dosis = meds_tratamiento.Cantidad.ToString(),
+                        Frecuencia = meds_tratamiento.Frecuencia,
+                        Fecha = cita.Dia,
+                        IdTratamiento = tratamiento.Id,
+                        IdMedicamento = meds_tratamiento.Medicamento
+                    };
+                    _context.TratamientosMeds.Add(tratamientoMed);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync(); // Si todo es exitoso, confirmamos la transacción
+
+                return RedirectToAction("DoctorHome", "Home");
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx && sqlEx.Message.Contains("Stock insuficiente"))
+                {
+                    // Extraer el mensaje de error del trigger
+                    string errorMessage = sqlEx.Message;
+
+                    // Cortar el mensaje hasta el primer punto
+                    int firstDotIndex = errorMessage.IndexOf('.');
+                    if (firstDotIndex > 0) // Verificar que haya un punto en el mensaje
+                    {
+                        errorMessage = errorMessage.Substring(0, firstDotIndex);
+                    }
+
+                    // Guardar el mensaje de error en TempData
+                    TempData["ErrorMessage"] = errorMessage;
+
+                    // Redirigir a la acción "Attend" con el IdCita
+                    await transaction.RollbackAsync(); // Revertimos la transacción
+                    return RedirectToAction("Attend", "Citas", new { id = IdCita });
+                }
+
+                await transaction.RollbackAsync(); // En caso de otro error, también revertimos
+                throw; // Relanzamos la excepción para depuración
+            }
         }
 
         // GET: Tratamientoes/Edit/5
