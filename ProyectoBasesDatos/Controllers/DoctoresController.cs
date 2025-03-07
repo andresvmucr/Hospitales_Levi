@@ -21,8 +21,8 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Doctores
         public async Task<IActionResult> Index(string searchString)
         {
-            var idHospital = "H001"; // Obtén el ID del hospital desde la sesión o donde corresponda
-            //var idHospital = HttpContext.Session.GetString("IdHospital");
+            //var idHospital = "H001"; // Obtén el ID del hospital desde la sesión o donde corresponda
+            var idHospital = HttpContext.Session.GetString("IdHospital");
             Console.WriteLine($"idHospital: {idHospital}");
 
             // Consulta base
@@ -67,6 +67,7 @@ namespace ProyectoBasesDatos.Controllers
                     Telefono = d.CorreoNavigation.Telefono
                 })
                 .ToListAsync();
+
 
             Console.WriteLine($"Doctores encontrados: {doctores.Count}");
             ViewBag.Doctores = doctores.Cast<dynamic>().ToList();

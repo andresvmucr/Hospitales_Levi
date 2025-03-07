@@ -15,14 +15,12 @@ namespace ProyectoBasesDatos.Controllers
         }
 
         
-
-
         // GET: Citas
         public async Task<IActionResult> Index()
         {
             // Obtener el IdHospital de la sesión
-            //var hospitalId = HttpContext.Session.GetString("IdHospital");
-            var hospitalId = "H001";
+            var hospitalId = HttpContext.Session.GetString("IdHospital");
+            // var hospitalId = "H001";
 
             if (string.IsNullOrEmpty(hospitalId))
             {
@@ -74,8 +72,8 @@ namespace ProyectoBasesDatos.Controllers
         {
             Console.WriteLine("Especialidad: " + especialidad);
             // Obtener el IdHospital de la sesión
-            //var hospitalId = HttpContext.Session.GetString("IdHospital");
-            var hospitalId = "H001";
+            var hospitalId = HttpContext.Session.GetString("IdHospital");
+            // var hospitalId = "H001";
 
             // Validar que el IdHospital no sea nulo o vacío
             if (string.IsNullOrEmpty(hospitalId))
@@ -95,7 +93,6 @@ namespace ProyectoBasesDatos.Controllers
 
             return Json(doctores);
         }
-
 
 
         public async Task<IActionResult> GetDiasTrabajoDoctor(string idDoctor)
@@ -342,6 +339,22 @@ namespace ProyectoBasesDatos.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Pagar(string id)
+        {
+            var cita = await _context.Citas.FindAsync(id);
+            if (cita == null)
+            {
+                return NotFound();
+            }
+
+            cita.Estado = "Pagada"; // Cambiar el estado de la cita a "Pagada"
+            _context.Update(cita);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         private bool CitaExists(string id)

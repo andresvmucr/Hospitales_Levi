@@ -51,7 +51,8 @@ namespace ProyectoBasesDatos.Controllers
         {
             Console.WriteLine($"Obteniendo medicamentos para la cita con ID: {id}");
 
-            var hospitalId = "H001"; // Puedes obtenerlo de la sesión si es necesario
+            // var hospitalId = "H001"; // Puedes obtenerlo de la sesión si es necesario
+            var hospitalId = HttpContext.Session.GetString("IdHospital");
 
             var medicamentos = _context.Medicamentos
                 .Where(m => m.IdHospitalMedicamento.StartsWith(hospitalId))
@@ -74,7 +75,6 @@ namespace ProyectoBasesDatos.Controllers
 
             return Json(medicamentos);
         }
-
 
 
         // GET: Tratamientoes/Details/5
@@ -214,6 +214,15 @@ namespace ProyectoBasesDatos.Controllers
                 }
 
                 await transaction.CommitAsync(); // Si todo es exitoso, confirmamos la transacción
+
+
+                Console.WriteLine("Tratamiento creado con éxito");
+
+                cita.Estado = "Completada";
+                _context.Update(cita);
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine("Estado de la cita " + cita.Id + ": " + cita.Estado);
 
                 return RedirectToAction("DoctorHome", "Home");
             }
