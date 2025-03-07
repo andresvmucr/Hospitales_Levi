@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ProyectoBasesDatos.Models.Tratamiento>
+
+@{
+    ViewData["Title"] = "Listado de tratamientos";
+}
+
+<h1>Listado de tratamientos</h1>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Tratamiento ID: @item.Id</h5>
+                    <p class="card-text">
+                        <strong>Precio:</strong> @Html.DisplayFor(modelItem => item.Precio)<br>
+                        <strong>Fecha de la Cita:</strong> @item.IdCitaNavigation.Dia.ToShortDateString()<br>
+                        <strong>Doctor:</strong>
+                        @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.Nombre
+                        @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido
+                        @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.SegundoApellido<br>
+                        <strong>Paciente:</strong>
+                        @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.Nombre
+                        @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido
+                        @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.SegundoApellido
+                    </p>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Detalles</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

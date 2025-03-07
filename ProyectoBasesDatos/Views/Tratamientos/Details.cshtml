@@ -1,0 +1,47 @@
+﻿@model ProyectoBasesDatos.Models.Tratamiento
+
+@{
+    ViewData["Title"] = "Detalles del Tratamiento";
+}
+
+<div class="container">
+    <h1>Detalles del Tratamiento</h1>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <h4 class="card-title">Tratamiento ID: @Model.Id</h4>
+            <p class="card-text">
+                <strong>Precio:</strong> @Html.DisplayFor(model => model.Precio)<br>
+                <strong>Fecha de la Cita:</strong> @Model.IdCitaNavigation?.Dia.ToShortDateString()<br>
+            </p>
+        </div>
+    </div>
+
+    <h3 class="mt-4">Medicinas del Tratamiento</h3>
+
+    @if (Model.TratamientosMeds?.Any() == true)
+    {
+        <div class="row">
+            @foreach (var medicina in Model.TratamientosMeds)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">@medicina.IdMedicamentoNavigation?.Nombre</h5>
+                            <p class="card-text">
+                                <strong>Cantidad:</strong> @medicina.Dosis<br>
+                                <strong>Frecuencia:</strong> @medicina.Frecuencia
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No se han registrado medicinas para este tratamiento.
+        </div>
+    }
+</div>

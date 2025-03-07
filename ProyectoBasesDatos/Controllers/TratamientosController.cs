@@ -23,8 +23,26 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Tratamientoes
         public async Task<IActionResult> Index()
         {
-            var dbContext = _context.Tratamientos.Include(t => t.IdCitaNavigation);
-            return View(await dbContext.ToListAsync());
+            // Obtener el ID del hospital desde el HttpContext
+            var hospitalId = HttpContext.Session.GetString("IdHospital");
+
+            if (string.IsNullOrEmpty(hospitalId))
+            {
+                return RedirectToAction("Error", "Home"); // Redirigir a una página de error si no hay hospital seleccionado
+            }
+
+            // Consulta para obtener los tratamientos filtrados por el ID del hospital
+            var tratamientos = await _context.Tratamientos
+                .Include(t => t.IdCitaNavigation) // Incluir la cita relacionada
+                    .ThenInclude(c => c.CedulaDoctorNavigation) // Incluir el doctor relacionado
+                        .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
+                .Include(t => t.IdCitaNavigation) // Incluir la cita relacionada
+                    .ThenInclude(c => c.CedulaPacienteNavigation) // Incluir el paciente relacionado
+                        .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
+                .Where(t => t.IdCitaNavigation.Id.StartsWith(hospitalId)) // Filtrar por ID del hospital
+                .ToListAsync();
+
+            return View(tratamientos);
         }
 
 
@@ -69,14 +87,27 @@ namespace ProyectoBasesDatos.Controllers
 
             var tratamiento = await _context.Tratamientos
                 .Include(t => t.IdCitaNavigation)
+                .Include(t => t.TratamientosMeds)
+                    .ThenInclude(tm => tm.IdMedicamentoNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (tratamiento == null)
             {
                 return NotFound();
             }
 
+            // Depurar los datos
+            Console.WriteLine($"Tratamiento ID: {tratamiento.Id}");
+            Console.WriteLine($"Cantidad de Medicinas: {tratamiento.TratamientosMeds?.Count}");
+
+            foreach (var medicina in tratamiento.TratamientosMeds)
+            {
+                Console.WriteLine($"Medicina ID: {medicina.Id}, Nombre: {medicina.IdMedicamentoNavigation?.Nombre}");
+            }
+
             return View(tratamiento);
         }
+
 
         public async Task<string> GenerateNextTreatmentID()
         {
@@ -179,9 +210,9 @@ namespace ProyectoBasesDatos.Controllers
                         IdMedicamento = meds_tratamiento.Medicamento
                     };
                     _context.TratamientosMeds.Add(tratamientoMed);
+                    await _context.SaveChangesAsync();
                 }
 
-                await _context.SaveChangesAsync();
                 await transaction.CommitAsync(); // Si todo es exitoso, confirmamos la transacción
 
                 return RedirectToAction("DoctorHome", "Home");

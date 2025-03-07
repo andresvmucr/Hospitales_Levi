@@ -3,37 +3,56 @@
   "WorkspaceRootPath": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\fabig\\AppData\\Local\\Temp\\os3zjxsr..sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\citas\\attend.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\citas\\attend.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\controllers\\tratamientoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:controllers\\tratamientoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\models\\tratamientosmed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:models\\tratamientosmed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.superAdmins.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\medicamentos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\medicamentos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.doctores.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\tratamientoes\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\tratamientoes\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.horarios.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\models\\tratamiento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:models\\tratamiento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.pacientes.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\fabig\\AppData\\Local\\Temp\\os3zjxsr..sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\fabig\\AppData\\Local\\Temp\\r5mu2miy..sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\fabig\\AppData\\Local\\Temp\\os3zjxsr..sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|ResultFrame"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.citas.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.tratamientos.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.tratamientosMed.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.medicamentos.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.hospitalMed.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\tratamientos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\tratamientos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\home\\doctorhome.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\home\\doctorhome.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|c:\\users\\fabig\\onedrive\\escritorio\\hospitales_levi\\proyectobasesdatos\\views\\tratamientos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BD6F939F-BFDE-4262-84A5-E5EA4571197C}|ProyectoBasesDatos.csproj|solutionrelative:views\\tratamientos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\fabig\\AppData\\Local\\Temp\\r5mu2miy..sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\fabig\\AppData\\Local\\Temp\\r5mu2miy..sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|ResultFrame"
     }
   ],
   "DocumentGroupContainers": [
@@ -43,96 +62,161 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Attend.cshtml",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Citas\\Attend.cshtml",
-              "RelativeDocumentMoniker": "Views\\Citas\\Attend.cshtml",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Citas\\Attend.cshtml",
-              "RelativeToolTip": "Views\\Citas\\Attend.cshtml",
-              "ViewState": "AgIAAE8AAAAAAAAAAAAAAF4AAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-07T03:16:34.972Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Medicamentos\\Create.cshtml",
-              "RelativeDocumentMoniker": "Views\\Medicamentos\\Create.cshtml",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Medicamentos\\Create.cshtml",
-              "RelativeToolTip": "Views\\Medicamentos\\Create.cshtml",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAACsAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-07T03:16:15.9Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Tratamientoes\\Create.cshtml",
-              "RelativeDocumentMoniker": "Views\\Tratamientoes\\Create.cshtml",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Tratamientoes\\Create.cshtml",
-              "RelativeToolTip": "Views\\Tratamientoes\\Create.cshtml",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAABwAAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-07T03:15:19.117Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Tratamiento.cs",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Models\\Tratamiento.cs",
-              "RelativeDocumentMoniker": "Models\\Tratamiento.cs",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Models\\Tratamiento.cs",
-              "RelativeToolTip": "Models\\Tratamiento.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-07T03:14:21.612Z",
+              "Title": "dbo.superAdmins [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.superAdmins.sql",
+              "ToolTip": "dbo.superAdmins [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:21:12.373Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "TratamientosMed.cs",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Models\\TratamientosMed.cs",
-              "RelativeDocumentMoniker": "Models\\TratamientosMed.cs",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Models\\TratamientosMed.cs",
-              "RelativeToolTip": "Models\\TratamientosMed.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-07T03:14:18.667Z",
+              "Title": "dbo.horarios [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.horarios.sql",
+              "ToolTip": "dbo.horarios [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:19:45.372Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "dbo.pacientes [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.pacientes.sql",
+              "ToolTip": "dbo.pacientes [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:19:30.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SQLQuery2.sql ",
+              "DocumentMoniker": "C:\\Users\\fabig\\AppData\\Local\\Temp\\r5mu2miy..sql",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\AppData\\Local\\Temp\\r5mu2miy..sql",
+              "ToolTip": "SQLQuery2.sql *",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:18:22.876Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "TratamientosController.cs",
-              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Controllers\\TratamientosController.cs",
-              "RelativeDocumentMoniker": "Controllers\\TratamientosController.cs",
-              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Controllers\\TratamientosController.cs*",
-              "RelativeToolTip": "Controllers\\TratamientosController.cs*",
-              "ViewState": "AgIAALEAAAAAAAAAAAAMwM8AAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "OverriddenGroupName": "Controllers",
-              "WhenOpened": "2025-03-07T02:56:47.042Z",
+              "Title": "dbo.doctores [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.doctores.sql",
+              "ToolTip": "dbo.doctores [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:17:39.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "dbo.citas [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.citas.sql",
+              "ToolTip": "dbo.citas [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:16:59.439Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "dbo.hospitalMed [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.hospitalMed.sql",
+              "ToolTip": "dbo.hospitalMed [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:08:48.233Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "dbo.medicamentos [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.medicamentos.sql",
+              "ToolTip": "dbo.medicamentos [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:07:57.944Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "dbo.tratamientos [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.tratamientos.sql",
+              "ToolTip": "dbo.tratamientos [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:05:07.501Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "dbo.tratamientosMed [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_8TROGTU/Hospitales/True/SqlTable/dbo.tratamientosMed.sql",
+              "ToolTip": "dbo.tratamientosMed [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-07T04:04:43.486Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Tratamientos\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tratamientos\\Details.cshtml",
+              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Tratamientos\\Details.cshtml",
+              "RelativeToolTip": "Views\\Tratamientos\\Details.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAUwBEAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-07T04:01:54.251Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "SQLQuery1.sql ",
-              "DocumentMoniker": "C:\\Users\\fabig\\AppData\\Local\\Temp\\os3zjxsr..sql",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\AppData\\Local\\Temp\\os3zjxsr..sql",
-              "ToolTip": "SQLQuery1.sql *",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-03-07T02:10:22.213Z",
+              "Title": "TratamientosController.cs",
+              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Controllers\\TratamientosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TratamientosController.cs",
+              "ToolTip": "Controllers/TratamientosController.cs",
+              "ViewState": "AgIAAMUAAAAAAAAAAAAswMwAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "OverriddenGroupName": "Controllers",
+              "OverriddenToolTip": "Controllers/TratamientosController.cs",
+              "WhenOpened": "2025-03-07T03:42:47.212Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Tratamientos\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tratamientos\\Index.cshtml",
+              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Tratamientos\\Index.cshtml",
+              "RelativeToolTip": "Views\\Tratamientos\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "OverriddenGroupName": "Views\\Tratamientos",
+              "WhenOpened": "2025-03-07T03:41:49.361Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "DoctorHome.cshtml",
+              "DocumentMoniker": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Home\\DoctorHome.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\DoctorHome.cshtml",
+              "ToolTip": "C:\\Users\\fabig\\OneDrive\\Escritorio\\Hospitales_Levi\\ProyectoBasesDatos\\Views\\Home\\DoctorHome.cshtml",
+              "RelativeToolTip": "Views\\Home\\DoctorHome.cshtml",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAAEEAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-07T03:39:56.159Z",
               "EditorCaption": ""
             }
           ]
