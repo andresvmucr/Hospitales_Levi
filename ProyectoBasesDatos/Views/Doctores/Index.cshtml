@@ -4,71 +4,132 @@
     var currentFilter = ViewBag.CurrentFilter as string;
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2">Lista de Doctores</h1>
-        <a asp-action="Create" class="btn btn-primary d-flex align-items-center">
-            <i class="fas fa-plus me-2"></i>
-            Crear Nuevo Doctor
-        </a>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-user-md me-2"></i>Lista de Doctores
+                            </h1>
+                            <p class="text-muted mb-0">Gestión de doctores registrados en el sistema.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a asp-action="Create" class="btn btn-primary px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                <i class="fas fa-plus me-2"></i>Crear Nuevo Doctor
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Barra de búsqueda -->
-    <form asp-action="Index" method="get" class="mb-4">
-        <div class="input-group">
-            <input type="text" id="searchBox" name="searchString" value="@currentFilter" class="form-control" placeholder="Buscar por nombre o especialidad..." />
-            <button type="submit" class="btn btn-outline-secondary">
-                <i class="fas fa-search"></i>
-            </button>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Index" method="get" class="row g-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" id="searchBox" name="searchString" value="@currentFilter"
+                                       class="form-control border-start-0 ps-0"
+                                       placeholder="Buscar por nombre o especialidad..." />
+                                <button type="submit" class="btn btn-primary">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
 
+    <!-- Listado de doctores -->
     @if (doctores == null || !doctores.Any())
     {
-        <div class="text-center mt-5">
-            <i class="fas fa-user-md fa-4x text-muted mb-3"></i>
-            <h2 class="h4">No hay doctores disponibles</h2>
-            <p class="text-muted">Aún no se han registrado doctores en el sistema.</p>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-5 text-center">
+                <div class="py-5">
+                    <i class="fas fa-user-md fa-5x text-muted mb-4 opacity-50"></i>
+                    <h2 class="h4 fw-bold">No hay doctores registrados</h2>
+                    <p class="text-muted mb-4">Aún no se han registrado doctores en el sistema.</p>
+                    <a asp-action="Create" class="btn btn-primary px-4 py-2 rounded-pill">
+                        <i class="fas fa-plus me-2"></i>Crear Nuevo Doctor
+                    </a>
+                </div>
+            </div>
         </div>
     }
     else
     {
-        <div class="row row-cols-1 row-cols-md-3 g-4" id="doctorList">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="doctorList">
             @foreach (var item in doctores)
             {
                 <div class="col doctor-card" data-name="@item.NombreCompleto.ToLower()" data-specialty="@item.Especialidad.ToLower()">
-                    <div class="card h-100 shadow-sm border-0 d-flex flex-column">
-                        <div class="card-body flex-grow-1">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow position-relative">
+                        <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-user-md"></i>
+                                <div class="avatar-container me-3">
+                                    <div class="avatar bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                                        <i class="fas fa-user-md"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <h5 class="card-title mb-0">@item.NombreCompleto</h5>
-                                    <small class="text-muted">@item.Especialidad</small>
+                                    <h5 class="card-title fw-bold mb-1">@item.NombreCompleto</h5>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-stethoscope text-primary me-1 small"></i>
+                                        @item.Especialidad
+                                    </p>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <small class="text-muted">Cédula</small>
-                                <p class="mb-2">@item.Cedula</p>
-                                <small class="text-muted">Correo</small>
-                                <p class="mb-2">@item.Correo</p>
-                                <small class="text-muted">Teléfono</small>
-                                <p class="mb-0">@item.Telefono</p>
+                            <hr class="my-3">
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-id-card text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Cédula</p>
+                                        <p class="fw-medium mb-0">@item.Cedula</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-envelope text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Correo</p>
+                                        <p class="fw-medium mb-0">@item.Correo</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-phone text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Teléfono</p>
+                                        <p class="fw-medium mb-0">@item.Telefono</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <small class="text-muted">Horarios</small>
+                            <div class="mb-4">
+                                <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                    <i class="fas fa-clock text-primary me-2"></i>Horarios
+                                </h6>
                                 <ul class="list-unstyled">
                                     @foreach (var horario in item.Horarios)
                                     {
-                                        <li>@horario.Dia: @horario.HoraInicio - @horario.HoraFin</li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-calendar-day text-muted me-2"></i>
+                                            @horario.Dia: @horario.HoraInicio - @horario.HoraFin
+                                        </li>
                                     }
                                 </ul>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent border-0">
-                            <div class="d-grid gap-2">
-                                <a asp-action="Details" asp-route-id="@item.Cedula" class="btn btn-outline-primary btn-sm">
+                        <div class="card-footer bg-white border-0 pt-0">
+                            <div class="d-flex justify-content-between mt-3">
+                                <a asp-action="Details" asp-route-id="@item.Cedula" class="btn btn-outline-primary btn-sm rounded-pill px-3">
                                     <i class="fas fa-info-circle me-1"></i>Detalles
                                 </a>
                             </div>
@@ -98,3 +159,55 @@
         });
     });
 </script>
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-footer {
+        border-top: none;
+    }
+
+    .btn {
+        min-width: 120px;
+    }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    .card-title i {
+        font-size: 1.2em;
+    }
+
+    .avatar-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar {
+        background-color: #0d6efd;
+        color: white;
+        font-weight: bold;
+    }
+
+    .hover-shadow {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+</style>
+
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

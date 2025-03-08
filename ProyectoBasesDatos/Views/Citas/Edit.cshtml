@@ -4,83 +4,103 @@
     ViewData["Title"] = "Editar Cita";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h1 class="h4 mb-0">Editar Cita</h1>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-calendar-check me-2"></i>Editar Cita
+                            </h1>
+                            <p class="text-muted mb-0">Modifique los detalles de la cita médica.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver a la lista
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <h4 class="card-title">Detalles de la Cita</h4>
-            <hr />
-            <form asp-action="Edit" class="needs-validation" novalidate>
-                <input type="hidden" asp-for="Id" />
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    </div>
 
-                <!-- Seleccionar Paciente -->
-                <div class="mb-3">
-                    <label asp-for="CedulaPaciente" class="form-label">Paciente</label>
-                    <input asp-for="CedulaPaciente" class="form-control" asp-items="ViewBag.CedulaPaciente" />
-                    <span asp-validation-for="CedulaPaciente" class="text-danger"></span>
-                </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Edit" class="needs-validation" novalidate>
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
 
-                <!-- Seleccionar Especialidad -->
-                <div class="mb-3">
-                    <label class="form-label">Especialidad</label>
-                    <select id="Especialidad" class="form-control" asp-items="ViewBag.Especialidad" required>
-                        <option value="">-- Seleccione una especialidad --</option>
-                    </select>
-                    <div class="invalid-feedback">Por favor, seleccione una especialidad.</div>
-                </div>
+                        <!-- Seleccionar Paciente -->
+                        <div class="form-floating mb-4">
+                            <input asp-for="CedulaPaciente" class="form-control" asp-items="ViewBag.CedulaPaciente" />
+                            <label asp-for="CedulaPaciente"><i class="fas fa-user me-1"></i>Paciente</label>
+                            <span asp-validation-for="CedulaPaciente" class="text-danger small"></span>
+                        </div>
 
-                <!-- Seleccionar Doctor -->
-                <div class="form-group">
-                    <label asp-for="CedulaDoctor" class="control-label">Doctor</label>
-                    <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control" asp-items="ViewBag.CedulaDoctor">
-                        <option value="">-- Seleccione un doctor --</option>
-                    </select>
-                    <span asp-validation-for="CedulaDoctor" class="text-danger"></span>
-                </div>
+                        <!-- Seleccionar Especialidad -->
+                        <div class="form-floating mb-4">
+                            <select id="Especialidad" class="form-select" asp-items="ViewBag.Especialidad" required>
+                                <option value="">-- Seleccione una especialidad --</option>
+                            </select>
+                            <label><i class="fas fa-stethoscope me-1"></i>Especialidad</label>
+                            <div class="invalid-feedback">Por favor, seleccione una especialidad.</div>
+                        </div>
 
-                <!-- Seleccionar Día -->
-                <div class="mb-3">
-                    <label asp-for="Dia" class="form-label">Día</label>
-                    <input asp-for="Dia" id="Dia" type="date" class="form-control" required />
-                    <span asp-validation-for="Dia" class="text-danger"></span>
-                    <div class="invalid-feedback">Por favor, seleccione un día.</div>
-                </div>
+                        <!-- Seleccionar Doctor -->
+                        <div class="form-floating mb-4">
+                            <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-select" required>
+                                <option value="">-- Seleccione un doctor --</option>
+                            </select>
+                            <label asp-for="CedulaDoctor"><i class="fas fa-user-md me-1"></i>Doctor</label>
+                            <span asp-validation-for="CedulaDoctor" class="text-danger small"></span>
+                        </div>
 
-                <!-- Seleccionar Hora -->
-                <div class="mb-3">
-                    <label asp-for="Hora" class="form-label">Hora</label>
-                    <select asp-for="Hora" id="Hora" class="form-control" required>
-                        <option value="">-- Seleccione una hora --</option>
-                    </select>
-                    <span asp-validation-for="Hora" class="text-danger"></span>
-                    <div class="invalid-feedback">Por favor, seleccione una hora.</div>
-                </div>
+                        <!-- Seleccionar Día -->
+                        <div class="form-floating mb-4">
+                            <input asp-for="Dia" id="Dia" type="date" class="form-control" required />
+                            <label asp-for="Dia"><i class="fas fa-calendar-day me-1"></i>Día</label>
+                            <span asp-validation-for="Dia" class="text-danger small"></span>
+                            <div class="invalid-feedback">Por favor, seleccione un día.</div>
+                        </div>
 
-                <!-- Estado de la Cita -->
-                <div class="mb-3">
-                    <label asp-for="Estado" class="form-label">Estado de la Cita</label>
-                    <select asp-for="Estado" class="form-control" required>
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Cancelado">Cancelado</option>
-                        <option value="Ausente">Ausente</option>
-                    </select>
-                    <span asp-validation-for="Estado" class="text-danger"></span>
-                    <div class="invalid-feedback">Por favor, seleccione un estado.</div>
-                </div>
+                        <!-- Seleccionar Hora -->
+                        <div class="form-floating mb-4">
+                            <select asp-for="Hora" id="Hora" class="form-select" required>
+                                <option value="">-- Seleccione una hora --</option>
+                            </select>
+                            <label asp-for="Hora"><i class="fas fa-clock me-1"></i>Hora</label>
+                            <span asp-validation-for="Hora" class="text-danger small"></span>
+                            <div class="invalid-feedback">Por favor, seleccione una hora.</div>
+                        </div>
 
-                <!-- Botones de Acción -->
-                <div class="d-flex justify-content-end gap-2 mt-4">
-                    <a asp-action="Index" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i> Volver a la lista
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i> Guardar Cambios
-                    </button>
+                        <!-- Estado de la Cita -->
+                        <div class="form-floating mb-4">
+                            <select asp-for="Estado" class="form-select" required>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Cancelado">Cancelado</option>
+                                <option value="Ausente">Ausente</option>
+                            </select>
+                            <label asp-for="Estado"><i class="fas fa-info-circle me-1"></i>Estado de la Cita</label>
+                            <span asp-validation-for="Estado" class="text-danger small"></span>
+                            <div class="invalid-feedback">Por favor, seleccione un estado.</div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

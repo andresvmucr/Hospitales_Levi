@@ -1,59 +1,134 @@
 ﻿@model ProyectoBasesDatos.Models.Usuario
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Nuevo Administrador";
 }
 
-<h1>Create</h1>
-
-<h4>Usuario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control" />
-                <span asp-validation-for="Correo" class="text-danger"></span>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-0">Crear Nuevo Administrador</h1>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-3">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Volver al listado
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PrimerApellido" class="control-label"></label>
-                <input asp-for="PrimerApellido" class="form-control" />
-                <span asp-validation-for="PrimerApellido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SegundoApellido" class="control-label"></label>
-                <input asp-for="SegundoApellido" class="form-control" />
-                <span asp-validation-for="SegundoApellido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdHospital" class="control-label"></label>
-                <select asp-for="IdHospital" class="form-control" asp-items="ViewBag.Hospitales"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white p-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">Información del Administrador</h5>
+                            <p class="text-muted mb-0 small">Complete todos los campos para crear un nuevo usuario administrador</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" id="createUserForm" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                <i class="fas fa-id-card me-2"></i>Información Personal
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input asp-for="Nombre" class="form-control" id="inputNombre" placeholder="Nombre" required />
+                                        <label asp-for="Nombre">Nombre</label>
+                                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input asp-for="PrimerApellido" class="form-control" id="inputPrimerApellido" placeholder="Primer Apellido" required />
+                                        <label asp-for="PrimerApellido">Primer Apellido</label>
+                                        <span asp-validation-for="PrimerApellido" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="SegundoApellido" class="form-control" id="inputSegundoApellido" placeholder="Segundo Apellido" />
+                                <label asp-for="SegundoApellido">Segundo Apellido</label>
+                                <span asp-validation-for="SegundoApellido" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                <i class="fas fa-address-book me-2"></i>Información de Contacto
+                            </h6>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Correo" class="form-control" id="inputCorreo" placeholder="correo@ejemplo.com" required />
+                                <label asp-for="Correo">Correo electrónico</label>
+                                <span asp-validation-for="Correo" class="text-danger"></span>
+                                <div class="form-text">Este correo será utilizado como identificador del usuario en el sistema.</div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Telefono" class="form-control" id="inputTelefono" placeholder="Teléfono" pattern="[0-9]{1,8}" maxlength="8" required />
+                                <label asp-for="Telefono">Teléfono</label>
+                                <span asp-validation-for="Telefono" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                <i class="fas fa-hospital me-2"></i>Asignación
+                            </h6>
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdHospital" class="form-select" id="inputHospital" asp-items="ViewBag.Hospitales" required>
+                                    <option value="">Seleccione un hospital</option>
+                                </select>
+                                <label asp-for="IdHospital">Hospital</label>
+                                <span asp-validation-for="IdHospital" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("Index")'">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </button>
+                            <div>
+                                <button type="reset" class="btn btn-outline-secondary me-2">
+                                    <i class="fas fa-eraser me-2"></i>Limpiar
+                                </button>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="fas fa-save me-2"></i>Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.getElementById('inputTelefono').addEventListener('input', function (event) {
+            // Elimina cualquier carácter que no sea un número
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
 }

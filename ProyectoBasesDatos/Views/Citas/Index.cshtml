@@ -4,95 +4,156 @@
     ViewData["Title"] = "Citas";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2">
-            <i class="fas fa-calendar-check me-2"></i>Citas
-        </h1>
-        <a asp-action="Create" class="btn btn-success d-flex align-items-center">
-            <i class="fas fa-plus me-2"></i>Crear Nueva Cita
-        </a>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-calendar-check me-2"></i>Citas
+                            </h1>
+                            <p class="text-muted mb-0">Gestión de citas médicas registradas en el sistema.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a asp-action="Create" class="btn btn-success px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                <i class="fas fa-plus me-2"></i>Crear Nueva Cita
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         @foreach (var item in Model)
         {
             <div class="col">
-                <div class="card shadow-sm h-100">
+                <div class="card h-100 border-0 shadow-sm hover-shadow position-relative">
                     <div class="card-body">
-                        <!-- Estado de la cita -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <span class="badge @(item.Estado == "Pendiente" ? "bg-warning" : item.Estado == "Completada" ? "bg-success" : "bg-secondary")">
                                 @item.Estado
                             </span>
                             <div>
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                @if (item.Estado != "Pagada")
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                }
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="Detalles">
                                     <i class="fas fa-info-circle"></i>
                                 </a>
                             </div>
                         </div>
 
-                        <!-- Información de la cita -->
-                        <h5 class="card-title">Cita</h5>
-                        <p class="card-text">
-                            <strong>Día:</strong> @item.Dia.ToString("dd/MM/yyyy")<br>
-                            <strong>Hora:</strong> @item.Hora.ToString(@"hh\:mm")
-                        </p>
+                        <h5 class="card-title fw-bold mb-3">Cita Médica</h5>
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-calendar-day text-muted me-3"></i>
+                                <div>
+                                    <p class="text-muted mb-0 small">Fecha</p>
+                                    <p class="fw-medium mb-0">@item.Dia.ToString("dd/MM/yyyy")</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-clock text-muted me-3"></i>
+                                <div>
+                                    <p class="text-muted mb-0 small">Hora</p>
+                                    <p class="fw-medium mb-0">@item.Hora.ToString(@"hh\:mm")</p>
+                                </div>
+                            </div>
+                        </div>
 
-                        <!-- Información del doctor -->
-                        <h6 class="card-subtitle mb-2 text-muted">Doctor</h6>
-                        <p class="card-text">
-                            @if (item.CedulaDoctorNavigation != null && item.CedulaDoctorNavigation.CorreoNavigation != null)
-                            {
-                                @($"{item.CedulaDoctorNavigation.CorreoNavigation.Nombre} {item.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido} {item.CedulaDoctorNavigation.CorreoNavigation.SegundoApellido}")
-                            }
-                            else
-                            {
-                                <span class="text-muted">No disponible</span>
-                            }
-                        </p>
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                <i class="fas fa-user-md me-2"></i>Doctor
+                            </h6>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user text-muted me-3"></i>
+                                <div>
+                                    <p class="text-muted mb-0 small">Nombre</p>
+                                    <p class="fw-medium mb-0">
+                                        @if (item.CedulaDoctorNavigation != null && item.CedulaDoctorNavigation.CorreoNavigation != null)
+                                        {
+                                            @($"{item.CedulaDoctorNavigation.CorreoNavigation.Nombre} {item.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido} {item.CedulaDoctorNavigation.CorreoNavigation.SegundoApellido}")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No disponible</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
-                        <!-- Información del paciente -->
-                        <h6 class="card-subtitle mb-2 text-muted">Paciente</h6>
-                        <p class="card-text">
-                            @if (item.CedulaPacienteNavigation != null && item.CedulaPacienteNavigation.CorreoNavigation != null)
-                            {
-                                @($"{item.CedulaPacienteNavigation.CorreoNavigation.Nombre} {item.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido} {item.CedulaPacienteNavigation.CorreoNavigation.SegundoApellido}")
-                            }
-                            else
-                            {
-                                <span class="text-muted">No disponible</span>
-                            }
-                        </p>
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                <i class="fas fa-user-injured me-2"></i>Paciente
+                            </h6>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user text-muted me-3"></i>
+                                <div>
+                                    <p class="text-muted mb-0 small">Nombre</p>
+                                    <p class="fw-medium mb-0">
+                                        @if (item.CedulaPacienteNavigation != null && item.CedulaPacienteNavigation.CorreoNavigation != null)
+                                        {
+                                            @($"{item.CedulaPacienteNavigation.CorreoNavigation.Nombre} {item.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido} {item.CedulaPacienteNavigation.CorreoNavigation.SegundoApellido}")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No disponible</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body p-5 text-center">
+                <div class="py-5">
+                    <i class="fas fa-calendar-times fa-5x text-muted mb-4 opacity-50"></i>
+                    <h2 class="h4 fw-bold">No hay citas registradas</h2>
+                    <p class="text-muted mb-4">Aún no se han registrado citas en el sistema.</p>
+                    <a asp-action="Create" class="btn btn-success px-4 py-2 rounded-pill">
+                        <i class="fas fa-plus me-2"></i>Crear Nueva Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        .card {
-            border: none;
-            border-radius: 10px;
+        /* Efecto hover en las tarjetas */
+        .hover-shadow {
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
-            .card:hover {
+            .hover-shadow:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             }
 
+        /* Estilos para los badges */
         .badge {
             font-size: 0.9em;
             padding: 0.5em 0.75em;
         }
 
+        /* Estilos para los botones pequeños */
         .btn-sm {
             margin-right: 5px;
         }
