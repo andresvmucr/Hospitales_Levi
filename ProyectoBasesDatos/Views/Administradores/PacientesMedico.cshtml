@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Pacientes por Médico";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4 text-center mb-4">Pacientes por Médico</h1>
+
+    <!-- Formulario para ingresar los parámetros -->
+    <form id="formPacientesPorMedico" class="mb-4">
+        <div class="form-group">
+            <label for="cedulaDoctor">Cédula del Doctor</label>
+            <input type="text" class="form-control" id="cedulaDoctor" name="cedulaDoctor" required>
+        </div>
+        <div class="form-group">
+            <label for="fechaInicio">Fecha de Inicio</label>
+            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+        </div>
+        <div class="form-group">
+            <label for="fechaFin">Fecha de Fin</label>
+            <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Obtener Datos</button>
+    </form>
+
+    <!-- Tabla para mostrar los resultados -->
+    <h2>Resultados</h2>
+    <table id="tablaPacientes" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Género</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Fecha de Cita</th>
+                <th>Hora de Cita</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos se llenarán dinámicamente -->
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#formPacientesPorMedico").submit(function (e) {
+                e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+                var cedulaDoctor = $("#cedulaDoctor").val();
+                var fechaInicio = $("#fechaInicio").val();
+                var fechaFin = $("#fechaFin").val();
+
+                $.ajax({
+                    url: "@Url.Action("ObtenerPacientesPorMedico", "Administradores")",
+                    type: "POST",
+                    data: { cedulaDoctor: cedulaDoctor, fechaInicio: fechaInicio, fechaFin: fechaFin },
+                    success: function (response) {
+                        console.log(response); // Imprime la respuesta en la consola
+                        if (response.success) {
+                            // Limpia la tabla antes de agregar nuevos datos
+                            $("#tablaPacientes tbody").empty();
+
+                            // Llena la tabla con los datos
+                            response.pacientes.forEach(function (item) {
+                                $("#tablaPacientes tbody").append(
+                                    `<tr>
+                                        <td>${item.cedulaPaciente}</td>
+                                        <td>${item.nombrePaciente} ${item.PrimerApellidoPaciente} ${item.SegundoApellidoPaciente}</td>
+                                        <td>${item.direccionPaciente}</td>
+                                        <td>${item.generoPaciente}</td>
+                                        <td>${item.fechaNacimientoPaciente}</td>
+                                        <td>${item.fechaCita}</td>
+                                        <td>${item.horaCita}</td>
+                                    </tr>`
+                                );
+                            });
+                        } else {
+                            alert(response.message); // Muestra un mensaje de error
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", status, error);
+                        alert("Ocurrió un error al procesar la solicitud.");
+                    }
+                });
+            });
+        });
+    </script>
+}

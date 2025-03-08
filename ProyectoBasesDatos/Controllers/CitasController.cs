@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ProyectoBasesDatos.Models;
+using System.Data;
 
 namespace ProyectoBasesDatos.Controllers
 {
@@ -224,18 +226,65 @@ namespace ProyectoBasesDatos.Controllers
             Console.WriteLine("CedulaPaciente: " + cita.CedulaPaciente);
             Console.WriteLine("CedulaDoctor: " + cita.CedulaDoctor);
 
+            try
+            {
+                // Generar el ID de la cita
+                cita.Id = await GenerateNextIDApp();
 
-            cita.Id = await GenerateNextIDApp();
-            _context.Add(cita);
-            await _context.SaveChangesAsync();
-            if (HttpContext.Session.GetString("Rol") == "Admin")
-            {
-                return RedirectToAction(nameof(Index));
-            } else
-            {
-                return RedirectToAction("PatientHome", "Home");
+                // Obtener la cadena de conexión
+                var connectionString = _context.Database.GetDbConnection().ConnectionString;
+
+                // Crear la conexión y el comando
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    Console.WriteLine("Hora: ");
+                    using (var command = new SqlCommand("RegistrarCita", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Agregar los parámetros del procedimiento almacenado
+                        command.Parameters.AddWithValue("@IdCita", cita.Id);
+                        command.Parameters.AddWithValue("@Dia", cita.Dia);
+                        command.Parameters.AddWithValue("@Hora", cita.Hora);
+                        command.Parameters.AddWithValue("@CedulaPaciente", cita.CedulaPaciente);
+                        command.Parameters.AddWithValue("@CedulaDoctor", cita.CedulaDoctor);
+                        command.Parameters.AddWithValue("@Estado", cita.Estado);
+
+                        // Ejecutar el procedimiento almacenado
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                // Redirigir según el rol del usuario
+                if (HttpContext.Session.GetString("Rol") == "Admin")
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return RedirectToAction("PatientHome", "Home");
+                }
             }
-                
+            catch (SqlException ex)
+            {
+                // Capturar errores de SQL, incluyendo los RAISERROR del procedimiento almacenado
+                Console.WriteLine("Error SQL: " + ex.Message);
+
+                // Mostrar el mensaje de error en la vista
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(cita); // Retornar a la vista con el mensaje de error
+            }
+            catch (Exception ex)
+            {
+                // Capturar otros errores
+                Console.WriteLine("Error: " + ex.Message);
+
+                // Mostrar un mensaje de error genérico
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al registrar la cita.");
+                return View(cita); // Retornar a la vista con el mensaje de error
+            }
         }
 
         // GET: Citas/Edit/5
@@ -341,18 +390,67 @@ namespace ProyectoBasesDatos.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+
+        public async Task<string> GenerateNextID()
+        {
+            var pagos = await _context.Pagos
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefaultAsync();
+            var nextID = 0;
+            if (pagos != null)
+            {
+                string lastID = pagos.Id;
+                Console.WriteLine("LAST ID:" + lastID);
+                if (lastID.Contains("PAG"))
+                {
+                    string number = lastID.Substring(3);
+                    if (int.TryParse(number, out int lastNumber))
+                    {
+                        nextID = lastNumber + 1;
+                    }
+                }
+            }
+
+            string newId = $"PAG{nextID:D3}";
+            Console.WriteLine("NEW ID:" + newId);
+            return newId;
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Pagar(string id)
         {
+            Console.WriteLine("Pagando cita");
             var cita = await _context.Citas.FindAsync(id);
             if (cita == null)
             {
                 return NotFound();
             }
 
+            var tratamiento = await _context.Tratamientos
+            .FirstOrDefaultAsync(t => t.IdCita == cita.Id);
+
+            Console.WriteLine("Total: " + tratamiento.Precio);
+          
+            var pago = new Pago
+            {
+                Id = await GenerateNextID(),
+                Fecha = DateOnly.FromDateTime(DateTime.Now), // Convertir DateTime.Now a DateOnly
+                Total = tratamiento.Precio,
+                MetodoPago = "Tarjeta",
+                Estado = "Pagado",
+                CedulaPaciente = cita.CedulaPaciente,
+                IdCita = cita.Id
+            };
+
+            _context.Add(pago);
+            await _context.SaveChangesAsync();
+
             cita.Estado = "Pagada"; // Cambiar el estado de la cita a "Pagada"
             _context.Update(cita);
             await _context.SaveChangesAsync();
+
 
             return Ok();
         }

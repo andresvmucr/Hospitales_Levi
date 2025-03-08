@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Consultas Avanzadas";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4 text-center mb-4" style="color: #3f51b5;">Consultas Avanzadas</h1>
+    <div class="row mt-4">
+
+        <!-- Pacientes atendidos por médico -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #f1f8ff;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #1976d2;">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Pacientes Atendidos por Médico</h5>
+                    <p class="card-text text-muted">Obtén todos los pacientes atendidos por un médico específico durante un periodo determinado.</p>
+                    <a asp-controller="Administradores" asp-action="PacientesMedico" class="btn btn-primary" style="background-color: #1976d2; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventario de medicamentos y prescripciones -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #f0f8f1;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #43a047;">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Inventario y Prescripciones</h5>
+                    <p class="card-text text-muted">Consulta el inventario de medicamentos y las prescripciones realizadas en los últimos 30 días.</p>
+                    <a asp-controller="Administradores" asp-action="InventarioPrescripcion" class="btn btn-primary" style="background-color: #43a047; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial de pagos pendientes -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #fff3e0;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #ff9800;">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Pagos Pendientes</h5>
+                    <p class="card-text text-muted">Obtén el historial de pagos pendientes de un paciente.</p>
+                    <a asp-controller="Administradores" asp-action="PagosPendientes" class="btn btn-primary" style="background-color: #ff9800; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total de pagos realizados por paciente -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; transition: transform 0.3s;">
+                <div class="card-body text-center p-4" style="background-color: #f4f0f9;">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #7b1fa2;">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h5 class="card-title" style="color: #2c3e50; font-weight: 600;">Total de Pagos</h5>
+                    <p class="card-text text-muted">Calcula el total de pagos realizados por un paciente en un rango de fechas específico.</p>
+                    <a asp-controller="Administradores" asp-action="TotalPagos" class="btn btn-primary" style="background-color: #7b1fa2; border: none; border-radius: 5px;">
+                        <i class="fas fa-arrow-right me-2"></i>Ver más
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+}

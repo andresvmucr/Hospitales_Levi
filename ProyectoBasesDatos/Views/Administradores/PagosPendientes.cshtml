@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Pagos Pendientes";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4 text-center mb-4">Pagos Pendientes</h1>
+
+    <!-- Formulario para ingresar la cédula del paciente -->
+    <form id="formPagosPendientes" class="mb-4">
+        <div class="form-group">
+            <label for="idPaciente">Cédula del Paciente</label>
+            <input type="text" class="form-control" id="idPaciente" name="idPaciente" required>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <span id="loadingSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            Obtener Datos
+        </button>
+    </form>
+
+    <!-- Tabla para mostrar los resultados -->
+    <h2>Resultados</h2>
+    <table id="tablaPagosPendientes" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Pago Pendiente</th>
+                <th>ID Cita</th>
+                <th>Fecha de Cita</th>
+                <th>Hora de Cita</th>
+                <th>Especialidad del Doctor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos se llenarán dinámicamente -->
+        </tbody>
+    </table>
+
+    <!-- Mensaje de error -->
+    <div id="errorMessage" class="alert alert-danger d-none mt-3"></div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#formPagosPendientes").submit(function (e) {
+                e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+                var idPaciente = $("#idPaciente").val();
+
+                // Validar que la cédula no esté vacía
+                if (!idPaciente) {
+                    alert("Por favor, ingrese la cédula del paciente.");
+                    return;
+                }
+
+                // Mostrar el spinner de carga
+                $("#loadingSpinner").removeClass("d-none");
+                $("#errorMessage").addClass("d-none"); // Ocultar mensaje de error
+
+                $.ajax({
+                    url: "@Url.Action("PagosPendientes", "Administradores")",
+                    type: "POST",
+                    data: { idPaciente: idPaciente },
+                    success: function (response) {
+                        console.log(response); // Imprime la respuesta en la consola
+
+                        // Ocultar el spinner de carga
+                        $("#loadingSpinner").addClass("d-none");
+
+                        if (response.success) {
+                            // Limpia la tabla antes de agregar nuevos datos
+                            $("#tablaPagosPendientes tbody").empty();
+
+                            // Llena la tabla con los datos
+                            response.pagosPendientes.forEach(function (item) {
+                                $("#tablaPagosPendientes tbody").append(
+                                    `<tr>
+                                        <td>${formatCurrency(item.pagoPendiente)}</td>
+                                        <td>${item.idCita}</td>
+                                        <td>${formatDate(item.fechaCita)}</td>
+                                        <td>${item.horaCita}</td>
+                                        <td>${item.nombreEspecialidad}</td>
+                                    </tr>`
+                                );
+                            });
+                        } else {
+                            // Mostrar mensaje de error
+                            $("#errorMessage").text(response.message).removeClass("d-none");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", status, error);
+
+                        // Ocultar el spinner de carga
+                        $("#loadingSpinner").addClass("d-none");
+
+                        // Mostrar mensaje de error
+                        $("#errorMessage").text("Ocurrió un error al procesar la solicitud. Inténtelo de nuevo más tarde.").removeClass("d-none");
+                    }
+                });
+            });
+
+            // Función para formatear fechas
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' });
+            }
+
+            // Función para formatear montos como moneda
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat("es-ES", { style: "currency", currency: "CRC" }).format(amount);
+            }
+        });
+    </script>
+}

@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "Inventario y Prescripciones";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4 text-center mb-4">Inventario y Prescripciones</h1>
+
+    <!-- Formulario para ingresar el ID del hospital -->
+    <form id="formInventarioPrescripciones" class="mb-4">
+        <div class="form-group">
+            <label for="idHospital">ID del Hospital</label>
+            <input type="text" class="form-control" id="idHospital" name="idHospital" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Obtener Datos</button>
+    </form>
+
+    <!-- Tabla para mostrar el inventario -->
+    <h2>Inventario de Medicamentos</h2>
+    <table id="tablaInventario" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Cantidad Disponible</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos se llenarán dinámicamente -->
+        </tbody>
+    </table>
+
+    <!-- Tabla para mostrar las prescripciones -->
+    <h2>Prescripciones (Últimos 30 días)</h2>
+    <table id="tablaPrescripciones" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID Prescripción</th>
+                <th>Medicamento</th>
+                <th>Dosis</th>
+                <th>Frecuencia</th>
+                <th>Fecha</th>
+                <th>Precio</th>
+                <th>Paciente</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos se llenarán dinámicamente -->
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#formInventarioPrescripciones").submit(function (e) {
+                e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+                var idHospital = $("#idHospital").val();
+
+                $.ajax({
+                    url: "@Url.Action("InventarioPrescripcion", "Administradores")",
+                    type: "POST",
+                    data: { idHospital: idHospital },
+                    success: function (response) {
+                        console.log(response); // Imprime la respuesta en la consola del navegador
+                        if (response.success) {
+                            // Limpia las tablas antes de agregar nuevos datos
+                            $("#tablaInventario tbody").empty();
+                            $("#tablaPrescripciones tbody").empty();
+
+                            // Llena la tabla de inventario
+                            response.inventario.forEach(function (item) {
+                                $("#tablaInventario tbody").append(
+                                    `<tr>
+                                        <td>${item.idMedicamento}</td>
+                                        <td>${item.nombreMedicamento}</td>
+                                        <td>${item.descripcionMedicamento}</td>
+                                        <td>${item.precioMedicamento}</td>
+                                        <td>${item.cantidadDisponible}</td>
+                                    </tr>`
+                                );
+                            });
+
+                            // Llena la tabla de prescripciones
+                            response.prescripciones.forEach(function (item) {
+                                $("#tablaPrescripciones tbody").append(
+                                    `<tr>
+                                        <td>${item.idPrescripcion}</td>
+                                        <td>${item.nombreMedicamento}</td>
+                                        <td>${item.dosis}</td>
+                                        <td>${item.frecuencia}</td>
+                                        <td>${item.fechaPrescripcion}</td>
+                                        <td>${item.precioTratamiento}</td>
+                                        <td>${item.nombrePaciente} ${item.primerApellidoPaciente} ${item.segundoApellidoPaciente}</td>
+                                    </tr>`
+                                );
+                            });
+                        } else {
+                            alert(response.message); // Muestra un mensaje de error
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", status, error);
+                        alert("Ocurrió un error al procesar la solicitud.");
+                    }
+                });
+            });
+        });
+    </script>
+}
