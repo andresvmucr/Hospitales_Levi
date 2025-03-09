@@ -23,14 +23,10 @@ namespace ProyectoBasesDatos.Controllers
         public async Task<IActionResult> Index()
         {
             var idHospital = HttpContext.Session.GetString("IdHospital");
-
             if (string.IsNullOrEmpty(idHospital))
             {
-                // Si no hay un IdHospital en la sesión, redirigir o mostrar un mensaje de error
                 return RedirectToAction("Error", "Home");
             }
-
-            // Filtrar los medicamentos por el IdHospital
             var medicamentos = await _context.Medicamentos
                 .Include(m => m.IdHospitalMedicamentoNavigation)
                     .ThenInclude(hm => hm.IdHospitalNavigation)
@@ -49,17 +45,9 @@ namespace ProyectoBasesDatos.Controllers
             }
 
             var medicamento = await _context.Medicamentos
-                .Include(m => m.IdHospitalMedicamentoNavigation) // Relación con HospitalMed
-                    .ThenInclude(hm => hm.IdHospitalNavigation) // Relación con Hospital
+                .Include(m => m.IdHospitalMedicamentoNavigation) 
+                    .ThenInclude(hm => hm.IdHospitalNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (medicamento == null)
-            {
-                return NotFound();
-            }
-
-            // Verifica si necesitas más información de otras tablas relacionadas
-            // Por ejemplo, si tienes más entidades relacionadas con Medicamento
 
             return View(medicamento);
         }
@@ -76,10 +64,7 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Medicamentos/Create
         public async Task<IActionResult> Create()
         {
-            // Generar el ID
             var newId = await GenerateNextIDMed();
-
-            // Pasar el ID a la vista
             ViewBag.GeneratedId = newId;
 
             return View();
@@ -94,13 +79,10 @@ namespace ProyectoBasesDatos.Controllers
                                          int Precio,
                                          int Cantidad)
         {
-            // Obtener el IdHospital de la sesión
             var idHospital = HttpContext.Session.GetString("IdHospital");
 
-            // Generar el ID y asignarlo al modelo
             var hospital_med_id = await GenerateNextIDMed();
 
-            // Crear el registro en HospitalMed
             var hospitalMed = new HospitalMed
             {
                 Id = hospital_med_id,
@@ -109,13 +91,10 @@ namespace ProyectoBasesDatos.Controllers
                 IdHospital = idHospital
             };
 
-            // Guardar en la base de datos
             _context.Add(hospitalMed);
             await _context.SaveChangesAsync();
 
             medicamento.Id = hospital_med_id.Substring(5);
-            Console.WriteLine(medicamento.Id);
-            // Asignar el IdHospitalMedicamento al medicamento
             medicamento.IdHospitalMedicamento = hospitalMed.Id;
 
             _context.Add(medicamento);
@@ -153,9 +132,8 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Medicamentos/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            // Incluir la entidad relacionada HospitalMed
             var medicamento = await _context.Medicamentos
-                .Include(m => m.IdHospitalMedicamentoNavigation) // Incluir HospitalMed
+                .Include(m => m.IdHospitalMedicamentoNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (medicamento == null)
@@ -164,8 +142,6 @@ namespace ProyectoBasesDatos.Controllers
             }
             ViewBag.Cantidad = medicamento.IdHospitalMedicamentoNavigation.Cantidad;
             ViewBag.Precio = medicamento.IdHospitalMedicamentoNavigation.Precio;
-
-            Console.WriteLine("Precio:" + medicamento.IdHospitalMedicamentoNavigation.Precio);
             ViewData["IdHospitalMedicamento"] = new SelectList(_context.HospitalMeds, "Id", "Id", medicamento.IdHospitalMedicamento);
             return View(medicamento);
         }
@@ -179,19 +155,17 @@ namespace ProyectoBasesDatos.Controllers
         {
             try
             {
-                // Obtener el registro de HospitalMed relacionado
+                Console.WriteLine("ID HOSPMED  " + medicamento.IdHospitalMedicamento);
                 var hospitalMed = await _context.HospitalMeds
                     .FirstOrDefaultAsync(hm => hm.Id == medicamento.IdHospitalMedicamento);
 
+                Console.WriteLine("Evaluando if");
                 if (hospitalMed != null)
                 {
-                    // Actualizar los valores de Cantidad y Precio
                     hospitalMed.Cantidad = Cantidad;
                     hospitalMed.Precio = Precio;
                     _context.Update(hospitalMed);
                 }
-
-                // Actualizar el medicamento
                 _context.Update(medicamento);
                 await _context.SaveChangesAsync();
             }

@@ -6,7 +6,6 @@
 }
 
 <div class="container-fluid py-4">
-    <!-- Header con título y botón de crear -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card bg-light border-0 shadow-sm">
@@ -29,7 +28,6 @@
         </div>
     </div>
 
-    <!-- Barra de búsqueda mejorada -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
@@ -52,7 +50,6 @@
         </div>
     </div>
 
-    <!-- Listado de pacientes -->
     @if (Model == null || !Model.Any())
     {
         <div class="card border-0 shadow-sm">
@@ -165,7 +162,6 @@
     });
 </script>
 
-<!-- Estilos adicionales -->
 <style>
     .card {
         border: none;

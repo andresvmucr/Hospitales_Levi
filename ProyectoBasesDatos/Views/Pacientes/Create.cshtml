@@ -50,7 +50,7 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input asp-for="Cedula" class="form-control" id="inputCedula" placeholder="Cédula" required />
+                                        <input asp-for="Cedula" class="form-control" id="inputCedula" placeholder="Cédula" maxlength="9" required />
                                         <label asp-for="Cedula">Cédula</label>
                                         <span asp-validation-for="Cedula" class="text-danger"></span>
                                     </div>
@@ -102,7 +102,7 @@
                                 <span asp-validation-for="Correo" class="text-danger"></span>
                             </div>
                             <div class="form-floating mb-3">
-                                <input name="Telefono" class="form-control" id="inputTelefono" placeholder="Teléfono" pattern="[0-9]{1,8}" maxlength="8" required />
+                                <input name="Telefono" class="form-control" id="inputTelefono" placeholder="Teléfono" maxlength="8" required />
                                 <label for="Telefono">Teléfono</label>
                             </div>
                             <div class="form-floating mb-3">
@@ -155,9 +155,20 @@
             });
         })();
 
-        // Validación del teléfono - solo permitir números
+        // Validación de la cédula - solo permitir números y máximo 9 dígitos
+        document.getElementById('inputCedula').addEventListener('input', function (event) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 9) {
+                this.value = this.value.slice(0, 9);
+            }
+        });
+
+        // Validación del teléfono - solo permitir números y máximo 8 dígitos
         document.getElementById('inputTelefono').addEventListener('input', function (event) {
             this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 8) {
+                this.value = this.value.slice(0, 8);
+            }
         });
     </script>
 }

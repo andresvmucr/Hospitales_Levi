@@ -23,23 +23,21 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Tratamientoes
         public async Task<IActionResult> Index()
         {
-            // Obtener el ID del hospital desde el HttpContext
             var hospitalId = HttpContext.Session.GetString("IdHospital");
 
             if (string.IsNullOrEmpty(hospitalId))
             {
-                return RedirectToAction("Error", "Home"); // Redirigir a una página de error si no hay hospital seleccionado
+                return RedirectToAction("Error", "Home");
             }
 
-            // Consulta para obtener los tratamientos filtrados por el ID del hospital
             var tratamientos = await _context.Tratamientos
-                .Include(t => t.IdCitaNavigation) // Incluir la cita relacionada
-                    .ThenInclude(c => c.CedulaDoctorNavigation) // Incluir el doctor relacionado
-                        .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
-                .Include(t => t.IdCitaNavigation) // Incluir la cita relacionada
-                    .ThenInclude(c => c.CedulaPacienteNavigation) // Incluir el paciente relacionado
-                        .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
-                .Where(t => t.IdCitaNavigation.Id.StartsWith(hospitalId)) // Filtrar por ID del hospital
+                .Include(t => t.IdCitaNavigation) 
+                    .ThenInclude(c => c.CedulaDoctorNavigation)
+                        .ThenInclude(d => d.CorreoNavigation) 
+                .Include(t => t.IdCitaNavigation) 
+                    .ThenInclude(c => c.CedulaPacienteNavigation) 
+                        .ThenInclude(p => p.CorreoNavigation) 
+                .Where(t => t.IdCitaNavigation.Id.StartsWith(hospitalId))
                 .ToListAsync();
 
             return View(tratamientos);
@@ -49,29 +47,12 @@ namespace ProyectoBasesDatos.Controllers
         [HttpGet("Citas/Attend/{id}/GetMeds")]
         public IActionResult GetMeds(string id)
         {
-            Console.WriteLine($"Obteniendo medicamentos para la cita con ID: {id}");
-
-            // var hospitalId = "H001"; // Puedes obtenerlo de la sesión si es necesario
             var hospitalId = HttpContext.Session.GetString("IdHospital");
 
             var medicamentos = _context.Medicamentos
                 .Where(m => m.IdHospitalMedicamento.StartsWith(hospitalId))
                 .Select(m => new { id = m.Id, nombre = m.Nombre })
                 .ToList();
-
-            if (medicamentos.IsNullOrEmpty())
-            {
-                Console.WriteLine("Sin meds");
-            } else
-            {
-                Console.WriteLine("Con meds");
-            }
-
-            // Imprimir los medicamentos en consola
-            foreach (var med in medicamentos)
-            {
-                Console.WriteLine($"ID: {med.id}, Nombre: {med.nombre}");
-            }
 
             return Json(medicamentos);
         }
@@ -94,15 +75,6 @@ namespace ProyectoBasesDatos.Controllers
             if (tratamiento == null)
             {
                 return NotFound();
-            }
-
-            // Depurar los datos
-            Console.WriteLine($"Tratamiento ID: {tratamiento.Id}");
-            Console.WriteLine($"Cantidad de Medicinas: {tratamiento.TratamientosMeds?.Count}");
-
-            foreach (var medicina in tratamiento.TratamientosMeds)
-            {
-                Console.WriteLine($"Medicina ID: {medicina.Id}, Nombre: {medicina.IdMedicamentoNavigation?.Nombre}");
             }
 
             return View(tratamiento);
@@ -128,7 +100,6 @@ namespace ProyectoBasesDatos.Controllers
             }
 
             string newId = $"TRM{nextID:D3}";
-            Console.WriteLine("NEW ID:" + newId);
             return newId;
         }
 
@@ -150,7 +121,6 @@ namespace ProyectoBasesDatos.Controllers
 
             }
             string newId = $"TMD{nextID:D3}";
-            Console.WriteLine("NEW ID:" + newId);
             return newId;
         }
 
@@ -161,7 +131,7 @@ namespace ProyectoBasesDatos.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string IdCita, List<string> TratamientosMeds, List<int> Cantidad, List<string> Frecuencia)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync(); // Iniciamos una transacción para seguridad
+            using var transaction = await _context.Database.BeginTransactionAsync(); 
 
             try
             {
@@ -213,16 +183,14 @@ namespace ProyectoBasesDatos.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                await transaction.CommitAsync(); // Si todo es exitoso, confirmamos la transacción
+                await transaction.CommitAsync(); 
 
 
-                Console.WriteLine("Tratamiento creado con éxito");
 
                 cita.Estado = "Completada";
                 _context.Update(cita);
                 await _context.SaveChangesAsync();
 
-                Console.WriteLine("Estado de la cita " + cita.Id + ": " + cita.Estado);
 
                 return RedirectToAction("DoctorHome", "Home");
             }
@@ -230,26 +198,26 @@ namespace ProyectoBasesDatos.Controllers
             {
                 if (ex.InnerException is SqlException sqlEx && sqlEx.Message.Contains("Stock insuficiente"))
                 {
-                    // Extraer el mensaje de error del trigger
+    
                     string errorMessage = sqlEx.Message;
 
-                    // Cortar el mensaje hasta el primer punto
+           
                     int firstDotIndex = errorMessage.IndexOf('.');
-                    if (firstDotIndex > 0) // Verificar que haya un punto en el mensaje
+                    if (firstDotIndex > 0) 
                     {
                         errorMessage = errorMessage.Substring(0, firstDotIndex);
                     }
 
-                    // Guardar el mensaje de error en TempData
+             
                     TempData["ErrorMessage"] = errorMessage;
 
-                    // Redirigir a la acción "Attend" con el IdCita
-                    await transaction.RollbackAsync(); // Revertimos la transacción
+             
+                    await transaction.RollbackAsync(); 
                     return RedirectToAction("Attend", "Citas", new { id = IdCita });
                 }
 
-                await transaction.RollbackAsync(); // En caso de otro error, también revertimos
-                throw; // Relanzamos la excepción para depuración
+                await transaction.RollbackAsync(); 
+                throw; 
             }
         }
 

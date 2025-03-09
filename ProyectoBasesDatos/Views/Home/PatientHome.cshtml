@@ -5,17 +5,16 @@
     var citasOrdenadas = Model
         .OrderBy(c => c.Estado switch
         {
-            "Pendiente" => 1,   // Primero las pendientes
-            "Completada" => 2,  // Luego las completadas
-            "Cancelada" => 3,   // Finalmente las canceladas
-            _ => 4              // Cualquier otro estado (si existe)
+            "Pendiente" => 1,
+            "Completada" => 2,
+            "Cancelada" => 3,
+            _ => 4   
         })
-        .ThenBy(c => c.Dia)     // Ordenar por fecha
-        .ThenBy(c => c.Hora);   // Ordenar por hora
+        .ThenBy(c => c.Dia)     
+        .ThenBy(c => c.Hora);   
 }
 
 <div class="container mt-4">
-    <!-- Header con estadísticas básicas -->
     <div class="jumbotron text-center bg-primary text-white p-5 rounded-3 shadow position-relative overflow-hidden">
         <div class="position-absolute top-0 end-0 p-3">
             <span class="badge bg-light text-primary rounded-pill fs-6">
@@ -32,7 +31,6 @@
         </div>
     </div>
 
-    <!-- Título de sección de citas -->
     <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
         <h2 class="text-primary"><i class="fas fa-clipboard-list me-2"></i>Tus Próximas Citas</h2>
         <div class="btn-group" role="group">
@@ -50,13 +48,11 @@
     }
     else
     {
-        <!-- Citas programadas -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
             @foreach (var item in citasOrdenadas)
             {
                 <div class="col cita-card" data-estado="@item.Estado">
                     <div class="card h-100 shadow-sm border-0 position-relative">
-                        <!-- Indicador visual del estado -->
                         <div class="estado-indicator @GetEstadoClass(item.Estado)"></div>
 
                         <div class="card-body">
@@ -68,7 +64,6 @@
                                 <small class="text-muted">ID: @item.Id</small>
                             </div>
 
-                            <!-- Fecha y hora destacadas -->
                             <div class="fecha-destacada mb-3 p-2 text-center">
                                 <div class="fecha-dia">@item.Dia.ToString("dddd")</div>
                                 <div class="fecha-numero">@item.Dia.ToString("dd")</div>
@@ -76,7 +71,6 @@
                                 <div class="hora mt-2"><i class="fas fa-clock me-1"></i>@item.Hora.ToString(@"hh\:mm tt")</div>
                             </div>
 
-                            <!-- Información del doctor -->
                             <div class="doctor-info mb-3">
                                 <h6 class="card-subtitle fw-bold">
                                     <i class="fas fa-user-md me-2 text-primary"></i>Doctor
@@ -94,7 +88,6 @@
                                 </p>
                             </div>
 
-                            <!-- Botones de acción -->
                             <div class="d-flex justify-content-between mt-3">
                                 <a asp-controller="Citas" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-info-circle me-1"></i>Detalles
@@ -121,7 +114,6 @@
     }
 </div>
 
-<!-- Modal de Confirmación de Cancelación -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -147,7 +139,6 @@
     </div>
 </div>
 
-<!-- Modal de Confirmación de Pago -->
 <div class="modal fade" id="payModal" tabindex="-1" aria-labelledby="payModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -216,7 +207,6 @@
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Estilos generales */
         .hover-card {
             transition: transform 0.3s, box-shadow 0.3s;
         }
@@ -226,7 +216,6 @@
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
             }
 
-        /* Iconos circulares */
         .icon-circle {
             width: 70px;
             height: 70px;
@@ -237,7 +226,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Indicador de estado */
         .estado-indicator {
             position: absolute;
             top: 0;
@@ -262,7 +250,6 @@
             background-color: #17a2b8;
         }
 
-        /* Estilos para la fecha destacada */
         .fecha-destacada {
             background-color: rgba(13, 110, 253, 0.05);
             border-radius: 10px;
@@ -292,7 +279,6 @@
             color: #212529;
         }
 
-        /* Estilos para las tarjetas */
         .card {
             border-radius: 15px;
             overflow: hidden;
@@ -303,7 +289,6 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Inicializar tooltips de Bootstrap (si existen)
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -312,13 +297,12 @@
             // Filtrado de citas
             document.querySelectorAll('.btn-group[role="group"] button').forEach(button => {
                 button.addEventListener('click', function() {
-                    // Actualizar estilo de botones
+                    
                     document.querySelectorAll('.btn-group[role="group"] button').forEach(btn => {
                         btn.classList.remove('active');
                     });
                     this.classList.add('active');
 
-                    // Filtrar las tarjetas
                     const filtro = this.dataset.filter;
                     const tarjetas = document.querySelectorAll('.cita-card');
 
@@ -337,8 +321,8 @@
             var confirmCancelButton = document.getElementById("confirmCancel");
 
             confirmModal.addEventListener("show.bs.modal", function (event) {
-                var button = event.relatedTarget; // Botón que activó el modal
-                var idCita = button.getAttribute("data-id"); // Obtener el ID de la cita
+                var button = event.relatedTarget;
+                var idCita = button.getAttribute("data-id"); 
 
                 if (confirmCancelButton) {
                     confirmCancelButton.onclick = function () {
@@ -346,20 +330,20 @@
                             method: "POST"
                         }).then(response => {
                             if (response.ok) {
-                                window.location.reload(); // Recargar la página para actualizar el estado
+                                window.location.reload(); 
                             }
                         }).catch(error => console.error("Error:", error));
                     };
                 }
             });
 
-            // Lógica para el modal de pago
+            
             var payModal = document.getElementById("payModal");
             var confirmPayButton = document.getElementById("confirmPay");
 
             payModal.addEventListener("show.bs.modal", function (event) {
-                var button = event.relatedTarget; // Botón que activó el modal
-                var idCita = button.getAttribute("data-id"); // Obtener el ID de la cita
+                var button = event.relatedTarget;
+                var idCita = button.getAttribute("data-id"); 
 
                 if (confirmPayButton) {
                     confirmPayButton.onclick = function () {
@@ -367,7 +351,7 @@
                             method: "POST"
                         }).then(response => {
                             if (response.ok) {
-                                window.location.reload(); // Recargar la página para actualizar el estado
+                                window.location.reload(); 
                             }
                         }).catch(error => console.error("Error:", error));
                     };

@@ -18,19 +18,15 @@
             <hr class="mb-4" />
 
             <dl class="row">
-                <!-- Nombre -->
                 <dt class="col-sm-3 fw-bold">Nombre</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.Nombre)</dd>
 
-                <!-- Descripción -->
                 <dt class="col-sm-3 fw-bold">Descripción</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.Descripcion)</dd>
 
-                <!-- Precio -->
                 <dt class="col-sm-3 fw-bold">Precio</dt>
                 <dd class="col-sm-9">@Model.IdHospitalMedicamentoNavigation.Precio.ToString("C")</dd>
 
-                <!-- Cantidad Disponible -->
                 <dt class="col-sm-3 fw-bold">Cantidad Disponible</dt>
                 <dd class="col-sm-9">@Model.IdHospitalMedicamentoNavigation.Cantidad</dd>
             </dl>
@@ -48,7 +44,6 @@
     </div>
 </div>
 
-<!-- Estilos adicionales -->
 <style>
     .card {
         border: none;

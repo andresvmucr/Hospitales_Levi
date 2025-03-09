@@ -1,6 +1,6 @@
-﻿@model ProyectoBasesDatos.Models.Tratamiento
+﻿@model ProyectoBasesDatos.Models.Usuario
 @{
-    ViewData["Title"] = "Detalles del Tratamiento";
+    ViewData["Title"] = "Detalles del Administrador";
 }
 
 <div class="container-fluid py-4">
@@ -10,7 +10,7 @@
                 <div class="card-body p-4">
                     <div class="row align-items-center">
                         <div class="col-md-8">
-                            <h1 class="h3 mb-2">Detalles del Tratamiento</h1>
+                            <h1 class="h3 mb-2">Detalles del Administrador</h1>
                         </div>
                         <div class="col-md-4 text-md-end mt-3 mt-md-0">
                             <div class="btn-group">
@@ -32,13 +32,13 @@
                     <div class="d-flex align-items-center">
                         <div class="avatar-container me-4">
                             <div class="avatar bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 1.8rem;">
-                                <i class="fas fa-pills"></i>
+                                @(Model.Nombre?.Substring(0, 1).ToUpper())@(Model.PrimerApellido?.Substring(0, 1).ToUpper())
                             </div>
                         </div>
                         <div>
-                            <h2 class="h3 fw-bold mb-1">Tratamiento ID: @Model.Id</h2>
+                            <h2 class="h3 fw-bold mb-1">@Model.Nombre @Model.PrimerApellido @Model.SegundoApellido</h2>
                             <p class="text-muted mb-2">
-                                <i class="fas fa-calendar me-2"></i>@(Model.IdCitaNavigation?.Dia.ToShortDateString() ?? "Fecha no disponible")
+                                <i class="fas fa-envelope me-2"></i>@Model.Correo
                             </p>
                         </div>
                     </div>
@@ -47,24 +47,24 @@
                 <div class="card-body p-4">
                     <div class="info-section mb-4">
                         <h5 class="border-bottom pb-2 mb-3">
-                            <i class="fas fa-info-circle text-primary me-2"></i>Información General
+                            <i class="fas fa-id-card text-primary me-2"></i>Información Personal
                         </h5>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-tag text-muted me-3"></i>
+                                    <i class="fas fa-user text-muted me-3"></i>
                                     <div>
-                                        <p class="text-muted mb-0 small">ID del Tratamiento</p>
-                                        <p class="fw-medium mb-0">@Html.DisplayFor(model => model.Id)</p>
+                                        <p class="text-muted mb-0 small">Nombre Completo</p>
+                                        <p class="fw-medium mb-0">@Model.Nombre @Model.PrimerApellido @Model.SegundoApellido</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-dollar-sign text-muted me-3"></i>
+                                    <i class="fas fa-phone-alt text-muted me-3"></i>
                                     <div>
-                                        <p class="text-muted mb-0 small">Precio</p>
-                                        <p class="fw-medium mb-0">@Html.DisplayFor(model => model.Precio)</p>
+                                        <p class="text-muted mb-0 small">Teléfono</p>
+                                        <p class="fw-medium mb-0">@Html.DisplayFor(model => model.Telefono)</p>
                                     </div>
                                 </div>
                             </div>
@@ -73,76 +73,36 @@
 
                     <div class="info-section mb-4">
                         <h5 class="border-bottom pb-2 mb-3">
-                            <i class="fas fa-calendar-alt text-primary me-2"></i>Información de la Cita
+                            <i class="fas fa-hospital-alt text-primary me-2"></i>Información de Asignación
                         </h5>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-calendar-day text-muted me-3"></i>
+                                    <i class="fas fa-building text-muted me-3"></i>
                                     <div>
-                                        <p class="text-muted mb-0 small">Fecha de la Cita</p>
-                                        <p class="fw-medium mb-0">@(Model.IdCitaNavigation?.Dia.ToShortDateString() ?? "No especificada")</p>
+                                        <p class="text-muted mb-0 small">Hospital Asignado</p>
+                                        <p class="fw-medium mb-0">@Model.IdHospitalNavigation?.Nombre</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-user-md text-muted me-3"></i>
+                                    <i class="fas fa-map-marker-alt text-muted me-3"></i>
                                     <div>
-                                        <p class="text-muted mb-0 small">Médico</p>
-                                        <p class="fw-medium mb-0">@(Model.IdCitaNavigation?.CedulaDoctorNavigation?.CorreoNavigation.Nombre ?? "No especificado")</p>
+                                        <p class="text-muted mb-0 small">Ubicación</p>
+                                        <p class="fw-medium mb-0">@(Model.IdHospitalNavigation?.Direccion ?? "No especificada")</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h5 class="border-bottom pb-2 mb-3">
-                            <i class="fas fa-pills text-primary me-2"></i>Medicinas Recetadas
-                        </h5>
-                        @if (Model.TratamientosMeds?.Any() == true)
-                        {
-                            <div class="row g-3">
-                                @foreach (var medicina in Model.TratamientosMeds)
-                                {
-                                    <div class="col-md-4 mb-3">
-                                        <div class="card h-100 border shadow-sm">
-                                            <div class="card-body">
-                                                <div class="d-flex align-items-center mb-3">
-                                                    <div class="avatar bg-primary bg-opacity-10 text-primary rounded p-2 me-3">
-                                                        <i class="fas fa-capsules"></i>
-                                                    </div>
-                                                    <h5 class="card-title mb-0">@medicina.IdMedicamentoNavigation?.Nombre</h5>
-                                                </div>
-                                                <div class="mb-2">
-                                                    <p class="text-muted mb-0 small">Dosis</p>
-                                                    <p class="fw-medium mb-2">@medicina.Dosis</p>
-                                                </div>
-                                                <div>
-                                                    <p class="text-muted mb-0 small">Frecuencia</p>
-                                                    <p class="fw-medium mb-0">@medicina.Frecuencia</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>No se han registrado medicinas para este tratamiento.
-                            </div>
-                        }
                     </div>
                 </div>
 
                 <div class="card-footer bg-white p-4 border-top">
                     <div class="d-flex justify-content-end">
                         <div>
-                            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
-                                <i class="fas fa-pen me-2"></i>Editar Tratamiento
+                            <a asp-action="Edit" asp-route-id="@Model?.Correo" class="btn btn-primary">
+                                <i class="fas fa-pen me-2"></i>Editar Información
                             </a>
                         </div>
                     </div>
@@ -153,17 +113,7 @@
 </div>
 
 <style>
-    /* Estilos para la transición de la tarjeta */
     .card {
         transition: all 0.3s ease;
-    }
-
-    /* Estilos para los iconos en las tarjetas de medicinas */
-    .avatar {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 </style>

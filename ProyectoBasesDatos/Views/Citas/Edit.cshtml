@@ -37,14 +37,12 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <!-- Seleccionar Paciente -->
                         <div class="form-floating mb-4">
                             <input asp-for="CedulaPaciente" class="form-control" asp-items="ViewBag.CedulaPaciente" />
                             <label asp-for="CedulaPaciente"><i class="fas fa-user me-1"></i>Paciente</label>
                             <span asp-validation-for="CedulaPaciente" class="text-danger small"></span>
                         </div>
 
-                        <!-- Seleccionar Especialidad -->
                         <div class="form-floating mb-4">
                             <select id="Especialidad" class="form-select" asp-items="ViewBag.Especialidad" required>
                                 <option value="">-- Seleccione una especialidad --</option>
@@ -53,7 +51,6 @@
                             <div class="invalid-feedback">Por favor, seleccione una especialidad.</div>
                         </div>
 
-                        <!-- Seleccionar Doctor -->
                         <div class="form-floating mb-4">
                             <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-select" required>
                                 <option value="">-- Seleccione un doctor --</option>
@@ -62,7 +59,6 @@
                             <span asp-validation-for="CedulaDoctor" class="text-danger small"></span>
                         </div>
 
-                        <!-- Seleccionar Día -->
                         <div class="form-floating mb-4">
                             <input asp-for="Dia" id="Dia" type="date" class="form-control" required />
                             <label asp-for="Dia"><i class="fas fa-calendar-day me-1"></i>Día</label>
@@ -70,7 +66,6 @@
                             <div class="invalid-feedback">Por favor, seleccione un día.</div>
                         </div>
 
-                        <!-- Seleccionar Hora -->
                         <div class="form-floating mb-4">
                             <select asp-for="Hora" id="Hora" class="form-select" required>
                                 <option value="">-- Seleccione una hora --</option>
@@ -80,7 +75,6 @@
                             <div class="invalid-feedback">Por favor, seleccione una hora.</div>
                         </div>
 
-                        <!-- Estado de la Cita -->
                         <div class="form-floating mb-4">
                             <select asp-for="Estado" class="form-select" required>
                                 <option value="Pendiente">Pendiente</option>
@@ -92,7 +86,6 @@
                             <div class="invalid-feedback">Por favor, seleccione un estado.</div>
                         </div>
 
-                        <!-- Botones de Acción -->
                         <div class="d-flex justify-content-end mt-4">
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="fas fa-save me-2"></i>Guardar Cambios

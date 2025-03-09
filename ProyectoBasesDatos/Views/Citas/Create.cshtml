@@ -47,11 +47,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <!-- Seleccionar Paciente -->
                         @if (userRole == "Admin")
                         {
                             <div class="form-floating mb-4">
-                                <input asp-for="CedulaPaciente" class="form-control" required />
+                                <input asp-for="CedulaPaciente" class="form-control" required maxlength="9" pattern="\d*" />
                                 <label asp-for="CedulaPaciente"><i class="fas fa-user me-1"></i>Paciente</label>
                                 <span asp-validation-for="CedulaPaciente" class="text-danger small"></span>
                                 <div class="invalid-feedback">Por favor, seleccione un paciente.</div>
@@ -66,7 +65,6 @@
                             </div>
                         }
 
-                        <!-- Seleccionar Especialidad -->
                         <div class="form-floating mb-4">
                             <select id="Especialidad" class="form-select" required>
                                 <option value="">-- Seleccione una especialidad --</option>
@@ -82,7 +80,6 @@
                             <div class="invalid-feedback">Por favor, seleccione una especialidad.</div>
                         </div>
 
-                        <!-- Seleccionar Doctor (se actualiza dinámicamente) -->
                         <div class="form-floating mb-4">
                             <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-select" required>
                                 <option value="">-- Seleccione un doctor --</option>
@@ -92,7 +89,6 @@
                             <div class="invalid-feedback">Por favor, seleccione un doctor.</div>
                         </div>
 
-                        <!-- Seleccionar Día de la Cita (se actualiza dinámicamente) -->
                         <div class="form-floating mb-4">
                             <input asp-for="Dia" id="Dia" type="date" class="form-control" required />
                             <label asp-for="Dia"><i class="fas fa-calendar-day me-1"></i>Día de la Cita</label>
@@ -100,7 +96,6 @@
                             <div class="invalid-feedback">Por favor, seleccione un día.</div>
                         </div>
 
-                        <!-- Seleccionar Hora de la Cita (se actualiza dinámicamente) -->
                         <div class="form-floating mb-4">
                             <select asp-for="Hora" id="Hora" class="form-select" required>
                                 <option value="">-- Seleccione una hora --</option>
@@ -110,7 +105,6 @@
                             <div class="invalid-feedback">Por favor, seleccione una hora.</div>
                         </div>
 
-                        <!-- Botones de acción -->
                         <div class="d-flex justify-content-end mt-4">
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="fas fa-save me-2"></i>Crear Cita
@@ -130,6 +124,11 @@
 
     <script>
         $(document).ready(function () {
+            // Validar que solo se ingresen números en el campo de cédula
+            $('#CedulaPaciente').on('input', function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
             // Cargar doctores al seleccionar una especialidad
             $('#Especialidad').change(function () {
                 var especialidad = $(this).val();
@@ -208,12 +207,12 @@
                                 $.each(data, function (index, hora) {
                                     $('#Hora').append($('<option></option>').val(hora).text(hora));
                                 });
-                                $('#Hora').removeAttr('readonly'); // Habilitar el campo
-                                $('#Hora').prop('disabled', false); // Asegurarse de que no esté deshabilitado
+                                $('#Hora').removeAttr('readonly'); 
+                                $('#Hora').prop('disabled', false);
                             } else {
                                 $('#Hora').append($('<option></option>').val('').text('-- No hay horas disponibles --'));
-                                $('#Hora').prop('readonly', true); // Deshabilitar el campo
-                                $('#Hora').prop('disabled', true); // Deshabilitar el campo
+                                $('#Hora').prop('readonly', true); 
+                                $('#Hora').prop('disabled', true);
                             }
                         },
                         error: function () {
@@ -222,8 +221,8 @@
                     });
                 } else {
                     $('#Hora').empty().append($('<option></option>').val('').text('-- No hay horas disponibles --'));
-                    $('#Hora').prop('readonly', true); // Deshabilitar el campo
-                    $('#Hora').prop('disabled', true); // Deshabilitar el campo
+                    $('#Hora').prop('readonly', true); 
+                    $('#Hora').prop('disabled', true); 
                 }
             });
 
@@ -233,7 +232,6 @@
     </script>
 }
 
-<!-- Estilos adicionales -->
 <style>
     .card {
         border: none;
@@ -261,5 +259,4 @@
     }
 </style>
 
-<!-- Font Awesome para íconos -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

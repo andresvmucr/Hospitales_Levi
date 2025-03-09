@@ -31,7 +31,6 @@
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <div class="card border-0 shadow-sm">
-                <!-- Encabezado de la tarjeta -->
                 <div class="card-header bg-white p-4 border-0">
                     <div class="d-flex align-items-center">
                         <div class="avatar-container me-4">
@@ -49,14 +48,12 @@
                     </div>
                 </div>
 
-                <!-- Cuerpo de la tarjeta -->
                 <div class="card-body p-4">
                     <div class="info-section mb-4">
                         <h5 class="border-bottom pb-2 mb-3">
                             <i class="fas fa-info-circle text-primary me-2"></i>Información General
                         </h5>
                         <div class="row g-3">
-                            <!-- Estado de la cita -->
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-tag text-muted me-3"></i>
@@ -66,7 +63,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Día de la cita -->
+
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-day text-muted me-3"></i>
@@ -76,7 +73,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Hora de la cita -->
+
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-clock text-muted me-3"></i>
@@ -89,7 +86,6 @@
                         </div>
                     </div>
 
-                    <!-- Información del doctor -->
                     <div class="info-section mb-4">
                         <h5 class="border-bottom pb-2 mb-3">
                             <i class="fas fa-user-md text-primary me-2"></i>Doctor
@@ -120,7 +116,6 @@
                         </div>
                     </div>
 
-                    <!-- Información del paciente -->
                     <div class="info-section mb-4">
                         <h5 class="border-bottom pb-2 mb-3">
                             <i class="fas fa-user-injured text-primary me-2"></i>Paciente
@@ -141,7 +136,6 @@
                     </div>
                 </div>
 
-                <!-- Pie de la tarjeta -->
                 <div class="card-footer bg-white p-4 border-top">
                     <div class="d-flex justify-content-end">
                         @if (userRole == "Admin" || (@Model.Estado != "Pagada" && @Model.Estado != "Cancelada"))
@@ -157,7 +151,7 @@
     </div>
 </div>
 
-<!-- Estilos adicionales -->
+
 <style>
     .card {
         border: none;
@@ -188,16 +182,16 @@
         .info-section h5 {
             font-size: 1rem;
             font-weight: bold;
-            color: #6c757d; /* Color gris para los títulos de sección */
+            color: #6c757d;
         }
 
     .text-muted {
-        color: #6c757d; /* Color gris para las etiquetas */
+        color: #6c757d;
     }
 
     .fw-medium {
         font-weight: 500;
-        color: #212529; /* Color oscuro para los valores */
+        color: #212529; 
     }
 
     .avatar-container {
@@ -212,6 +206,4 @@
         font-weight: bold;
     }
 </style>
-
-<!-- Font Awesome para íconos -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

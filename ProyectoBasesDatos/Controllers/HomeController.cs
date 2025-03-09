@@ -28,15 +28,12 @@ public class HomeController : Controller
     public async Task<IActionResult> DoctorHome()
     {
         var doctorId = HttpContext.Session.GetString("DoctorId");
-
-
-        // Filtrar citas por el hospital y cargar la información relacionada
         var citas = await _context.Citas
             .Include(c => c.CedulaDoctorNavigation)
-                .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
+                .ThenInclude(d => d.CorreoNavigation)
             .Include(c => c.CedulaPacienteNavigation)
-                .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
-            .Where(c => c.CedulaDoctor == doctorId) // Filtrar por hospital
+                .ThenInclude(p => p.CorreoNavigation)
+            .Where(c => c.CedulaDoctor == doctorId)
             .ToListAsync();
 
         return View(citas);
@@ -47,13 +44,13 @@ public class HomeController : Controller
         var patientId = HttpContext.Session.GetString("PatientId");
         var citas = await _context.Citas
             .Include(c => c.CedulaDoctorNavigation)
-                .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
+                .ThenInclude(d => d.CorreoNavigation)
             .Include(c => c.CedulaPacienteNavigation)
-                .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
+                .ThenInclude(p => p.CorreoNavigation)
             .Where(c => c.CedulaPaciente == patientId)
-            .OrderBy(c => c.Estado == "Cancelado" ? 1 : 0) // Canceladas al final
-            .ThenBy(c => c.Hora) // Ordenar por hora
-            .ThenBy(c => c.Dia) // Ordenar por fecha
+            .OrderBy(c => c.Estado == "Cancelado" ? 1 : 0)
+            .ThenBy(c => c.Hora)
+            .ThenBy(c => c.Dia)
             
             .ToListAsync();
 

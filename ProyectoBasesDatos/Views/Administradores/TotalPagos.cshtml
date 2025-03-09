@@ -10,14 +10,13 @@
                     <h1 class="h3 mb-0">Calcular Total de Pagos por Paciente</h1>
                 </div>
                 <div class="card-body">
-                    <!-- Formulario para ingresar los datos -->
                     <form id="formCalcularPagos" class="mb-4">
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="cedulaPaciente" class="form-label">Cédula del Paciente</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                    <input type="text" class="form-control" id="cedulaPaciente" name="cedulaPaciente" placeholder="Ingrese la cédula del paciente" required>
+                                    <input type="text" class="form-control" id="cedulaPaciente" name="cedulaPaciente" placeholder="Ingrese la cédula del paciente" maxlength="9" required>
                                 </div>
                             </div>
                         </div>
@@ -45,16 +44,13 @@
                         </div>
                     </form>
 
-                    <!-- Alerta de error -->
                     <div id="errorMessage" class="alert alert-danger d-none mb-4">
                         <i class="fas fa-exclamation-circle me-2"></i><span id="errorText"></span>
                     </div>
 
-                    <!-- Resultados -->
                     <div id="resultadosContainer" class="d-none">
                         <h2 class="h4 mb-3 border-bottom pb-2">Resultados del Cálculo</h2>
 
-                        <!-- Resumen de consulta -->
                         <div class="alert alert-info mb-4">
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0">
@@ -67,7 +63,6 @@
                             </div>
                         </div>
 
-                        <!-- Tarjetas de resumen -->
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <div class="card bg-light">
@@ -87,7 +82,6 @@
                             </div>
                         </div>
 
-                        <!-- Tabla detallada -->
                         <div class="card mb-4">
                             <div class="card-header bg-light">
                                 <h3 class="h5 mb-0"><i class="fas fa-list me-2"></i>Detalle de Pagos</h3>
@@ -103,13 +97,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Los datos se llenarán dinámicamente -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <!-- Opciones adicionales -->
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-outline-primary me-2" id="btnImprimir">
                                 <i class="fas fa-print me-2"></i>Imprimir
@@ -120,7 +112,6 @@
                         </div>
                     </div>
 
-                    <!-- Mensaje de no resultados -->
                     <div id="noResultados" class="alert alert-warning d-none mt-3">
                         <i class="fas fa-exclamation-triangle me-2"></i>No se encontraron pagos para el paciente en el período seleccionado.
                     </div>
@@ -133,6 +124,14 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            // Validación de la cédula del paciente - solo números y máximo 9 dígitos
+            document.getElementById('cedulaPaciente').addEventListener('input', function (event) {
+                this.value = this.value.replace(/[^0-9]/g, ''); // Solo permite números
+                if (this.value.length > 9) {
+                    this.value = this.value.slice(0, 9); // Limita a 9 dígitos
+                }
+            });
+
             // Establecer fecha fin como hoy por defecto
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0];
@@ -167,7 +166,6 @@
                     return;
                 }
 
-                // Mostrar el spinner de carga
                 $("#loadingSpinner").removeClass("d-none");
                 $("#resultadosContainer").addClass("d-none");
                 $("#noResultados").addClass("d-none");
@@ -183,33 +181,25 @@
                     },
                     success: function (response) {
                         console.log(response);
-
-                        // Ocultar el spinner de carga
                         $("#loadingSpinner").addClass("d-none");
 
                         if (response.success) {
                             if (response.data && response.data.cantidadPagos > 0) {
-                                // Mostrar los resultados
                                 $("#resultadosContainer").removeClass("d-none");
 
-                                // Actualizar resumen de consulta
                                 $("#periodoConsulta").text(`${formatDateToSpanish(fechaInicio)} al ${formatDateToSpanish(fechaFin)}`);
                                 $("#cedulaResumen").text(response.data.cedulaPaciente);
                                 if (response.data.nombrePaciente) {
                                     $("#nombrePaciente").text(response.data.nombrePaciente);
                                 }
 
-                                // Actualizar tarjetas de resumen
                                 $("#totalPagado").text(formatCurrency(response.data.totalPagos));
                                 $("#cantidadPagos").text(response.data.cantidadPagos);
 
-                                // Limpiar la tabla antes de agregar nuevos datos
                                 $("#tablaResultados tbody").empty();
 
-                                // Calcular promedio por pago
                                 const promedioPago = response.data.totalPagos / response.data.cantidadPagos;
 
-                                // Agregar los datos a la tabla
                                 $("#tablaResultados tbody").append(
                                     `<tr>
                                         <td>${response.data.cedulaPaciente}</td>
@@ -219,21 +209,17 @@
                                     </tr>`
                                 );
                             } else {
-                                // Mostrar mensaje de no resultados
                                 $("#noResultados").removeClass("d-none");
                             }
                         } else {
-                            // Mostrar mensaje de error
                             mostrarError(response.message || "Error al procesar la solicitud.");
                         }
                     },
                     error: function (xhr, status, error) {
                         console.error("Error en la solicitud AJAX:", status, error);
 
-                        // Ocultar el spinner de carga
                         $("#loadingSpinner").addClass("d-none");
 
-                        // Mostrar mensaje de error
                         mostrarError("Ocurrió un error al procesar la solicitud. Inténtelo de nuevo más tarde.");
                     }
                 });
@@ -247,16 +233,6 @@
                     scrollTop: $("#errorMessage").offset().top - 100
                 }, 200);
             }
-
-            // Manejar clic en botón de imprimir
-            $("#btnImprimir").click(function() {
-                window.print();
-            });
-
-            // Manejar clic en botón de exportar
-            $("#btnExportar").click(function() {
-                alert("Funcionalidad de exportación: Esta característica se implementará en una futura actualización.");
-            });
 
             // Función para formatear fechas al estilo español
             function formatDateToSpanish(dateString) {

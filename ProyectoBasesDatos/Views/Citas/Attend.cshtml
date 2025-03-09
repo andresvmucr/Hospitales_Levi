@@ -26,7 +26,6 @@
 
                 <input type="hidden" name="IdCita" value="@idCita" />
 
-                <!-- Contenedor de medicamentos con estilo mejorado -->
                 <div id="medicamentosContainer" class="mb-4">
                     <div class="medicamento-group mb-3 p-3 border rounded bg-light">
                         <div class="row g-3">
@@ -73,7 +72,7 @@
                 <hr class="my-4">
 
                 <div class="form-group d-flex justify-content-between align-items-center">
-                    <a href="/Citas" class="btn btn-outline-secondary">
+                    <a href="/Home/DoctorHome" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Volver
                     </a>
                     <button type="submit" class="btn btn-primary btn-lg px-4">
@@ -90,7 +89,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Habilitar validación Bootstrap
             (() => {
                 'use strict'
                 const forms = document.querySelectorAll('.needs-validation')
@@ -137,7 +135,6 @@
                         select.innerHTML = '<option value="">Error al cargar medicamentos</option>';
                         select.disabled = false;
 
-                        // Mostrar alerta de error
                         const alertDiv = document.createElement('div');
                         alertDiv.className = 'alert alert-danger mt-3';
                         alertDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> Error al cargar medicamentos: ${error.message}`;
@@ -166,14 +163,9 @@
                 nuevoGrupo.querySelector("input[type='number']").value = "";
                 nuevoGrupo.querySelector("input[type='text']").value = "";
 
-                // Remover clase was-validated si existe
                 nuevoGrupo.classList.remove('was-validated');
-
-                // Efecto de aparecer gradualmente
                 nuevoGrupo.style.opacity = '0';
                 medicamentosContainer.appendChild(nuevoGrupo);
-
-                // Animación de entrada
                 setTimeout(() => {
                     nuevoGrupo.style.transition = 'opacity 0.3s ease';
                     nuevoGrupo.style.opacity = '1';
@@ -188,16 +180,12 @@
                 if (e.target.closest(".btn-eliminar")) {
                     const grupoEliminar = e.target.closest(".medicamento-group");
 
-                    // Animación de salida
                     grupoEliminar.style.transition = 'all 0.3s ease';
                     grupoEliminar.style.opacity = '0';
                     grupoEliminar.style.maxHeight = '0';
 
-                    // Eliminar después de la animación
                     setTimeout(() => {
                         grupoEliminar.remove();
-
-                        // Reindexar los nombres de los campos
                         const grupos = medicamentosContainer.querySelectorAll(".medicamento-group");
                         grupos.forEach((grupo, index) => {
                             grupo.querySelector("select").name = `TratamientosMeds[${index}]`;
@@ -205,7 +193,6 @@
                             grupo.querySelector("input[type='text']").name = `Frecuencia[${index}]`;
                         });
 
-                        // Mostrar mensaje si no hay grupos
                         if (grupos.length === 0) {
                             mensajeSinTratamientos.style.display = "block";
                         }
@@ -252,7 +239,6 @@
             }
 
             if (!esValido) {
-                // Scroll to first error
                 const firstInvalid = document.querySelector(".is-invalid");
                 if (firstInvalid) {
                     firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });

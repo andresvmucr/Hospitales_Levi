@@ -16,7 +16,8 @@
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
                 <input type="hidden" asp-for="Id" />
 
-                <!-- Nombre -->
+                <input type="hidden" asp-for="IdHospitalMedicamento" />
+
                 <div class="mb-4">
                     <label asp-for="Nombre" class="form-label fw-bold">Nombre del Medicamento</label>
                     <input asp-for="Nombre" class="form-control form-control-lg" placeholder="Ingresa el nombre del medicamento" required />
@@ -24,31 +25,27 @@
                     <div class="invalid-feedback">Por favor, ingresa el nombre del medicamento.</div>
                 </div>
 
-                <!-- Descripción -->
                 <div class="mb-4">
                     <label asp-for="Descripcion" class="form-label fw-bold">Descripción</label>
                     <textarea asp-for="Descripcion" class="form-control" rows="4" placeholder="Ingresa una descripción del medicamento"></textarea>
                     <span asp-validation-for="Descripcion" class="text-danger small"></span>
                 </div>
 
-                <!-- Cantidad -->
                 <div class="mb-4">
                     <label for="Cantidad" class="form-label fw-bold">Cantidad</label>
                     <input name="Cantidad" class="form-control form-control-lg" type="number" min="0" value="@ViewBag.Cantidad" placeholder="Ingresa la cantidad disponible" required />
                     <div class="invalid-feedback">Por favor, ingresa una cantidad válida.</div>
                 </div>
 
-                <!-- Precio -->
                 <div class="mb-4">
                     <label for="Precio" class="form-label fw-bold">Precio</label>
                     <div class="input-group">
-                        <span class="input-group-text">$</span>
+                        <span class="input-group-text">₡</span>
                         <input name="Precio" class="form-control form-control-lg" type="number" step="0.01" min="0" value="@ViewBag.Precio" placeholder="Ingresa el precio del medicamento" required />
                     </div>
                     <div class="invalid-feedback">Por favor, ingresa un precio válido.</div>
                 </div>
 
-                <!-- Botones -->
                 <div class="d-grid gap-3 d-md-flex justify-content-md-end mt-5">
                     <a asp-action="Index" class="btn btn-outline-secondary btn-lg d-flex align-items-center">
                         <i class="fas fa-arrow-left me-2"></i> Volver a la Lista

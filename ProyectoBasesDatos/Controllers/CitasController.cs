@@ -20,70 +20,43 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Citas
         public async Task<IActionResult> Index()
         {
-            // Obtener el IdHospital de la sesión
             var hospitalId = HttpContext.Session.GetString("IdHospital");
-            // var hospitalId = "H001";
-
             if (string.IsNullOrEmpty(hospitalId))
             {
-                return RedirectToAction("Error", "Home"); // Redirigir a una página de error si no hay hospital seleccionado
+                return RedirectToAction("Error", "Home");
             }
-
-            // Filtrar citas por el hospital y cargar la información relacionada
             var citas = await _context.Citas
                 .Include(c => c.CedulaDoctorNavigation)
-                    .ThenInclude(d => d.CorreoNavigation) // Incluir el usuario (nombre del doctor)
+                    .ThenInclude(d => d.CorreoNavigation) 
                 .Include(c => c.CedulaPacienteNavigation)
-                    .ThenInclude(p => p.CorreoNavigation) // Incluir el usuario (nombre del paciente)
-                .Where(c => c.CedulaDoctorNavigation.CorreoNavigation.IdHospital == hospitalId) // Filtrar por hospital
-                .OrderBy(c => c.Dia) // Ordenar por fecha (las más cercanas primero)
-                .ThenBy(c => c.Estado == "Pendiente" ? 0 : 1) // Ordenar por estado (pendientes primero)
+                    .ThenInclude(p => p.CorreoNavigation) 
+                .Where(c => c.CedulaDoctorNavigation.CorreoNavigation.IdHospital == hospitalId) 
+                .OrderBy(c => c.Dia) 
+                .ThenBy(c => c.Estado == "Pendiente" ? 0 : 1)
                 .ToListAsync();
-
 
             return View(citas);
         }
 
         // GET: Citas/Details/5
         public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            // Obtener la cita con la información relacionada del doctor y el paciente
+        {   
             var cita = await _context.Citas
-                .Include(c => c.CedulaDoctorNavigation) // Incluir la información del doctor
-                    .ThenInclude(d => d.CorreoNavigation) // Incluir la información del usuario (correo)
-                .Include(c => c.CedulaDoctorNavigation) // Incluir la información del doctor
-                    .ThenInclude(d => d.IdEspecialidadNavigation) // Incluir la información de la especialidad
-                .Include(c => c.CedulaPacienteNavigation) // Incluir la información del paciente
-                    .ThenInclude(p => p.CorreoNavigation) // Incluir la información del usuario (correo)
+                .Include(c => c.CedulaDoctorNavigation)
+                    .ThenInclude(d => d.CorreoNavigation) 
+                .Include(c => c.CedulaDoctorNavigation) 
+                    .ThenInclude(d => d.IdEspecialidadNavigation) 
+                .Include(c => c.CedulaPacienteNavigation) 
+                    .ThenInclude(p => p.CorreoNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (cita == null)
-            {
-                return NotFound();
-            }
-
+          
             return View(cita);
         }
 
         public async Task<IActionResult> GetDoctoresByEspecialidad(string especialidad)
         {
-            Console.WriteLine("Especialidad: " + especialidad);
-            // Obtener el IdHospital de la sesión
             var hospitalId = HttpContext.Session.GetString("IdHospital");
-            // var hospitalId = "H001";
-
-            // Validar que el IdHospital no sea nulo o vacío
-            if (string.IsNullOrEmpty(hospitalId))
-            {
-                return Json(new { error = "Hospital no seleccionado o sesión inválida." });
-            }
-
-            // Filtrar doctores por especialidad y hospital
             var doctores = await _context.Doctores
                 .Where(d => d.IdEspecialidad == especialidad && d.CorreoNavigation.IdHospital == hospitalId)
                  .Select(d => new
@@ -99,8 +72,6 @@ namespace ProyectoBasesDatos.Controllers
 
         public async Task<IActionResult> GetDiasTrabajoDoctor(string idDoctor)
         {
-            Console.WriteLine("idDoctor: " + idDoctor);
-            // Obtener los días de trabajo del doctor desde la base de datos
             var diasTrabajo = await _context.Horarios
                 .Where(d => d.CedulaDoctor == idDoctor)
                 .Select(d => new
@@ -115,26 +86,14 @@ namespace ProyectoBasesDatos.Controllers
                                   d.Dia.StartsWith("D") ? "Domingo" : "Desconocido"
                 })
                 .ToListAsync();
-
-
-            foreach (var dia in diasTrabajo)
-            {
-                Console.WriteLine($"Inicial: {dia.Dia} - Día completo: {dia.DiaCompleto}");
-            }
-            // Devolver los días de trabajo en formato JSON
             return Json(diasTrabajo);
         }
 
         public async Task<IActionResult> GetHorasDisponibles(string idDoctor, string dia)
         {
-            Console.WriteLine($"Doctor: {idDoctor}, Día: {dia}");
-
             DateTime fecha = DateTime.Parse(dia);
             string[] diasSemana = { "D", "L", "K", "M", "J", "V", "S" };
             string diaSemana = diasSemana[(int)fecha.DayOfWeek];
-
-            Console.WriteLine("DIA: " + diaSemana);
-
             var horarios = await _context.Horarios
                 .Where(h => h.CedulaDoctor == idDoctor && h.Dia == diaSemana)
                 .Select(h => new { h.Horainicio, h.Horafin })
@@ -146,32 +105,22 @@ namespace ProyectoBasesDatos.Controllers
             {
                 TimeSpan inicio = horario.Horainicio.TimeOfDay;
                 TimeSpan fin = horario.Horafin.TimeOfDay;
-
-                Console.WriteLine("Inicio: " + inicio);
-                Console.WriteLine("Fin: " + fin);
-
-                // Si el horario no cruza la medianoche
                 if (inicio < fin)
                 {
                     for (TimeSpan hora = inicio; hora < fin; hora = hora.Add(TimeSpan.FromMinutes(60)))
                     {
-                        Console.WriteLine("Hora: " + hora);
                         horasDisponibles.Add(hora.ToString(@"hh\:mm"));
                     }
                 }
-                else // Si el horario cruza la medianoche
+                else
                 {
-                    // Desde inicio hasta 23:59
                     for (TimeSpan hora = inicio; hora < TimeSpan.FromHours(24); hora = hora.Add(TimeSpan.FromMinutes(60)))
                     {
-                        Console.WriteLine("Hora: " + hora);
                         horasDisponibles.Add(hora.ToString(@"hh\:mm"));
                     }
 
-                    // Desde 00:00 hasta fin
                     for (TimeSpan hora = TimeSpan.Zero; hora < fin; hora = hora.Add(TimeSpan.FromMinutes(60)))
                     {
-                        Console.WriteLine("Hora: " + hora);
                         horasDisponibles.Add(hora.ToString(@"hh\:mm"));
                     }
                 }
@@ -202,7 +151,6 @@ namespace ProyectoBasesDatos.Controllers
             }
 
             string newId = $"{hospId}_APP-{nextID:D3}";
-            Console.WriteLine("NEW ID:" + newId);
             return newId;
         }
 
@@ -221,43 +169,27 @@ namespace ProyectoBasesDatos.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Dia,Hora,Estado,CedulaPaciente,CedulaDoctor")] Cita cita)
         {
-            Console.WriteLine("DIA: " + cita.Dia);
-            Console.WriteLine("Hora: " + cita.Hora);
-            Console.WriteLine("CedulaPaciente: " + cita.CedulaPaciente);
-            Console.WriteLine("CedulaDoctor: " + cita.CedulaDoctor);
-
             try
             {
-                // Generar el ID de la cita
                 cita.Id = await GenerateNextIDApp();
-
-                // Obtener la cadena de conexión
                 var connectionString = _context.Database.GetDbConnection().ConnectionString;
-
-                // Crear la conexión y el comando
                 using (var connection = new SqlConnection(connectionString))
                 {
                     await connection.OpenAsync();
-
-                    Console.WriteLine("Hora: ");
                     using (var command = new SqlCommand("RegistrarCita", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Agregar los parámetros del procedimiento almacenado
                         command.Parameters.AddWithValue("@IdCita", cita.Id);
                         command.Parameters.AddWithValue("@Dia", cita.Dia);
                         command.Parameters.AddWithValue("@Hora", cita.Hora);
                         command.Parameters.AddWithValue("@CedulaPaciente", cita.CedulaPaciente);
                         command.Parameters.AddWithValue("@CedulaDoctor", cita.CedulaDoctor);
                         command.Parameters.AddWithValue("@Estado", cita.Estado);
-
-                        // Ejecutar el procedimiento almacenado
                         await command.ExecuteNonQueryAsync();
                     }
                 }
 
-                // Redirigir según el rol del usuario
                 if (HttpContext.Session.GetString("Rol") == "Admin")
                 {
                     return RedirectToAction(nameof(Index));
@@ -269,21 +201,14 @@ namespace ProyectoBasesDatos.Controllers
             }
             catch (SqlException ex)
             {
-                // Capturar errores de SQL, incluyendo los RAISERROR del procedimiento almacenado
                 Console.WriteLine("Error SQL: " + ex.Message);
-
-                // Mostrar el mensaje de error en la vista
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View(cita); // Retornar a la vista con el mensaje de error
+                return View(cita); 
             }
             catch (Exception ex)
             {
-                // Capturar otros errores
-                Console.WriteLine("Error: " + ex.Message);
-
-                // Mostrar un mensaje de error genérico
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al registrar la cita.");
-                return View(cita); // Retornar a la vista con el mensaje de error
+                return View(cita); 
             }
         }
 
@@ -291,13 +216,6 @@ namespace ProyectoBasesDatos.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            Console.WriteLine("Id: " + id);
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            // Obtain the appointment with related doctor and patient information
             var cita = await _context.Citas
                 .Include(c => c.CedulaDoctorNavigation)
                     .ThenInclude(d => d.IdEspecialidadNavigation)
@@ -305,10 +223,7 @@ namespace ProyectoBasesDatos.Controllers
                     .ThenInclude(p => p.CorreoNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            // Get the specialization ID of the doctor associated with the selected appointment
             var especialidadId = cita.CedulaDoctorNavigation.IdEspecialidad;
-
-            // Fetch doctors based on the specialization ID
             var doctores = _context.Doctores
                 .Where(d => d.IdEspecialidad == especialidadId)
                 .Select(d => new { d.Cedula,
@@ -318,20 +233,13 @@ namespace ProyectoBasesDatos.Controllers
                 })
                 .ToList();
 
-            // Create SelectLists
             ViewBag.CedulaDoctor = new SelectList(doctores, "Cedula", "NombreCompleto", cita.CedulaDoctor);
             ViewBag.CedulaPaciente = new SelectList(_context.Pacientes, "Cedula", "Nombre", cita.CedulaPaciente);
             ViewBag.Especialidad = new SelectList(_context.Especialidades, "Id", "Nombre", cita.CedulaDoctorNavigation?.IdEspecialidad);
-
-            // Convert DateOnly to string
             string diaString = cita.Dia.ToString("yyyy-MM-dd");
-
-            // Await the GetHorasDisponibles method and extract the hours
             var availableHoursResult = await GetHorasDisponibles(cita.CedulaDoctor, diaString);
             var availableHours = (availableHoursResult as JsonResult)?.Value as List<string> ?? new List<string>();
-
             ViewBag.AvailableHours = new SelectList(availableHours);
-
             return View(cita);
         }
 
@@ -369,7 +277,7 @@ namespace ProyectoBasesDatos.Controllers
                 return NotFound();
             }
 
-            ViewBag.IdCita = id; // Pasamos el ID de la cita a la vista
+            ViewBag.IdCita = id; 
 
             return View();
         }
@@ -401,7 +309,6 @@ namespace ProyectoBasesDatos.Controllers
             if (pagos != null)
             {
                 string lastID = pagos.Id;
-                Console.WriteLine("LAST ID:" + lastID);
                 if (lastID.Contains("PAG"))
                 {
                     string number = lastID.Substring(3);
@@ -413,7 +320,6 @@ namespace ProyectoBasesDatos.Controllers
             }
 
             string newId = $"PAG{nextID:D3}";
-            Console.WriteLine("NEW ID:" + newId);
             return newId;
         }
 
@@ -421,22 +327,14 @@ namespace ProyectoBasesDatos.Controllers
         [HttpPost]
         public async Task<IActionResult> Pagar(string id)
         {
-            Console.WriteLine("Pagando cita");
             var cita = await _context.Citas.FindAsync(id);
-            if (cita == null)
-            {
-                return NotFound();
-            }
-
             var tratamiento = await _context.Tratamientos
             .FirstOrDefaultAsync(t => t.IdCita == cita.Id);
 
-            Console.WriteLine("Total: " + tratamiento.Precio);
-          
             var pago = new Pago
             {
                 Id = await GenerateNextID(),
-                Fecha = DateOnly.FromDateTime(DateTime.Now), // Convertir DateTime.Now a DateOnly
+                Fecha = DateOnly.FromDateTime(DateTime.Now), 
                 Total = tratamiento.Precio,
                 MetodoPago = "Tarjeta",
                 Estado = "Pagado",
@@ -447,10 +345,9 @@ namespace ProyectoBasesDatos.Controllers
             _context.Add(pago);
             await _context.SaveChangesAsync();
 
-            cita.Estado = "Pagada"; // Cambiar el estado de la cita a "Pagada"
+            cita.Estado = "Pagada"; 
             _context.Update(cita);
             await _context.SaveChangesAsync();
-
 
             return Ok();
         }

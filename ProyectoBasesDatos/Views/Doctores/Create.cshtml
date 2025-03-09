@@ -36,13 +36,13 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <!-- Sección de información básica -->
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input asp-for="Cedula" class="form-control" placeholder="Cédula" required />
+                                    <input asp-for="Cedula" class="form-control" placeholder="Cédula" required maxlength="9" pattern="\d*" />
                                     <label asp-for="Cedula"><i class="fas fa-id-card me-1"></i>Cédula</label>
                                     <span asp-validation-for="Cedula" class="text-danger small"></span>
+                                    <div class="invalid-feedback">Por favor, ingrese una cédula válida (solo números, máximo 9 dígitos).</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -54,7 +54,6 @@
                             </div>
                         </div>
 
-                        <!-- Sección de nombre y apellidos -->
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <div class="form-floating">
@@ -76,7 +75,6 @@
                             </div>
                         </div>
 
-                        <!-- Sección de especialidad y teléfono -->
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <div class="form-floating">
@@ -102,16 +100,15 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input name="Telefono" class="form-control" placeholder="Teléfono" required />
+                                    <input name="Telefono" class="form-control" placeholder="Teléfono" required maxlength="8" pattern="\d*" />
                                     <label for="Telefono"><i class="fas fa-phone me-1"></i>Teléfono</label>
+                                    <div class="invalid-feedback">Por favor, ingrese un teléfono válido (solo números, máximo 8 dígitos).</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Campo oculto para el ID del hospital -->
                         <input type="hidden" name="IdHospital" value="@ViewBag.IdHospital" />
 
-                        <!-- Sección de horarios -->
                         <div class="mb-4">
                             <h6 class="text-uppercase text-muted small fw-bold mb-3">
                                 <i class="fas fa-calendar-alt me-2"></i>Días de Trabajo
@@ -148,7 +145,6 @@
                             </div>
                         </div>
 
-                        <!-- Sección de horas de trabajo -->
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <div class="form-floating">
@@ -164,7 +160,6 @@
                             </div>
                         </div>
 
-                        <!-- Botón de envío -->
                         <div class="d-flex justify-content-end mt-4">
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="fas fa-save me-2"></i>Crear Doctor
@@ -181,9 +176,21 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
 
-<!-- Estilos adicionales -->
+    <script>
+        $(document).ready(function () {
+            // Validar que solo se ingresen números en el campo de cédula
+            $('#Cedula').on('input', function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            // Validar que solo se ingresen números en el campo de teléfono
+            $('input[name="Telefono"]').on('input', function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        });
+    </script>
+}
 <style>
     .card {
         border: none;

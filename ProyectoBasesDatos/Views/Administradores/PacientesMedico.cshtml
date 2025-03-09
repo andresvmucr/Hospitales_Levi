@@ -47,7 +47,7 @@
                                     <label for="cedulaDoctor" class="form-label fw-medium">
                                         <i class="fas fa-id-card text-primary me-2"></i>Cédula del Doctor
                                     </label>
-                                    <input type="text" class="form-control form-control-lg" id="cedulaDoctor" name="cedulaDoctor" placeholder="Ingrese la cédula" required>
+                                    <input type="text" class="form-control form-control-lg" id="cedulaDoctor" name="cedulaDoctor" placeholder="Ingrese la cédula" maxlength="9" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -111,7 +111,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Los datos se llenarán dinámicamente -->
                                 <tr id="emptyMessage">
                                     <td colspan="7" class="text-center py-5">
                                         <div class="text-muted">
@@ -130,12 +129,10 @@
 </div>
 
 <style>
-    /* Estilos para la transición de la tarjeta */
     .card {
         transition: all 0.3s ease;
     }
 
-    /* Estilos para mejorar la visualización de la tabla */
     .table th {
         font-weight: 600;
         white-space: nowrap;
@@ -156,32 +153,35 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            // Validación de la cédula del doctor - solo números y máximo 9 dígitos
+            document.getElementById('cedulaDoctor').addEventListener('input', function (event) {
+                this.value = this.value.replace(/[^0-9]/g, ''); // Solo permite números
+                if (this.value.length > 9) {
+                    this.value = this.value.slice(0, 9); // Limita a 9 dígitos
+                }
+            });
+
             // Función para formatear la hora en formato HH:MM
             function formatearHora(hora) {
-                if (!hora) return ""; // Si no hay hora, devuelve una cadena vacía
-
-                // Verifica si la hora tiene el formato YYYY-MM-DDTHH:MM
+                if (!hora) return "";
                 if (hora.includes("T")) {
-                    // Divide la cadena en la "T" y toma la segunda parte (HH:MM)
                     const partesHora = hora.split("T");
                     if (partesHora.length > 1) {
                         const horaCompleta = partesHora[1];
-                        // Toma solo las primeras 5 caracteres (HH:MM)
                         return horaCompleta.substring(0, 5);
                     }
                 }
 
-                return ""; // Si el formato no es válido, devuelve una cadena vacía
+                return "";
             }
 
             $("#formPacientesPorMedico").submit(function (e) {
-                e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+                e.preventDefault();
 
                 var cedulaDoctor = $("#cedulaDoctor").val();
                 var fechaInicio = $("#fechaInicio").val();
                 var fechaFin = $("#fechaFin").val();
 
-                // Mostrar un estado de carga en la tabla
                 $("#tablaPacientes tbody").html(`
                     <tr>
                         <td colspan="7" class="text-center py-5">
@@ -198,21 +198,18 @@
                     type: "POST",
                     data: { cedulaDoctor: cedulaDoctor, fechaInicio: fechaInicio, fechaFin: fechaFin },
                     success: function (response) {
-                        console.log(response); // Imprime la respuesta en la consola
+                        console.log(response);
 
-                        // Limpia la tabla antes de agregar nuevos datos
                         $("#tablaPacientes tbody").empty();
 
                         if (response.success && response.pacientes.length > 0) {
-                            // Actualizamos el contador y lo mostramos
                             $("#totalPacientes").text(response.pacientes.length + " pacientes");
                             $("#resultadosInfo").removeClass("d-none");
 
-                            // Llena la tabla con los datos
                             response.pacientes.forEach(function (item) {
                                 const fechaNacimiento = new Date(item.fechaNacimientoPaciente).toLocaleDateString();
                                 const fechaCita = new Date(item.fechaCita).toLocaleDateString();
-                                const horaCita = formatearHora(item.horaCita); // Formatear la hora
+                                const horaCita = formatearHora(item.horaCita);
 
                                 $("#tablaPacientes tbody").append(`
                                     <tr>
@@ -231,7 +228,6 @@
                                 `);
                             });
                         } else {
-                            // Mostrar mensaje de no hay resultados
                             $("#resultadosInfo").addClass("d-none");
                             $("#tablaPacientes tbody").html(`
                                 <tr>
@@ -246,7 +242,6 @@
                             `);
 
                             if (!response.success) {
-                                // Mostrar notificación de error
                                 const Toast = Swal.mixin({
                                     toast: true,
                                     position: 'top-end',
@@ -265,7 +260,6 @@
                     error: function (xhr, status, error) {
                         console.error("Error en la solicitud AJAX:", status, error);
 
-                        // Mostrar mensaje de error en la tabla
                         $("#tablaPacientes tbody").html(`
                             <tr>
                                 <td colspan="7" class="text-center py-5">
@@ -305,6 +299,5 @@
         });
     </script>
 
-    <!-- Añadir SweetAlert2 para notificaciones mejoradas -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 }

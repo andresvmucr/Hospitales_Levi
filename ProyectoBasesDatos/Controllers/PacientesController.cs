@@ -21,17 +21,14 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Pacientes
         public async Task<IActionResult> Index()
         {
-            // var idHospital = "H001";
             var idHospital = HttpContext.Session.GetString("IdHospital");
-
             if (string.IsNullOrEmpty(idHospital))
             {
                 return RedirectToAction("Error");
             }
 
-            // Cargar los pacientes con sus datos relacionados
             var pacientes = await _context.Pacientes
-                .Include(p => p.CorreoNavigation) // Incluir el usuario relacionado
+                .Include(p => p.CorreoNavigation)
                 .Where(p => p.CorreoNavigation.IdHospital == idHospital)
                 .ToListAsync();
 
@@ -41,14 +38,8 @@ namespace ProyectoBasesDatos.Controllers
         // GET: Pacientes/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            // Cargar el paciente incluyendo el usuario relacionado
             var paciente = await _context.Pacientes
-                .Include(p => p.CorreoNavigation) // Incluir el usuario relacionado
+                .Include(p => p.CorreoNavigation)
                 .FirstOrDefaultAsync(m => m.Cedula == id);
 
             if (paciente == null)
@@ -77,17 +68,6 @@ namespace ProyectoBasesDatos.Controllers
                                          string SegundoApellido,
                                          string Telefono)
         {
-            Console.WriteLine("Cedula: " + paciente.Cedula);
-            Console.WriteLine("Direccion: " + paciente.Direccion);
-            Console.WriteLine("Correo: " + paciente.Correo);
-            Console.WriteLine("Genero: " + paciente.Genero);
-            Console.WriteLine("FechaNacimiento: " + paciente.FechaNacimiento);
-            Console.WriteLine("Nombre: " + Nombre);
-            Console.WriteLine("PrimerApellido: " + PrimerApellido);
-            Console.WriteLine("SegundoApellido: " + SegundoApellido);
-            Console.WriteLine("Telefono: " + Telefono);
-
-            // Initialize CorreoNavigation if it is null
             if (paciente.CorreoNavigation == null)
             {
                 paciente.CorreoNavigation = new Usuario();
@@ -98,9 +78,8 @@ namespace ProyectoBasesDatos.Controllers
             paciente.CorreoNavigation.PrimerApellido = PrimerApellido;
             paciente.CorreoNavigation.SegundoApellido = SegundoApellido;
             paciente.CorreoNavigation.Telefono = Telefono;
-            paciente.CorreoNavigation.Contrasenna = "1234"; // Default password
+            paciente.CorreoNavigation.Contrasenna = "1234"; 
             paciente.CorreoNavigation.Rol = "Paciente";
-            // paciente.CorreoNavigation.IdHospital = "H001";
             paciente.CorreoNavigation.IdHospital = HttpContext.Session.GetString("IdHospital");
 
             _context.Usuarios.Add(paciente.CorreoNavigation);
@@ -128,7 +107,6 @@ namespace ProyectoBasesDatos.Controllers
                 return NotFound();
             }
 
-            // Asegurar que CorreoNavigation no sea nulo
             if (paciente.CorreoNavigation == null)
             {
                 paciente.CorreoNavigation = new Usuario();
@@ -143,12 +121,6 @@ namespace ProyectoBasesDatos.Controllers
         public async Task<IActionResult> Edit(string id, [Bind("Cedula,Direccion,Genero,Fechanacimiento,Correo, CorreoNavigation")] Paciente paciente,
                                                      string Nombre, string PrimerApellido, string SegundoApellido, string Telefono)
         {
-            Console.WriteLine("Nombre: " + Nombre);
-            Console.WriteLine("PrimerApellido: " + PrimerApellido);
-            Console.WriteLine("SegundoApellido: " + SegundoApellido);
-            Console.WriteLine("Telefono: " + Telefono);
-
-
             if (id != paciente.Cedula)
             {
                 return NotFound();
@@ -188,7 +160,6 @@ namespace ProyectoBasesDatos.Controllers
             else
             {
                 var errores = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                Console.WriteLine("Errores: " + string.Join(", ", errores));
             }
 
             return View(paciente);

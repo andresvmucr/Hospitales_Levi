@@ -10,7 +10,7 @@
                     <h1 class="h3 mb-0">Pagos Pendientes</h1>
                 </div>
                 <div class="card-body">
-                    <!-- Formulario para ingresar la cédula del paciente -->
+
                     <form id="formPagosPendientes" class="mb-4">
                         <div class="row">
                             <div class="col-md-8">
@@ -18,7 +18,7 @@
                                     <label for="idPaciente" class="form-label">Cédula del Paciente</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                        <input type="text" class="form-control" id="idPaciente" name="idPaciente" placeholder="Ingrese la cédula del paciente" required>
+                                        <input type="text" class="form-control" id="idPaciente" name="idPaciente" placeholder="Ingrese la cédula del paciente" maxlength="9" required>
                                     </div>
                                 </div>
                             </div>
@@ -31,16 +31,12 @@
                         </div>
                     </form>
 
-                    <!-- Mensaje de error -->
                     <div id="errorMessage" class="alert alert-danger d-none mb-3"></div>
-
-                    <!-- Información del paciente (se mostrará cuando se encuentren resultados) -->
                     <div id="infoPaciente" class="alert alert-info d-none mb-3">
                         <h5 class="alert-heading mb-2"><i class="fas fa-user-circle me-2"></i><span id="nombrePaciente"></span></h5>
                         <p class="mb-0">Total pendiente: <strong><span id="totalPendiente"></span></strong></p>
                     </div>
 
-                    <!-- Resultados -->
                     <div id="resultadosContainer" class="d-none">
                         <h2 class="h4 mb-3 mt-4">Detalle de Pagos Pendientes</h2>
                         <div class="table-responsive">
@@ -54,13 +50,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Los datos se llenarán dinámicamente -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Mensaje cuando no hay pagos pendientes -->
                     <div id="noPagosMessage" class="alert alert-success d-none mt-3">
                         <i class="fas fa-check-circle me-2"></i>El paciente no tiene pagos pendientes.
                     </div>
@@ -74,19 +68,24 @@
     <script>
         $(document).ready(function () {
             let pagosPendientesData = [];
+            // Validación de la cédula del paciente - solo números y máximo 9 dígitos
+            document.getElementById('idPaciente').addEventListener('input', function (event) {
+                this.value = this.value.replace(/[^0-9]/g, ''); 
+                if (this.value.length > 9) {
+                    this.value = this.value.slice(0, 9);
+                }
+            });
 
             $("#formPagosPendientes").submit(function (e) {
                 e.preventDefault();
 
                 var idPaciente = $("#idPaciente").val();
 
-                // Validar que la cédula no esté vacía
                 if (!idPaciente) {
                     showNotification("Por favor, ingrese la cédula del paciente.", "warning");
                     return;
                 }
 
-                // Mostrar el spinner de carga
                 $("#loadingSpinner").removeClass("d-none");
                 $("#errorMessage").addClass("d-none");
                 $("#infoPaciente").addClass("d-none");
@@ -100,30 +99,24 @@
                     success: function (response) {
                         console.log(response);
 
-                        // Ocultar el spinner de carga
                         $("#loadingSpinner").addClass("d-none");
 
                         if (response.success) {
                             pagosPendientesData = response.pagosPendientes;
 
-                            // Mostrar info del paciente si tenemos datos
                             if (response.nombrePaciente) {
                                 $("#nombrePaciente").text(response.nombrePaciente);
                                 $("#infoPaciente").removeClass("d-none");
                             }
 
-                            // Calcular y mostrar total pendiente
                             const totalPendiente = pagosPendientesData.reduce((total, item) => total + item.pagoPendiente, 0);
                             $("#totalPendiente").text(formatCurrency(totalPendiente));
 
-                            // Limpia la tabla antes de agregar nuevos datos
                             $("#tablaPagosPendientes tbody").empty();
 
                             if (pagosPendientesData.length > 0) {
-                                // Mostrar tabla de resultados
                                 $("#resultadosContainer").removeClass("d-none");
 
-                                // Llena la tabla con los datos
                                 pagosPendientesData.forEach(function (item) {
                                     $("#tablaPagosPendientes tbody").append(
                                         `<tr>
@@ -131,40 +124,31 @@
                                             <td>${formatDate(item.fechaCita)}</td>
                                             <td>${item.horaCita}</td>
                                             <td>${item.nombreEspecialidad}</td>
-  
                                         </tr>`
                                     );
                                 });
                             } else {
-                                // Mostrar mensaje de que no hay pagos pendientes
                                 $("#noPagosMessage").removeClass("d-none");
                             }
                         } else {
-                            // Mostrar mensaje de error
                             $("#errorMessage").html(`<i class="fas fa-exclamation-triangle me-2"></i>${response.message}`).removeClass("d-none");
                         }
                     },
                     error: function (xhr, status, error) {
                         console.error("Error en la solicitud AJAX:", status, error);
 
-                        // Ocultar el spinner de carga
                         $("#loadingSpinner").addClass("d-none");
 
-                        // Mostrar mensaje de error
                         $("#errorMessage").html(`<i class="fas fa-exclamation-circle me-2"></i>Ocurrió un error al procesar la solicitud. Inténtelo de nuevo más tarde.`).removeClass("d-none");
                     }
                 });
             });
 
-          
-
-            // Función para formatear fechas
             function formatDate(dateString) {
                 const date = new Date(dateString);
                 return date.toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' });
             }
 
-            // Función para formatear montos como moneda
             function formatCurrency(amount) {
                 return new Intl.NumberFormat("es-ES", { style: "currency", currency: "CRC" }).format(amount);
             }
