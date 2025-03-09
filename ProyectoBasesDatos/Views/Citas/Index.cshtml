@@ -34,15 +34,15 @@
                 <div class="card h-100 border-0 shadow-sm hover-shadow position-relative">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge @(item.Estado == "Pendiente" ? "bg-warning" : item.Estado == "Completada" ? "bg-success" : "bg-secondary")">
+                            <span class="badge @(item.Estado == "Pendiente" ? "bg-warning" : item.Estado == "Completada" ? "bg-success" : "bg-secondary")" id="badge-@item.Id">
                                 @item.Estado
                             </span>
                             <div>
-                                @if (item.Estado != "Pagada")
+                                @if (item.Estado == "Pendiente")
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="@item.Id">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
                                 }
                                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="Detalles">
                                     <i class="fas fa-info-circle"></i>
@@ -134,25 +134,54 @@
     }
 </div>
 
-@section Styles {
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        .hover-shadow {
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+<!-- Modal de Confirmación para Cancelar -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Cancelación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas cancelar esta cita?</p>
+                <p class="text-danger"><small>Esta acción no se puede deshacer.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cerrar
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmCancel">
+                    <i class="fas fa-check me-1"></i>Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            .hover-shadow:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-            }
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            var confirmCancelButton = document.getElementById("confirmCancel");
 
-        .badge {
-            font-size: 0.9em;
-            padding: 0.5em 0.75em;
-        }
+            document.getElementById('confirmModal').addEventListener("show.bs.modal", function (event) {
+                var button = event.relatedTarget;
+                var idCita = button.getAttribute("data-id");
 
-        .btn-sm {
-            margin-right: 5px;
-        }
-    </style>
+                if (confirmCancelButton) {
+                    confirmCancelButton.onclick = function () {
+                        fetch(`/Citas/Cancelar/${idCita}`, {
+                            method: "POST"
+                        }).then(response => {
+                            if (response.ok) {
+                                window.location.reload();
+                            }
+                        }).catch(error => console.error("Error:", error));
+                    };
+                }
+            });
+        });
+    </script>
 }
