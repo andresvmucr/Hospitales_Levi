@@ -4,64 +4,121 @@
     ViewData["Title"] = "Detalles del Doctor";
 }
 
-<div class="container mt-4">
-    <h1 class="display-4">Detalles del Doctor</h1>
-    <hr />
-
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h4 class="card-title mb-0">Información del Doctor</h4>
-        </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Cédula</dt>
-                <dd class="col-sm-9">@Model.Cedula</dd>
-
-                <dt class="col-sm-3">Nombre Completo</dt>
-                <dd class="col-sm-9">
-                    @Model.CorreoNavigation.Nombre
-                    @Model.CorreoNavigation.PrimerApellido
-                    @Model.CorreoNavigation.SegundoApellido
-                </dd>
-
-                <dt class="col-sm-3">Especialidad</dt>
-                <dd class="col-sm-9">@Model.IdEspecialidadNavigation.Nombre</dd>
-
-                <dt class="col-sm-3">Correo</dt>
-                <dd class="col-sm-9">@Model.CorreoNavigation.Correo</dd>
-
-                <dt class="col-sm-3">Teléfono</dt>
-                <dd class="col-sm-9">@Model.CorreoNavigation.Telefono</dd>
-
-                <dt class="col-sm-3">Horarios</dt>
-                <dd class="col-sm-9">
-                    <ul class="list-unstyled">
-                        @foreach (var horario in Model.Horarios
-                        .OrderBy(h => h.Dia == "L" ? 1
-                        : h.Dia == "M" ? 2
-                        : h.Dia == "K" ? 3
-                        : h.Dia == "J" ? 4
-                        : h.Dia == "V" ? 5
-                        : h.Dia == "S" ? 6
-                        : 7)) // Ordena L, M, K, J, V, S, D
-                        {
-                            <li class="mb-2">
-                                <span class="badge bg-secondary">@horario.Dia</span>
-                                @horario.Horainicio.ToString("HH:mm") - @horario.Horafin.ToString("HH:mm")
-                            </li>
-                        }
-                    </ul>
-                </dd>
-            </dl>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-user-md me-2"></i>Detalles del Doctor
+                            </h1>
+                            <p class="text-muted mb-0">Información detallada del doctor registrado en el sistema.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver a la lista
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="mt-4">
-        <a asp-action="Edit" asp-route-id="@Model.Cedula" class="btn btn-primary">Editar</a>
-        <a asp-action="Index" class="btn btn-outline-secondary">Volver a la Lista</a>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <!-- Encabezado de la tarjeta -->
+                <div class="card-header bg-white p-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-container me-4">
+                            <div class="avatar bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 1.8rem;">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="h3 fw-bold mb-1">@Model.CorreoNavigation.Nombre @Model.CorreoNavigation.PrimerApellido @Model.CorreoNavigation.SegundoApellido</h2>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-stethoscope text-primary me-1 small"></i>
+                                @Model.IdEspecialidadNavigation.Nombre
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cuerpo de la tarjeta -->
+                <div class="card-body p-4">
+                    <div class="info-section mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-info-circle text-primary me-2"></i>Información General
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-id-card text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Cédula</p>
+                                        <p class="fw-medium mb-0">@Model.Cedula</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-envelope text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Correo</p>
+                                        <p class="fw-medium mb-0">@Model.CorreoNavigation.Correo</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-phone text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Teléfono</p>
+                                        <p class="fw-medium mb-0">@Model.CorreoNavigation.Telefono</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Horarios -->
+                    <div class="info-section mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-calendar-alt text-primary me-2"></i>Horarios
+                        </h5>
+                        <ul class="list-unstyled">
+                            @foreach (var horario in Model.Horarios
+                            .OrderBy(h => h.Dia == "L" ? 1
+                            : h.Dia == "M" ? 2
+                            : h.Dia == "K" ? 3
+                            : h.Dia == "J" ? 4
+                            : h.Dia == "V" ? 5
+                            : h.Dia == "S" ? 6
+                            : 7)) // Ordena L, M, K, J, V, S, D
+                            {
+                                <li class="mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-primary me-3">@horario.Dia</span>
+                                        <div>
+                                            <p class="fw-medium mb-0">@horario.Horainicio.ToString("HH:mm") - @horario.Horafin.ToString("HH:mm")</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 
+<!-- Estilos adicionales -->
 <style>
     .card {
         border: none;
@@ -70,6 +127,49 @@
 
     .card-header {
         border-radius: 10px 10px 0 0;
+    }
+
+    .card-footer {
+        border-top: none;
+    }
+
+    .btn {
+        min-width: 120px;
+    }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    .info-section {
+        margin-bottom: 1.5rem;
+    }
+
+        .info-section h5 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #6c757d; /* Color gris para los títulos de sección */
+        }
+
+    .text-muted {
+        color: #6c757d; /* Color gris para las etiquetas */
+    }
+
+    .fw-medium {
+        font-weight: 500;
+        color: #212529; /* Color oscuro para los valores */
+    }
+
+    .avatar-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar {
+        background-color: #0d6efd;
+        color: white;
+        font-weight: bold;
     }
 
     .badge {
@@ -81,3 +181,6 @@
         padding: 0.25em 0;
     }
 </style>
+
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

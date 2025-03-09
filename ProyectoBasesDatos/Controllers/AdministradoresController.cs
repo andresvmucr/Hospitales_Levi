@@ -24,6 +24,14 @@ namespace ProyectoBasesDatos.Controllers
 
         public IActionResult InventarioPrescripcion()
         {
+            // Obtener el ID del hospital desde el HttpContext (por ejemplo, desde una sesión o un claim)
+            var idHospital = HttpContext.Session.GetString("IdHospital"); // Si está en la sesión
+                                                                          // O si está en un claim:
+                                                                          // var idHospital = User.FindFirst("HospitalId")?.Value;
+
+            // Pasar el ID a la vista usando ViewData
+            ViewData["IdHospital"] = idHospital;
+
             return View();
         }
 

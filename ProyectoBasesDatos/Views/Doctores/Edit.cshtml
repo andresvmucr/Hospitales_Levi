@@ -4,7 +4,7 @@
     ViewData["Title"] = "Editar Doctor";
 }
 
-<div class="container mt-4">
+<div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2">
             <i class="fas fa-user-md me-2"></i>Editar Doctor
@@ -16,57 +16,56 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form asp-action="Edit">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <form asp-action="Edit" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                 <!-- Sección de información básica -->
-                <div class="row">
+                <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label asp-for="Cedula" class="form-label">Cédula</label>
+                        <div class="form-floating">
                             <input asp-for="Cedula" class="form-control" readonly />
+                            <label asp-for="Cedula" class="form-label">Cédula</label>
                             <span asp-validation-for="Cedula" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label asp-for="Correo" class="form-label">Correo</label>
+                        <div class="form-floating">
                             <input asp-for="Correo" class="form-control" readonly />
+                            <label asp-for="Correo" class="form-label">Correo</label>
                             <span asp-validation-for="Correo" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Sección de nombre y apellidos -->
-                <div class="row">
+                <div class="row g-3 mb-4">
                     <div class="col-md-4">
-                        <div class="form-group mb-3">
+                        <div class="form-floating">
+                            <input asp-for="CorreoNavigation.Nombre" name="Nombre" class="form-control" required />
                             <label asp-for="CorreoNavigation.Nombre" class="form-label">Nombre</label>
-                            <input asp-for="CorreoNavigation.Nombre" name="Nombre" class="form-control" />
                             <span asp-validation-for="CorreoNavigation.Nombre" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group mb-3">
+                        <div class="form-floating">
+                            <input asp-for="CorreoNavigation.PrimerApellido" name="PrimerApellido" class="form-control" required />
                             <label asp-for="CorreoNavigation.PrimerApellido" class="form-label">Primer Apellido</label>
-                            <input asp-for="CorreoNavigation.PrimerApellido" name="PrimerApellido" class="form-control" />
                             <span asp-validation-for="CorreoNavigation.PrimerApellido" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group mb-3">
-                            <label asp-for="CorreoNavigation.SegundoApellido" class="form-label">Segundo Apellido</label>
+                        <div class="form-floating">
                             <input asp-for="CorreoNavigation.SegundoApellido" name="SegundoApellido" class="form-control" />
+                            <label asp-for="CorreoNavigation.SegundoApellido" class="form-label">Segundo Apellido</label>
                             <span asp-validation-for="CorreoNavigation.SegundoApellido" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Sección de especialidad y teléfono -->
-                <div class="row">
+                <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label asp-for="IdEspecialidad" class="form-label">Especialidad</label>
+                        <div class="form-floating">
                             @if (ViewBag.NoEspecialidades == true)
                             {
                                 <select asp-for="IdEspecialidad" class="form-control" disabled>
@@ -75,79 +74,70 @@
                             }
                             else
                             {
-                                <select asp-for="IdEspecialidad" class="form-control" asp-items="ViewBag.Especialidades">
+                                <select asp-for="IdEspecialidad" class="form-control" asp-items="ViewBag.Especialidades" required>
                                     <option value="">Seleccione una especialidad</option>
                                 </select>
                             }
+                            <label asp-for="IdEspecialidad" class="form-label">Especialidad</label>
                             <span asp-validation-for="IdEspecialidad" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group mb-3">
+                        <div class="form-floating">
+                            <input asp-for="CorreoNavigation.Telefono" name="Telefono" class="form-control" required />
                             <label asp-for="CorreoNavigation.Telefono" class="form-label">Teléfono</label>
-                            <input asp-for="CorreoNavigation.Telefono" name="Telefono" class="form-control" />
                             <span asp-validation-for="CorreoNavigation.Telefono" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Sección de días de trabajo -->
-                <div class="form-group mb-4">
-                    <label class="form-label">Días de trabajo</label>
+                <div class="mb-4">
+                    <label class="form-label mb-2">Días de trabajo</label>
                     <div class="d-flex flex-wrap gap-3">
                         @{
                             var diasSeleccionados = ViewBag.Dias as List<string> ?? new List<string>();
                         }
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="Dias" value="L" id="diaL" @(diasSeleccionados.Contains("L") ? "checked" : "")>
-                            <label class="form-check-label" for="diaL">Lunes</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="Dias" value="M" id="diaM" @(diasSeleccionados.Contains("M") ? "checked" : "")>
-                            <label class="form-check-label" for="diaM">Martes</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="Dias" value="K" id="diaK" @(diasSeleccionados.Contains("K") ? "checked" : "")>
-                            <label class="form-check-label" for="diaK">Miércoles</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="Dias" value="J" id="diaJ" @(diasSeleccionados.Contains("J") ? "checked" : "")>
-                            <label class="form-check-label" for="diaJ">Jueves</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="Dias" value="V" id="diaV" @(diasSeleccionados.Contains("V") ? "checked" : "")>
-                            <label class="form-check-label" for="diaV">Viernes</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="Dias" value="S" id="diaS" @(diasSeleccionados.Contains("S") ? "checked" : "")>
-                            <label class="form-check-label" for="diaS">Sábado</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="Dias" value="D" id="diaD" @(diasSeleccionados.Contains("D") ? "checked" : "")>
-                            <label class="form-check-label" for="diaD">Domingo</label>
-                        </div>
+                        @foreach (var dia in new[] { "L", "M", "K", "J", "V", "S", "D" })
+                        {
+                            var diaNombre = dia switch
+                            {
+                                "L" => "Lunes",
+                                "M" => "Martes",
+                                "K" => "Miércoles",
+                                "J" => "Jueves",
+                                "V" => "Viernes",
+                                "S" => "Sábado",
+                                "D" => "Domingo",
+                                _ => ""
+                            };
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Dias" value="@dia" id="dia@dia" @(diasSeleccionados.Contains(dia) ? "checked" : "") />
+                                <label class="form-check-label" for="dia@dia">@diaNombre</label>
+                            </div>
+                        }
                     </div>
                 </div>
 
                 <!-- Sección de horas de trabajo -->
-                <div class="row">
+                <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <div class="form-group mb-3">
+                        <div class="form-floating">
+                            <input type="time" name="HoraInicio" class="form-control" value="@ViewBag.HoraInicio" required />
                             <label class="form-label">Hora de Inicio</label>
-                            <input type="time" name="HoraInicio" class="form-control" value="@ViewBag.HoraInicio" />
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group mb-3">
+                        <div class="form-floating">
+                            <input type="time" name="HoraFin" class="form-control" value="@ViewBag.HoraFin" required />
                             <label class="form-label">Hora de Fin</label>
-                            <input type="time" name="HoraFin" class="form-control" value="@ViewBag.HoraFin" />
                         </div>
                     </div>
                 </div>
 
                 <!-- Botón de envío -->
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary btn-lg">
                         <i class="fas fa-save me-2"></i>Guardar Cambios
                     </button>
                 </div>
@@ -160,4 +150,20 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        // Validación del formulario
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
 }

@@ -2,89 +2,146 @@
     ViewData["Title"] = "Pagos Pendientes";
 }
 
-<div class="container mt-4">
-    <h1 class="display-4 text-center mb-4">Pagos Pendientes</h1>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">Pagos Pendientes</h1>
+                </div>
+                <div class="card-body">
+                    <!-- Formulario para ingresar la cédula del paciente -->
+                    <form id="formPagosPendientes" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="idPaciente" class="form-label">Cédula del Paciente</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                        <input type="text" class="form-control" id="idPaciente" name="idPaciente" placeholder="Ingrese la cédula del paciente" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <span id="loadingSpinner" class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+                                    <i class="fas fa-search me-2"></i>Obtener Datos
+                                </button>
+                            </div>
+                        </div>
+                    </form>
 
-    <!-- Formulario para ingresar la cédula del paciente -->
-    <form id="formPagosPendientes" class="mb-4">
-        <div class="form-group">
-            <label for="idPaciente">Cédula del Paciente</label>
-            <input type="text" class="form-control" id="idPaciente" name="idPaciente" required>
+                    <!-- Mensaje de error -->
+                    <div id="errorMessage" class="alert alert-danger d-none mb-3"></div>
+
+                    <!-- Información del paciente (se mostrará cuando se encuentren resultados) -->
+                    <div id="infoPaciente" class="alert alert-info d-none mb-3">
+                        <h5 class="alert-heading mb-2"><i class="fas fa-user-circle me-2"></i><span id="nombrePaciente"></span></h5>
+                        <p class="mb-0">Total pendiente: <strong><span id="totalPendiente"></span></strong></p>
+                    </div>
+
+                    <!-- Resultados -->
+                    <div id="resultadosContainer" class="d-none">
+                        <h2 class="h4 mb-3 mt-4">Detalle de Pagos Pendientes</h2>
+                        <div class="table-responsive">
+                            <table id="tablaPagosPendientes" class="table table-hover table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Pago Pendiente</th>
+                                        <th>Fecha de Cita</th>
+                                        <th>Hora de Cita</th>
+                                        <th>Especialidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los datos se llenarán dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje cuando no hay pagos pendientes -->
+                    <div id="noPagosMessage" class="alert alert-success d-none mt-3">
+                        <i class="fas fa-check-circle me-2"></i>El paciente no tiene pagos pendientes.
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">
-            <span id="loadingSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-            Obtener Datos
-        </button>
-    </form>
-
-    <!-- Tabla para mostrar los resultados -->
-    <h2>Resultados</h2>
-    <table id="tablaPagosPendientes" class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Pago Pendiente</th>
-                <th>ID Cita</th>
-                <th>Fecha de Cita</th>
-                <th>Hora de Cita</th>
-                <th>Especialidad del Doctor</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Los datos se llenarán dinámicamente -->
-        </tbody>
-    </table>
-
-    <!-- Mensaje de error -->
-    <div id="errorMessage" class="alert alert-danger d-none mt-3"></div>
+    </div>
 </div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
+            let pagosPendientesData = [];
+
             $("#formPagosPendientes").submit(function (e) {
-                e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+                e.preventDefault();
 
                 var idPaciente = $("#idPaciente").val();
 
                 // Validar que la cédula no esté vacía
                 if (!idPaciente) {
-                    alert("Por favor, ingrese la cédula del paciente.");
+                    showNotification("Por favor, ingrese la cédula del paciente.", "warning");
                     return;
                 }
 
                 // Mostrar el spinner de carga
                 $("#loadingSpinner").removeClass("d-none");
-                $("#errorMessage").addClass("d-none"); // Ocultar mensaje de error
+                $("#errorMessage").addClass("d-none");
+                $("#infoPaciente").addClass("d-none");
+                $("#resultadosContainer").addClass("d-none");
+                $("#noPagosMessage").addClass("d-none");
 
                 $.ajax({
                     url: "@Url.Action("PagosPendientes", "Administradores")",
                     type: "POST",
                     data: { idPaciente: idPaciente },
                     success: function (response) {
-                        console.log(response); // Imprime la respuesta en la consola
+                        console.log(response);
 
                         // Ocultar el spinner de carga
                         $("#loadingSpinner").addClass("d-none");
 
                         if (response.success) {
+                            pagosPendientesData = response.pagosPendientes;
+
+                            // Mostrar info del paciente si tenemos datos
+                            if (response.nombrePaciente) {
+                                $("#nombrePaciente").text(response.nombrePaciente);
+                                $("#infoPaciente").removeClass("d-none");
+                            }
+
+                            // Calcular y mostrar total pendiente
+                            const totalPendiente = pagosPendientesData.reduce((total, item) => total + item.pagoPendiente, 0);
+                            $("#totalPendiente").text(formatCurrency(totalPendiente));
+
                             // Limpia la tabla antes de agregar nuevos datos
                             $("#tablaPagosPendientes tbody").empty();
 
-                            // Llena la tabla con los datos
-                            response.pagosPendientes.forEach(function (item) {
-                                $("#tablaPagosPendientes tbody").append(
-                                    `<tr>
-                                        <td>${formatCurrency(item.pagoPendiente)}</td>
-                                        <td>${item.idCita}</td>
-                                        <td>${formatDate(item.fechaCita)}</td>
-                                        <td>${item.horaCita}</td>
-                                        <td>${item.nombreEspecialidad}</td>
-                                    </tr>`
-                                );
-                            });
+                            if (pagosPendientesData.length > 0) {
+                                // Mostrar tabla de resultados
+                                $("#resultadosContainer").removeClass("d-none");
+
+                                // Llena la tabla con los datos
+                                pagosPendientesData.forEach(function (item) {
+                                    $("#tablaPagosPendientes tbody").append(
+                                        `<tr>
+                                            <td class="fw-bold text-danger">${formatCurrency(item.pagoPendiente)}</td>
+                                            <td>${formatDate(item.fechaCita)}</td>
+                                            <td>${item.horaCita}</td>
+                                            <td>${item.nombreEspecialidad}</td>
+  
+                                        </tr>`
+                                    );
+                                });
+                            } else {
+                                // Mostrar mensaje de que no hay pagos pendientes
+                                $("#noPagosMessage").removeClass("d-none");
+                            }
                         } else {
                             // Mostrar mensaje de error
-                            $("#errorMessage").text(response.message).removeClass("d-none");
+                            $("#errorMessage").html(`<i class="fas fa-exclamation-triangle me-2"></i>${response.message}`).removeClass("d-none");
                         }
                     },
                     error: function (xhr, status, error) {
@@ -94,10 +151,12 @@
                         $("#loadingSpinner").addClass("d-none");
 
                         // Mostrar mensaje de error
-                        $("#errorMessage").text("Ocurrió un error al procesar la solicitud. Inténtelo de nuevo más tarde.").removeClass("d-none");
+                        $("#errorMessage").html(`<i class="fas fa-exclamation-circle me-2"></i>Ocurrió un error al procesar la solicitud. Inténtelo de nuevo más tarde.`).removeClass("d-none");
                     }
                 });
             });
+
+          
 
             // Función para formatear fechas
             function formatDate(dateString) {

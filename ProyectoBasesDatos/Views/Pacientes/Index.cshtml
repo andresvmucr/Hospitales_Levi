@@ -5,69 +5,137 @@
     var currentFilter = ViewBag.CurrentFilter as string;
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2">Lista de Pacientes</h1>
-        <a asp-action="Create" class="btn btn-primary d-flex align-items-center">
-            <i class="fas fa-plus me-2"></i> Crear Nuevo Paciente
-        </a>
+<div class="container-fluid py-4">
+    <!-- Header con título y botón de crear -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-user-injured me-2"></i>Lista de Pacientes
+                            </h1>
+                            <p class="text-muted mb-0">Gestión de pacientes registrados en el sistema.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a asp-action="Create" class="btn btn-primary px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                <i class="fas fa-plus me-2"></i>Crear Nuevo Paciente
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Barra de búsqueda -->
-    <form asp-action="Index" method="get" class="mb-4">
-        <div class="input-group">
-            <input type="text" id="searchBox" name="searchString" value="@currentFilter" class="form-control" placeholder="Buscar por nombre o cédula..." />
-            <button type="submit" class="btn btn-outline-secondary">
-                <i class="fas fa-search"></i>
-            </button>
+    <!-- Barra de búsqueda mejorada -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Index" method="get" class="row g-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" id="searchBox" name="searchString" value="@currentFilter"
+                                       class="form-control border-start-0 ps-0"
+                                       placeholder="Buscar por nombre o cédula..." />
+                                <button type="submit" class="btn btn-primary">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
 
+    <!-- Listado de pacientes -->
     @if (Model == null || !Model.Any())
     {
-        <div class="text-center mt-5">
-            <i class="fas fa-user-injured fa-4x text-muted mb-3"></i>
-            <h2 class="h4">No hay pacientes disponibles</h2>
-            <p class="text-muted">Aún no se han registrado pacientes en el sistema.</p>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-5 text-center">
+                <div class="py-5">
+                    <i class="fas fa-user-injured fa-5x text-muted mb-4 opacity-50"></i>
+                    <h2 class="h4 fw-bold">No hay pacientes registrados</h2>
+                    <p class="text-muted mb-4">Aún no se han registrado pacientes en el sistema.</p>
+                    <a asp-action="Create" class="btn btn-primary px-4 py-2 rounded-pill">
+                        <i class="fas fa-plus me-2"></i>Crear Nuevo Paciente
+                    </a>
+                </div>
+            </div>
         </div>
     }
     else
     {
-        <div class="row row-cols-1 row-cols-md-3 g-4" id="pacienteList">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="pacienteList">
             @foreach (var paciente in Model)
             {
                 <div class="col paciente-card" data-name="@paciente.CorreoNavigation.Nombre.ToLower()" data-cedula="@paciente.Cedula.ToLower()">
-                    <div class="card h-100 shadow-sm border-0 d-flex flex-column">
-                        <div class="card-body flex-grow-1">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow position-relative">
+                        <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-user-injured"></i>
+                                <div class="avatar-container me-3">
+                                    <div class="avatar bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                                        <i class="fas fa-user-injured"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <h5 class="card-title mb-0">@paciente.CorreoNavigation.Nombre @paciente.CorreoNavigation.PrimerApellido @paciente.CorreoNavigation.SegundoApellido</h5>
-                                    <small class="text-muted">Cédula: @paciente.Cedula</small>
+                                    <h5 class="card-title fw-bold mb-1">@paciente.CorreoNavigation.Nombre @paciente.CorreoNavigation.PrimerApellido @paciente.CorreoNavigation.SegundoApellido</h5>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-id-card text-primary me-1 small"></i>
+                                        @paciente.Cedula
+                                    </p>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <small class="text-muted">Dirección</small>
-                                <p class="mb-2">@paciente.Direccion</p>
-                                <small class="text-muted">Género</small>
-                                <p class="mb-2">@(paciente.Genero == "F" ? "Femenino" : "Masculino")</p>
-                                <small class="text-muted">Fecha de Nacimiento</small>
-                                <p class="mb-2">@paciente.FechaNacimiento.ToString("dd/MM/yyyy")</p>
-                                <small class="text-muted">Correo</small>
-                                <p class="mb-2">@paciente.CorreoNavigation.Correo</p>
-                                <small class="text-muted">Teléfono</small>
-                                <p class="mb-0">@paciente.CorreoNavigation.Telefono</p>
+                            <hr class="my-3">
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-map-marker-alt text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Dirección</p>
+                                        <p class="fw-medium mb-0">@paciente.Direccion</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-venus-mars text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Género</p>
+                                        <p class="fw-medium mb-0">@(paciente.Genero == "F" ? "Femenino" : "Masculino")</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-birthday-cake text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Fecha de Nacimiento</p>
+                                        <p class="fw-medium mb-0">@paciente.FechaNacimiento.ToString("dd/MM/yyyy")</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-envelope text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Correo</p>
+                                        <p class="fw-medium mb-0">@paciente.CorreoNavigation.Correo</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-phone text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Teléfono</p>
+                                        <p class="fw-medium mb-0">@paciente.CorreoNavigation.Telefono</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent border-0">
-                            <div class="d-grid gap-2">
-                                <a asp-action="Edit" asp-route-id="@paciente.Cedula" class="btn btn-outline-success btn-sm">
-                                    <i class="fas fa-edit me-1"></i> Editar
+                        <div class="card-footer bg-white border-0 pt-0">
+                            <div class="d-flex justify-content-between mt-3">
+                                <a asp-action="Details" asp-route-id="@paciente.Cedula" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                    <i class="fas fa-info-circle me-1"></i>Detalles
                                 </a>
-                                <a asp-action="Details" asp-route-id="@paciente.Cedula" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-info-circle me-1"></i> Detalles
+                                <a asp-action="Edit" asp-route-id="@paciente.Cedula" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                                    <i class="fas fa-edit me-1"></i>Editar
                                 </a>
                             </div>
                         </div>
@@ -112,9 +180,38 @@
         border-top: none;
     }
 
-    .btn-sm {
-        margin-right: 5px;
+    .btn {
+        min-width: 100px;
     }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    .card-title i {
+        font-size: 1.2em;
+    }
+
+    .avatar-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar {
+        background-color: #0d6efd;
+        color: white;
+        font-weight: bold;
+    }
+
+    .hover-shadow {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
 </style>
 
 <!-- Font Awesome para íconos -->

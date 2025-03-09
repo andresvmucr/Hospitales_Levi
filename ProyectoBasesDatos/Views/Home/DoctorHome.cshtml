@@ -1,83 +1,176 @@
 ﻿@model IEnumerable<ProyectoBasesDatos.Models.Cita>
 
 @{
-    ViewData["Title"] = "Citas";
+    ViewData["Title"] = "Gestión de Citas";
+    // Filtrar citas pagadas y ordenar para mostrar pendientes primero
+    var citasFiltradas = Model.Where(c => c.Estado != "Pagada").OrderByDescending(c => c.Estado == "Pendiente").ThenBy(c => c.Dia).ThenBy(c => c.Hora);
 }
 
 <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-calendar-alt me-2"></i>@ViewData["Title"]</h2>
+    </div>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var item in Model)
-        {
-            <div class="col">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <!-- Estado de la cita -->
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge @(item.Estado == "Pendiente" ? "bg-warning" : item.Estado == "Completada" ? "bg-success" : "bg-secondary")">
-                                @item.Estado
-                            </span>
+    <!-- Filtros rápidos -->
+    <div class="mb-4">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary active" data-filter="todas">Todas</button>
+            <button type="button" class="btn btn-outline-warning" data-filter="Pendiente">Pendientes</button>
+            <button type="button" class="btn btn-outline-success" data-filter="Completada">Completadas</button>
+            <button type="button" class="btn btn-outline-secondary" data-filter="Cancelada">Canceladas</button>
+        </div>
+    </div>
+
+    @if (!citasFiltradas.Any())
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No hay citas disponibles.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="citas-container">
+            @foreach (var item in citasFiltradas)
+            {
+                <div class="col cita-card" data-estado="@item.Estado">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-transparent">
+                            <!-- Estado de la cita con icono -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge @GetEstadoBadgeClass(item.Estado)">
+                                    <i class="@GetEstadoIconClass(item.Estado) me-1"></i>
+                                    @item.Estado
+                                </span>
+                                <small class="text-muted">ID: @item.Id</small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Fecha y hora más destacadas -->
+                            <div class="text-center mb-3 fecha-hora-container">
+                                <h5 class="mb-1">@item.Dia.ToString("dddd, dd 'de' MMMM, yyyy")</h5>
+                                <h4 class="text-primary">@item.Hora.ToString(@"hh\:mm tt")</h4>
+                            </div>
+
+                            <!-- Información del paciente -->
+                            <div class="participante-info">
+                                <h6 class="card-subtitle d-flex align-items-center">
+                                    <i class="fas fa-user me-2 text-success"></i>Paciente
+                                </h6>
+                                <p class="card-text ps-4">
+                                    @if (item.CedulaPacienteNavigation?.CorreoNavigation != null)
+                                    {
+                                        var paciente = item.CedulaPacienteNavigation.CorreoNavigation;
+                                        @($"{paciente.Nombre} {paciente.PrimerApellido} {paciente.SegundoApellido}")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">No disponible</span>
+                                    }
+                                </p>
+                            </div>
                         </div>
 
-                        <!-- Información de la cita -->
-                        <h5 class="card-title">Cita</h5>
-                        <p class="card-text">
-                            <strong>Día:</strong> @item.Dia.ToString("dd/MM/yyyy")<br>
-                            <strong>Hora:</strong> @item.Hora.ToString(@"hh\:mm")
-                        </p>
-
-                        <!-- Información del doctor -->
-                        <h6 class="card-subtitle mb-2 text-muted">Doctor</h6>
-                        <p class="card-text">
-                            @if (item.CedulaDoctorNavigation != null && item.CedulaDoctorNavigation.CorreoNavigation != null)
-                            {
-                                @($"{item.CedulaDoctorNavigation.CorreoNavigation.Nombre} {item.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido} {item.CedulaDoctorNavigation.CorreoNavigation.SegundoApellido}")
-                            }
-                            else
-                            {
-                                <span class="text-muted">No disponible</span>
-                            }
-                        </p>
-
-                        <!-- Información del paciente -->
-                        <h6 class="card-subtitle mb-2 text-muted">Paciente</h6>
-                        <p class="card-text">
-                            @if (item.CedulaPacienteNavigation != null && item.CedulaPacienteNavigation.CorreoNavigation != null)
-                            {
-                                @($"{item.CedulaPacienteNavigation.CorreoNavigation.Nombre} {item.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido} {item.CedulaPacienteNavigation.CorreoNavigation.SegundoApellido}")
-                            }
-                            else
-                            {
-                                <span class="text-muted">No disponible</span>
-                            }
-                        </p>
-
-                        <!-- Botones de acción -->
-                        <div class="d-flex justify-content-between mt-3">
-                            <a asp-controller="Citas" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                            @if (item.Estado == "Pendiente")
-                            {
-                                <a asp-controller="Citas" asp-action="Attend" asp-route-id="@item.Id" class="btn btn-primary">
-                                    <i class="fas fa-user-md me-2"></i>Atender
-                                </a>
-                            }
+                        <!-- Botones de acción con tooltips -->
+                        <div class="card-footer bg-transparent border-top-0">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    @if (item.Estado == "Pendiente")
+                                    {
+                                        <a asp-controller="Citas" asp-action="Attend" asp-route-id="@item.Id"
+                                           class="btn btn-primary">
+                                            <i class="fas fa-user-md me-2"></i>Atender
+                                        </a>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+
+        <!-- Mensaje de "No hay citas" para cuando no hay citas en el filtro seleccionado -->
+        <div id="no-citas-mensaje" class="alert alert-info d-none mt-4">
+            <i class="fas fa-info-circle me-2"></i>No hay citas en este estado.
+        </div>
+    }
 </div>
+
+@functions {
+    string GetEstadoBadgeClass(string estado)
+    {
+        return estado switch
+        {
+            "Pendiente" => "bg-warning text-dark",
+            "Completada" => "bg-success",
+            "Cancelada" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    string GetEstadoIconClass(string estado)
+    {
+        return estado switch
+        {
+            "Pendiente" => "fas fa-clock",
+            "Completada" => "fas fa-check-circle",
+            "Cancelada" => "fas fa-ban",
+            _ => "fas fa-question-circle"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        // Inicializar tooltips de Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Filtrado de citas
+        document.querySelectorAll('.btn-group[role="group"] button').forEach(button => {
+            button.addEventListener('click', function () {
+                // Actualizar estilo de botones
+                document.querySelectorAll('.btn-group[role="group"] button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                // Filtrar las tarjetas
+                const filtro = this.dataset.filter;
+                const tarjetas = document.querySelectorAll('.cita-card');
+                let tarjetasVisibles = 0;
+
+                tarjetas.forEach(tarjeta => {
+                    if (filtro === 'todas' || tarjeta.dataset.estado === filtro) {
+                        tarjeta.style.display = '';
+                        tarjetasVisibles++;
+                    } else {
+                        tarjeta.style.display = 'none';
+                    }
+                });
+
+                // Mostrar u ocultar el mensaje de "No hay citas"
+                const noCitasMensaje = document.getElementById('no-citas-mensaje');
+                if (tarjetasVisibles === 0) {
+                    noCitasMensaje.classList.remove('d-none'); // Mostrar mensaje
+                } else {
+                    noCitasMensaje.classList.add('d-none'); // Ocultar mensaje
+                }
+            });
+        });
+    </script>
+}
 
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         .card {
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
         }
 
             .card:hover {
@@ -86,12 +179,47 @@
             }
 
         .badge {
-            font-size: 0.9em;
+            font-size: 0.85em;
             padding: 0.5em 0.75em;
+            border-radius: 20px;
+        }
+
+        .fecha-hora-container {
+            background-color: rgba(0, 123, 255, 0.05);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .participante-info {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+
+            .participante-info:last-child {
+                border-bottom: none;
+            }
+
+        .btn {
+            border-radius: 8px;
         }
 
         .btn-sm {
             margin-right: 5px;
+        }
+
+        /* Estilos adicionales para resaltar las citas pendientes */
+        [data-estado="Pendiente"] .card {
+            border-left: 4px solid #ffc107;
+            background-color: rgba(255, 248, 225, 0.2);
+        }
+
+        [data-estado="Completada"] .card {
+            border-left: 4px solid #28a745;
+        }
+
+        [data-estado="Cancelada"] .card {
+            border-left: 4px solid #dc3545;
         }
     </style>
 }

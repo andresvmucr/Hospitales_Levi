@@ -1,68 +1,147 @@
 ﻿@model ProyectoBasesDatos.Models.Paciente
-
 @{
     ViewData["Title"] = "Detalles del Paciente";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h1 class="h4 mb-0">Detalles del Paciente</h1>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">Detalles del Paciente</h1>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <div class="btn-group">
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Volver
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <h5 class="card-title text-primary mb-3">
-                <i class="fas fa-user-injured me-2"></i>Información del Paciente
-            </h5>
-            <hr />
+    </div>
 
-            <dl class="row">
-                <!-- Cédula -->
-                <dt class="col-sm-3">Cédula</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Cedula)</dd>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white p-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-container me-4">
+                            <div class="avatar bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 1.8rem;">
+                                @(Model.CorreoNavigation.Nombre?.Substring(0, 1).ToUpper())@(Model.CorreoNavigation.PrimerApellido?.Substring(0, 1).ToUpper())
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="h3 fw-bold mb-1">@Model.CorreoNavigation.Nombre @Model.CorreoNavigation.PrimerApellido @Model.CorreoNavigation.SegundoApellido</h2>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-id-card me-2"></i>@Model.Cedula
+                            </p>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-envelope me-2"></i>@Model.CorreoNavigation.Correo
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Nombre Completo -->
-                <dt class="col-sm-3">Nombre Completo</dt>
-                <dd class="col-sm-9">
-                    @Model.CorreoNavigation.Nombre @Model.CorreoNavigation.PrimerApellido @Model.CorreoNavigation.SegundoApellido
-                </dd>
+                <div class="card-body p-4">
+                    <div class="info-section mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-user-injured text-primary me-2"></i>Información Personal
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Nombre Completo</p>
+                                        <p class="fw-medium mb-0">@Model.CorreoNavigation.Nombre @Model.CorreoNavigation.PrimerApellido @Model.CorreoNavigation.SegundoApellido</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-phone-alt text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Teléfono</p>
+                                        <p class="fw-medium mb-0">@Html.DisplayFor(model => model.CorreoNavigation.Telefono)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-venus-mars text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Género</p>
+                                        <p class="fw-medium mb-0">@(Model.Genero.ToLower() == "f" ? "Femenino" : "Masculino")</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-birthday-cake text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Fecha de Nacimiento</p>
+                                        <p class="fw-medium mb-0">@Model.FechaNacimiento.ToString("dd/MM/yyyy")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Dirección -->
-                <dt class="col-sm-3">Dirección</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Direccion)</dd>
+                    <div class="info-section mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-map-marked-alt text-primary me-2"></i>Información de Contacto
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-map-marker-alt text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Dirección</p>
+                                        <p class="fw-medium mb-0">@Html.DisplayFor(model => model.Direccion)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-envelope text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Correo Electrónico</p>
+                                        <p class="fw-medium mb-0">@Model.CorreoNavigation.Correo</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Género -->
-                <dt class="col-sm-3">Género</dt>
-                <dd class="col-sm-9">@(Model.Genero == "f" ? "Femenino" : "Masculino")</dd>
+                    <!-- Se pueden agregar más secciones según se necesite, como historial médico, etc. -->
+                </div>
 
-                <!-- Fecha de Nacimiento -->
-                <dt class="col-sm-3">Fecha de Nacimiento</dt>
-                <dd class="col-sm-9">@Model.FechaNacimiento.ToString("dd/MM/yyyy")</dd>
-
-                <!-- Correo -->
-                <dt class="col-sm-3">Correo</dt>
-                <dd class="col-sm-9">@Model.CorreoNavigation.Correo</dd>
-
-                <!-- Teléfono -->
-                <dt class="col-sm-3">Teléfono</dt>
-                <dd class="col-sm-9">@Model.CorreoNavigation.Telefono</dd>
-            </dl>
-        </div>
-        <div class="card-footer bg-transparent">
-            <div class="d-flex justify-content-end gap-2">
-                <a asp-action="Edit" asp-route-id="@Model?.Cedula" class="btn btn-warning">
-                    <i class="fas fa-edit me-1"></i> Editar
-                </a>
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Volver a la Lista
-                </a>
+                <div class="card-footer bg-white p-4 border-top">
+                    <div class="d-flex justify-content-end">
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model?.Cedula" class="btn btn-primary me-2">
+                                <i class="fas fa-pen me-2"></i>Editar Información
+                            </a>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver a la Lista
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Estilos adicionales -->
 <style>
+    /* Estilos para la transición de la tarjeta */
     .card {
+        transition: all 0.3s ease;
         border: none;
         border-radius: 10px;
     }
@@ -71,20 +150,24 @@
         border-radius: 10px 10px 0 0;
     }
 
-    .card-footer {
-        border-top: none;
+    .avatar-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .btn {
-        min-width: 120px;
+    .avatar {
+        background-color: #0d6efd;
+        color: white;
+        font-weight: bold;
     }
 
     .text-primary {
         color: #0d6efd !important;
     }
 
-    .card-title i {
-        font-size: 1.2em;
+    .btn {
+        min-width: 120px;
     }
 </style>
 

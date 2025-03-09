@@ -2,78 +2,156 @@
 
 @{
     ViewData["Title"] = "Detalles de la Cita";
+    var userRole = ViewContext.HttpContext.Session.GetString("Rol");
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h1 class="h4 mb-0">Detalles de la Cita</h1>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-calendar-check me-2"></i>Detalles de la Cita
+                            </h1>
+                            <p class="text-muted mb-0">Información detallada de la cita médica.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver a la lista
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <h4 class="card-title">Información de la Cita</h4>
-            <hr />
+    </div>
 
-            <dl class="row">
-                <!-- Día de la cita -->
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Dia)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Dia)
-                </dd>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <!-- Encabezado de la tarjeta -->
+                <div class="card-header bg-white p-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-container me-4">
+                            <div class="avatar bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 1.8rem;">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="h3 fw-bold mb-1">Cita Médica</h2>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-calendar-day text-primary me-1 small"></i>
+                                @Model.Dia.ToString("dd/MM/yyyy") - @Model.Hora.ToString(@"hh\:mm")
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Hora de la cita -->
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Hora)
-                </dt>
-                <dd class="col-sm-9">
-                    @Model.Hora.ToString(@"hh\:mm")
-                </dd>
+                <!-- Cuerpo de la tarjeta -->
+                <div class="card-body p-4">
+                    <div class="info-section mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-info-circle text-primary me-2"></i>Información General
+                        </h5>
+                        <div class="row g-3">
+                            <!-- Estado de la cita -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-tag text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Estado</p>
+                                        <p class="fw-medium mb-0">@Model.Estado</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Día de la cita -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar-day text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Día</p>
+                                        <p class="fw-medium mb-0">@Model.Dia.ToString("dd/MM/yyyy")</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Hora de la cita -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-clock text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Hora</p>
+                                        <p class="fw-medium mb-0">@Model.Hora.ToString(@"hh\:mm")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Estado de la cita -->
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Estado)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Estado)
-                </dd>
+                    <!-- Información del doctor -->
+                    <div class="info-section mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-user-md text-primary me-2"></i>Doctor
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Nombre</p>
+                                        <p class="fw-medium mb-0">
+                                            @Model.CedulaDoctorNavigation?.CorreoNavigation?.Nombre @Model.CedulaDoctorNavigation?.CorreoNavigation?.PrimerApellido @Model.CedulaDoctorNavigation?.CorreoNavigation?.SegundoApellido
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-stethoscope text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Especialidad</p>
+                                        <p class="fw-medium mb-0">
+                                            @Model.CedulaDoctorNavigation?.IdEspecialidadNavigation?.Nombre
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Nombre del doctor -->
-                <dt class="col-sm-3">
-                    Doctor
-                </dt>
-                <dd class="col-sm-9">
-                    @Model.CedulaDoctorNavigation?.CorreoNavigation?.Nombre @Model.CedulaDoctorNavigation?.CorreoNavigation.PrimerApellido  @Model.CedulaDoctorNavigation?.CorreoNavigation.SegundoApellido
-                </dd>
+                    <!-- Información del paciente -->
+                    <div class="info-section mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-user-injured text-primary me-2"></i>Paciente
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Nombre</p>
+                                        <p class="fw-medium mb-0">
+                                            @Model.CedulaPacienteNavigation?.CorreoNavigation?.Nombre @Model.CedulaPacienteNavigation?.CorreoNavigation?.PrimerApellido @Model.CedulaPacienteNavigation?.CorreoNavigation?.SegundoApellido
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Especialidad del doctor -->
-                <dt class="col-sm-3">
-                    Especialidad
-                </dt>
-                <dd class="col-sm-9">
-					@Model.CedulaDoctorNavigation?.IdEspecialidadNavigation?.Nombre 
-                </dd>
-
-                <!-- Nombre del paciente -->
-                <dt class="col-sm-3">
-                    Paciente
-                </dt>
-                <dd class="col-sm-9">
-					@Model.CedulaPacienteNavigation?.CorreoNavigation?.Nombre @Model.CedulaPacienteNavigation?.CorreoNavigation?.PrimerApellido  @Model.CedulaPacienteNavigation?.CorreoNavigation?.SegundoApellido
-                </dd>
-            </dl>
-        </div>
-        <div class="card-footer bg-light">
-            <div class="d-flex justify-content-between">
-                @if (ViewContext.HttpContext.Session.GetString("Rol") == "Admin")
-                {
-                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
-                        <i class="fas fa-edit me-2"></i> Editar
-                    </a>
-                }
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-2"></i> Volver a la lista
-                </a>
+                <!-- Pie de la tarjeta -->
+                <div class="card-footer bg-white p-4 border-top">
+                    <div class="d-flex justify-content-end">
+                        @if (userRole == "Admin" || (@Model.Estado != "Pagada" && @Model.Estado != "Cancelada"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
+                                <i class="fas fa-edit me-2"></i>Editar
+                            </a>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -103,13 +181,35 @@
         font-weight: bold;
     }
 
-    dt {
-        font-weight: 500;
+    .info-section {
+        margin-bottom: 1.5rem;
+    }
+
+        .info-section h5 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #6c757d; /* Color gris para los títulos de sección */
+        }
+
+    .text-muted {
         color: #6c757d; /* Color gris para las etiquetas */
     }
 
-    dd {
+    .fw-medium {
+        font-weight: 500;
         color: #212529; /* Color oscuro para los valores */
+    }
+
+    .avatar-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar {
+        background-color: #0d6efd;
+        color: white;
+        font-weight: bold;
     }
 </style>
 

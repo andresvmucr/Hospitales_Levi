@@ -91,11 +91,28 @@ namespace ProyectoBasesDatos.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Telefono,IdSuperAdmin")] Hospitale hospitale)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Telefono")] Hospitale hospitale)
         {
+           
+            // Obtener el IdSuperAdmin de la sesión
+            var idSuperAdmin = HttpContext.Session.GetString("Id");
+
+            if (string.IsNullOrEmpty(idSuperAdmin))
+            {
+                // Manejar el caso en que no haya un SuperAdmin en la sesión
+                ModelState.AddModelError("", "No se ha identificado al SuperAdmin.");
+                return View(hospitale);
+            }
+
+            // Asignar el IdSuperAdmin al hospital
+            hospitale.IdSuperAdmin = idSuperAdmin;
+
+            // Guardar el hospital en la base de datos
             _context.Add(hospitale);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Hospitales/Edit/5

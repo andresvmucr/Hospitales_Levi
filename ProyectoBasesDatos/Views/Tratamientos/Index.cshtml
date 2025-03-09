@@ -1,33 +1,255 @@
 ﻿@model IEnumerable<ProyectoBasesDatos.Models.Tratamiento>
-
 @{
-    ViewData["Title"] = "Listado de tratamientos";
+    ViewData["Title"] = "Gestión de Tratamientos";
+    var currentFilter = ViewBag.CurrentFilter as string;
 }
 
-<h1>Listado de tratamientos</h1>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">Gestión de Tratamientos</h1>
+                            <p class="text-muted mb-0">Administra los tratamientos registrados en el sistema</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="row">
-    @foreach (var item in Model)
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Index" method="get" class="row g-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" id="searchBox" name="searchString" value="@currentFilter"
+                                       class="form-control border-start-0 ps-0"
+                                       placeholder="Buscar tratamiento..." />
+                                <button type="submit" class="btn btn-primary">Buscar</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary" id="viewGrid">
+                                    <i class="fas fa-th-large"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" id="viewList">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vista Grid -->
+    <div id="gridView">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="tratamientosList">
+            @foreach (var item in Model)
+            {
+                <div class="col tratamiento-card"
+                     data-id="@item.Id"
+                     data-doctor="@item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.Nombre.ToLower() @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido.ToLower()"
+                     data-paciente="@item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.Nombre.ToLower() @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido.ToLower()">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow position-relative">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar-wrapper me-3">
+                                    <div class="avatar-circle bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                                        <span class="h4 mb-0">T@(item.Id)</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="card-title fw-bold mb-1">Tratamiento #@item.Id</h5>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-calendar-alt text-primary me-1 small"></i>
+                                        @item.IdCitaNavigation.Dia.ToShortDateString()
+                                    </p>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-user-md text-secondary me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Doctor</small>
+                                            <span>@item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.Nombre @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-user text-secondary me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Paciente</small>
+                                            <span>@item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.Nombre @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-dollar-sign text-success me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Precio</small>
+                                            <span class="fw-bold">@item.Precio.ToString("C")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0 pt-0">
+                            <div class="d-flex justify-content-between mt-3">
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                   class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                    <i class="fas fa-info-circle me-1"></i>Detalles
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Vista Lista -->
+    <div id="listView" class="d-none">
+        <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="border-0">ID</th>
+                            <th scope="col" class="border-0">Fecha</th>
+                            <th scope="col" class="border-0">Doctor</th>
+                            <th scope="col" class="border-0">Paciente</th>
+                            <th scope="col" class="border-0">Precio</th>
+                            <th scope="col" class="border-0 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="tratamiento-row"
+                                data-id="@item.Id"
+                                data-doctor="@item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.Nombre.ToLower() @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido.ToLower()"
+                                data-paciente="@item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.Nombre.ToLower() @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido.ToLower()">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <span>T@(item.Id)</span>
+                                        </div>
+                                        <div>
+                                            <p class="fw-bold mb-0">#@item.Id</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@item.IdCitaNavigation.Dia.ToShortDateString()</td>
+                                <td>@item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.Nombre @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido</td>
+                                <td>@item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.Nombre @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido</td>
+                                <td>@item.Precio.ToString("C")</td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Ver detalles">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
     {
-        <div class="col-md-4 mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Tratamiento ID: @item.Id</h5>
-                    <p class="card-text">
-                        <strong>Precio:</strong> @Html.DisplayFor(modelItem => item.Precio)<br>
-                        <strong>Fecha de la Cita:</strong> @item.IdCitaNavigation.Dia.ToShortDateString()<br>
-                        <strong>Doctor:</strong>
-                        @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.Nombre
-                        @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido
-                        @item.IdCitaNavigation.CedulaDoctorNavigation.CorreoNavigation.SegundoApellido<br>
-                        <strong>Paciente:</strong>
-                        @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.Nombre
-                        @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.PrimerApellido
-                        @item.IdCitaNavigation.CedulaPacienteNavigation.CorreoNavigation.SegundoApellido
-                    </p>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Detalles</a>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-5 text-center">
+                <div class="py-5">
+                    <i class="fas fa-clipboard-list fa-5x text-muted mb-4 opacity-50"></i>
+                    <h2 class="h4 fw-bold">No hay tratamientos registrados</h2>
+                    <p class="text-muted mb-4">Aún no hay tratamientos registrados en el sistema.</p>
+                    <a asp-action="Create" class="btn btn-primary px-4 py-2 rounded-pill">
+                        <i class="fas fa-plus me-2"></i>Registrar el primer tratamiento
+                    </a>
                 </div>
             </div>
         </div>
     }
 </div>
+
+<script>
+    // Búsqueda en tiempo real
+    document.getElementById("searchBox").addEventListener("keyup", function () {
+        let searchValue = this.value.toLowerCase();
+        let cards = document.querySelectorAll(".tratamiento-card");
+        let rows = document.querySelectorAll(".tratamiento-row");
+
+        // Para vista de tarjetas
+        cards.forEach(card => {
+            let id = card.getAttribute("data-id");
+            let doctor = card.getAttribute("data-doctor");
+            let paciente = card.getAttribute("data-paciente");
+
+            if (id.includes(searchValue) || doctor.includes(searchValue) || paciente.includes(searchValue)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        // Para vista de lista
+        rows.forEach(row => {
+            let id = row.getAttribute("data-id");
+            let doctor = row.getAttribute("data-doctor");
+            let paciente = row.getAttribute("data-paciente");
+
+            if (id.includes(searchValue) || doctor.includes(searchValue) || paciente.includes(searchValue)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+
+    // Cambio de vista (Grid/Lista)
+    document.getElementById("viewGrid").addEventListener("click", function() {
+        document.getElementById("gridView").classList.remove("d-none");
+        document.getElementById("listView").classList.add("d-none");
+        this.classList.add("active");
+        document.getElementById("viewList").classList.remove("active");
+    });
+
+    document.getElementById("viewList").addEventListener("click", function() {
+        document.getElementById("listView").classList.remove("d-none");
+        document.getElementById("gridView").classList.add("d-none");
+        this.classList.add("active");
+        document.getElementById("viewGrid").classList.remove("active");
+    });
+
+    // Efecto hover para las tarjetas
+    document.querySelectorAll('.hover-shadow').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('shadow');
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'all 0.3s ease';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('shadow');
+            this.style.transform = 'translateY(0)';
+        });
+    });
+</script>

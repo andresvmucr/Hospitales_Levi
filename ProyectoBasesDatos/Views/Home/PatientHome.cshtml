@@ -1,93 +1,147 @@
 ﻿@model IEnumerable<ProyectoBasesDatos.Models.Cita>
 @{
     ViewData["Title"] = "Inicio";
+    // Ordenar citas: primero pendientes, luego completadas y al final canceladas
+    var citasOrdenadas = Model
+        .OrderBy(c => c.Estado switch
+        {
+            "Pendiente" => 1,   // Primero las pendientes
+            "Completada" => 2,  // Luego las completadas
+            "Cancelada" => 3,   // Finalmente las canceladas
+            _ => 4              // Cualquier otro estado (si existe)
+        })
+        .ThenBy(c => c.Dia)     // Ordenar por fecha
+        .ThenBy(c => c.Hora);   // Ordenar por hora
 }
 
 <div class="container mt-4">
-    <div class="jumbotron text-center bg-primary text-white p-5 rounded-3 shadow">
+    <!-- Header con estadísticas básicas -->
+    <div class="jumbotron text-center bg-primary text-white p-5 rounded-3 shadow position-relative overflow-hidden">
+        <div class="position-absolute top-0 end-0 p-3">
+            <span class="badge bg-light text-primary rounded-pill fs-6">
+                <i class="fas fa-calendar-check me-1"></i>
+                @Model.Count(c => c.Estado == "Pendiente") citas pendientes
+            </span>
+        </div>
         <h1 class="display-4 fw-bold">Bienvenido al Hospital</h1>
         <p class="lead">Cuidando tu salud con profesionalismo y compromiso.</p>
-    </div>
-
-    <div class="card border-0 shadow-sm h-100 mt-4">
-        <div class="card-body text-center">
-            <h5 class="card-title fw-bold">Citas</h5>
-            <p class="card-text">Agenda tu cita médica de manera rápida y sencilla.</p>
-            <a asp-controller="Citas" asp-action="Create" class="btn btn-primary btn-lg">
-                <i class="fas fa-calendar-plus me-2"></i>Agendar
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+            <a asp-controller="Citas" asp-action="Create" class="btn btn-light btn-lg px-4 me-md-2">
+                <i class="fas fa-calendar-plus me-2"></i>Agendar Cita
             </a>
         </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-4">
-        @foreach (var item in Model)
-        {
-            <div class="col">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge @(item.Estado == "Pendiente" ? "bg-warning" : item.Estado == "Completada" ? "bg-success" : item.Estado == "Pagada" ? "bg-info" : "bg-secondary") fs-6">
-                                @item.Estado
-                            </span>
-                        </div>
-                        <h5 class="card-title fw-bold mb-3">Cita Médica</h5>
-                        <div class="mb-3">
-                            <p class="card-text">
-                                <i class="fas fa-calendar-day me-2 text-primary"></i>
-                                <strong>Día:</strong> @item.Dia.ToString("dd/MM/yyyy")
-                            </p>
-                            <p class="card-text">
-                                <i class="fas fa-clock me-2 text-primary"></i>
-                                <strong>Hora:</strong> @item.Hora.ToString(@"hh\:mm")
-                            </p>
-                        </div>
-                        <h6 class="card-subtitle mb-2 text-muted fw-bold">Doctor</h6>
-                        <p class="card-text mb-3">
-                            @if (item.CedulaDoctorNavigation != null && item.CedulaDoctorNavigation.CorreoNavigation != null)
-                            {
-                                <i class="fas fa-user-md me-2 text-primary"></i>
-                                @($"{item.CedulaDoctorNavigation.CorreoNavigation.Nombre} {item.CedulaDoctorNavigation.CorreoNavigation.PrimerApellido} {item.CedulaDoctorNavigation.CorreoNavigation.SegundoApellido}")
-                            }
-                            else
-                            {
-                                <span class="text-muted">No disponible</span>
-                            }
-                        </p>
-                        <div class="d-flex justify-content-between mt-auto">
-                            @if (item.Estado == "Pendiente")
-                            {
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="@item.Id">
-                                    Cancelar Cita
-                                </button>
-                            }
-                            else if (item.Estado == "Completada")
-                            {
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#payModal" data-id="@item.Id">
-                                    Pagar
-                                </button>
-                            }
+    <!-- Título de sección de citas -->
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+        <h2 class="text-primary"><i class="fas fa-clipboard-list me-2"></i>Tus Próximas Citas</h2>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary active" data-filter="todas">Todas</button>
+            <button type="button" class="btn btn-outline-warning" data-filter="Pendiente">Pendientes</button>
+            <button type="button" class="btn btn-outline-success" data-filter="Completada">Completadas</button>
+        </div>
+    </div>
+
+    @if (!citasOrdenadas.Any())
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No tienes citas programadas. <a asp-controller="Citas" asp-action="Create" class="alert-link">¡Agenda una ahora!</a>
+        </div>
+    }
+    else
+    {
+        <!-- Citas programadas -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+            @foreach (var item in citasOrdenadas)
+            {
+                <div class="col cita-card" data-estado="@item.Estado">
+                    <div class="card h-100 shadow-sm border-0 position-relative">
+                        <!-- Indicador visual del estado -->
+                        <div class="estado-indicator @GetEstadoClass(item.Estado)"></div>
+
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge @GetEstadoBadgeClass(item.Estado) fs-6">
+                                    <i class="@GetEstadoIconClass(item.Estado) me-1"></i>
+                                    @item.Estado
+                                </span>
+                                <small class="text-muted">ID: @item.Id</small>
+                            </div>
+
+                            <!-- Fecha y hora destacadas -->
+                            <div class="fecha-destacada mb-3 p-2 text-center">
+                                <div class="fecha-dia">@item.Dia.ToString("dddd")</div>
+                                <div class="fecha-numero">@item.Dia.ToString("dd")</div>
+                                <div class="fecha-mes">@item.Dia.ToString("MMMM yyyy")</div>
+                                <div class="hora mt-2"><i class="fas fa-clock me-1"></i>@item.Hora.ToString(@"hh\:mm tt")</div>
+                            </div>
+
+                            <!-- Información del doctor -->
+                            <div class="doctor-info mb-3">
+                                <h6 class="card-subtitle fw-bold">
+                                    <i class="fas fa-user-md me-2 text-primary"></i>Doctor
+                                </h6>
+                                <p class="card-text ms-4">
+                                    @if (item.CedulaDoctorNavigation?.CorreoNavigation != null)
+                                    {
+                                        var doctor = item.CedulaDoctorNavigation.CorreoNavigation;
+                                        @($"{doctor.Nombre} {doctor.PrimerApellido} {doctor.SegundoApellido}")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">No asignado</span>
+                                    }
+                                </p>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="d-flex justify-content-between mt-3">
+                                <a asp-controller="Citas" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-info-circle me-1"></i>Detalles
+                                </a>
+
+                                @if (item.Estado == "Pendiente")
+                                {
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="@item.Id">
+                                        <i class="fas fa-times-circle me-1"></i>Cancelar
+                                    </button>
+                                }
+                                else if (item.Estado == "Completada")
+                                {
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#payModal" data-id="@item.Id">
+                                        <i class="fas fa-money-bill-wave me-1"></i>Pagar
+                                    </button>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>
 
 <!-- Modal de Confirmación de Cancelación -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmModalLabel">Confirmar Cancelación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Cancelación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas cancelar esta cita?
+                <p>¿Estás seguro de que deseas cancelar esta cita?</p>
+                <p class="text-danger"><small>Esta acción no se puede deshacer.</small></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-danger" id="confirmCancel">Confirmar</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cerrar
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmCancel">
+                    <i class="fas fa-check me-1"></i>Confirmar
+                </button>
             </div>
         </div>
     </div>
@@ -97,63 +151,228 @@
 <div class="modal fade" id="payModal" tabindex="-1" aria-labelledby="payModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="payModalLabel">Confirmar Pago</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="payModalLabel">
+                    <i class="fas fa-credit-card me-2"></i>Confirmar Pago
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas proceder con el pago de esta cita?
+                <p>¿Estás seguro de que deseas proceder con el pago de esta cita?</p>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>El pago se procesará inmediatamente.
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" id="confirmPay">Confirmar Pago</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="confirmPay">
+                    <i class="fas fa-check me-1"></i>Confirmar Pago
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Lógica para el modal de cancelación
-        var confirmModal = document.getElementById("confirmModal");
-        var confirmCancelButton = document.getElementById("confirmCancel");
+@functions {
+    string GetEstadoClass(string estado)
+    {
+        return estado switch
+        {
+            "Pendiente" => "estado-pendiente",
+            "Completada" => "estado-completada",
+            "Cancelada" => "estado-cancelada",
+            "Pagada" => "estado-pagada",
+            _ => "estado-default"
+        };
+    }
 
-        confirmModal.addEventListener("show.bs.modal", function (event) {
-            var button = event.relatedTarget; // Botón que activó el modal
-            var idCita = button.getAttribute("data-id"); // Obtener el ID de la cita
+    string GetEstadoBadgeClass(string estado)
+    {
+        return estado switch
+        {
+            "Pendiente" => "bg-warning text-dark",
+            "Completada" => "bg-success",
+            "Cancelada" => "bg-danger",
+            "Pagada" => "bg-info",
+            _ => "bg-secondary"
+        };
+    }
 
-            if (confirmCancelButton) {
-                confirmCancelButton.onclick = function () {
-                    fetch(`/Citas/Cancelar/${idCita}`, {
-                        method: "POST"
-                    }).then(response => {
-                        if (response.ok) {
-                            window.location.reload(); // Recargar la página para actualizar el estado
-                        }
-                    }).catch(error => console.error("Error:", error));
-                };
+    string GetEstadoIconClass(string estado)
+    {
+        return estado switch
+        {
+            "Pendiente" => "fas fa-clock",
+            "Completada" => "fas fa-check-circle",
+            "Cancelada" => "fas fa-ban",
+            "Pagada" => "fas fa-dollar-sign",
+            _ => "fas fa-question-circle"
+        };
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Estilos generales */
+        .hover-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .hover-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
             }
-        });
 
-        // Lógica para el modal de pago
-        var payModal = document.getElementById("payModal");
-        var confirmPayButton = document.getElementById("confirmPay");
+        /* Iconos circulares */
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-        payModal.addEventListener("show.bs.modal", function (event) {
-            var button = event.relatedTarget; // Botón que activó el modal
-            var idCita = button.getAttribute("data-id"); // Obtener el ID de la cita
+        /* Indicador de estado */
+        .estado-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 6px;
+        }
 
-            if (confirmPayButton) {
-                confirmPayButton.onclick = function () {
-                    fetch(`/Citas/Pagar/${idCita}`, {
-                        method: "POST"
-                    }).then(response => {
-                        if (response.ok) {
-                            window.location.reload(); // Recargar la página para actualizar el estado
+        .estado-pendiente {
+            background-color: #ffc107;
+        }
+
+        .estado-completada {
+            background-color: #28a745;
+        }
+
+        .estado-cancelada {
+            background-color: #dc3545;
+        }
+
+        .estado-pagada {
+            background-color: #17a2b8;
+        }
+
+        /* Estilos para la fecha destacada */
+        .fecha-destacada {
+            background-color: rgba(13, 110, 253, 0.05);
+            border-radius: 10px;
+        }
+
+        .fecha-dia {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: capitalize;
+        }
+
+        .fecha-numero {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+            line-height: 1;
+        }
+
+        .fecha-mes {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: capitalize;
+        }
+
+        .hora {
+            font-weight: bold;
+            color: #212529;
+        }
+
+        /* Estilos para las tarjetas */
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Inicializar tooltips de Bootstrap (si existen)
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Filtrado de citas
+            document.querySelectorAll('.btn-group[role="group"] button').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Actualizar estilo de botones
+                    document.querySelectorAll('.btn-group[role="group"] button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+
+                    // Filtrar las tarjetas
+                    const filtro = this.dataset.filter;
+                    const tarjetas = document.querySelectorAll('.cita-card');
+
+                    tarjetas.forEach(tarjeta => {
+                        if (filtro === 'todas' || tarjeta.dataset.estado === filtro) {
+                            tarjeta.style.display = '';
+                        } else {
+                            tarjeta.style.display = 'none';
                         }
-                    }).catch(error => console.error("Error:", error));
-                };
-            }
+                    });
+                });
+            });
+
+            // Lógica para el modal de cancelación
+            var confirmModal = document.getElementById("confirmModal");
+            var confirmCancelButton = document.getElementById("confirmCancel");
+
+            confirmModal.addEventListener("show.bs.modal", function (event) {
+                var button = event.relatedTarget; // Botón que activó el modal
+                var idCita = button.getAttribute("data-id"); // Obtener el ID de la cita
+
+                if (confirmCancelButton) {
+                    confirmCancelButton.onclick = function () {
+                        fetch(`/Citas/Cancelar/${idCita}`, {
+                            method: "POST"
+                        }).then(response => {
+                            if (response.ok) {
+                                window.location.reload(); // Recargar la página para actualizar el estado
+                            }
+                        }).catch(error => console.error("Error:", error));
+                    };
+                }
+            });
+
+            // Lógica para el modal de pago
+            var payModal = document.getElementById("payModal");
+            var confirmPayButton = document.getElementById("confirmPay");
+
+            payModal.addEventListener("show.bs.modal", function (event) {
+                var button = event.relatedTarget; // Botón que activó el modal
+                var idCita = button.getAttribute("data-id"); // Obtener el ID de la cita
+
+                if (confirmPayButton) {
+                    confirmPayButton.onclick = function () {
+                        fetch(`/Citas/Pagar/${idCita}`, {
+                            method: "POST"
+                        }).then(response => {
+                            if (response.ok) {
+                                window.location.reload(); // Recargar la página para actualizar el estado
+                            }
+                        }).catch(error => console.error("Error:", error));
+                    };
+                }
+            });
         });
-    });
-</script>
+    </script>
+}

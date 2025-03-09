@@ -6,98 +6,119 @@
     var userRole = ViewContext.HttpContext.Session.GetString("Rol");
 }
 
-
-
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h1 class="h4 mb-0">Crear Nueva Cita</h1>
-        </div>
-        <div class="card-body">
-            <form asp-action="Create" class="needs-validation" novalidate>
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-
-                @if (userRole == "Admin") {
-                    <!-- Seleccionar Paciente -->
-                    <div class="mb-3">
-                        <label asp-for="CedulaPaciente" class="form-label">Paciente</label>
-                        <input asp-for="CedulaPaciente" class="form-control" required />
-                        <span asp-validation-for="CedulaPaciente" class="text-danger"></span>
-                        <div class="invalid-feedback">Por favor, seleccione un paciente.</div>
-                    </div>
-                } else {
-                    <!-- Campo oculto con el valor de la cédula del paciente (no Admin) -->
-                    <div class="mb-3">
-                        <label asp-for="CedulaPaciente" class="form-label">Paciente</label>
-                        <input asp-for="CedulaPaciente" value="@cedulaPaciente" class="form-control" readonly />
-                        <span asp-validation-for="CedulaPaciente" class="text-danger"></span>
-                    </div>
-
-                }
-
-
-                <!-- Seleccionar Especialidad -->
-                <div class="mb-3">
-                    <label class="form-label">Especialidad</label>
-                    <select id="Especialidad" class="form-control" required>
-                        <option value="">-- Seleccione una especialidad --</option>
-                        @if (ViewBag.Especialidad != null)
-                        {
-                            foreach (var especialidad in ViewBag.Especialidad)
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-calendar-check me-2"></i>Crear Nueva Cita
+                            </h1>
+                            <p class="text-muted mb-0">Programe una nueva cita médica en el sistema.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            @if (userRole == "Admin")
                             {
-                                <option value="@especialidad.Value">@especialidad.Text</option>
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Volver a la lista
+                                </a>
                             }
+                            else
+                            {
+                                <a asp-controller="Home" asp-action="PatientHome" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Volver a inicio
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <!-- Seleccionar Paciente -->
+                        @if (userRole == "Admin")
+                        {
+                            <div class="form-floating mb-4">
+                                <input asp-for="CedulaPaciente" class="form-control" required />
+                                <label asp-for="CedulaPaciente"><i class="fas fa-user me-1"></i>Paciente</label>
+                                <span asp-validation-for="CedulaPaciente" class="text-danger small"></span>
+                                <div class="invalid-feedback">Por favor, seleccione un paciente.</div>
+                            </div>
                         }
-                    </select>
-                    <div class="invalid-feedback">Por favor, seleccione una especialidad.</div>
-                </div>
+                        else
+                        {
+                            <div class="form-floating mb-4">
+                                <input asp-for="CedulaPaciente" value="@cedulaPaciente" class="form-control" readonly />
+                                <label asp-for="CedulaPaciente"><i class="fas fa-user me-1"></i>Paciente</label>
+                                <span asp-validation-for="CedulaPaciente" class="text-danger small"></span>
+                            </div>
+                        }
 
-                <!-- Seleccionar Doctor (se actualiza dinámicamente) -->
-                <div class="mb-3">
-                    <label asp-for="CedulaDoctor" class="form-label">Doctor</label>
-                    <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-control" required>
-                        <option value="">-- Seleccione un doctor --</option>
-                    </select>
-                    <span asp-validation-for="CedulaDoctor" class="text-danger"></span>
-                    <div class="invalid-feedback">Por favor, seleccione un doctor.</div>
-                </div>
+                        <!-- Seleccionar Especialidad -->
+                        <div class="form-floating mb-4">
+                            <select id="Especialidad" class="form-select" required>
+                                <option value="">-- Seleccione una especialidad --</option>
+                                @if (ViewBag.Especialidad != null)
+                                {
+                                    foreach (var especialidad in ViewBag.Especialidad)
+                                    {
+                                        <option value="@especialidad.Value">@especialidad.Text</option>
+                                    }
+                                }
+                            </select>
+                            <label><i class="fas fa-stethoscope me-1"></i>Especialidad</label>
+                            <div class="invalid-feedback">Por favor, seleccione una especialidad.</div>
+                        </div>
 
-                <!-- Seleccionar Día de la Cita (se actualiza dinámicamente) -->
-                <div class="mb-3">
-                    <label asp-for="Dia" class="form-label">Día de la Cita</label>
-                    <input asp-for="Dia" id="Dia" type="date" class="form-control" required />
-                    <span asp-validation-for="Dia" class="text-danger"></span>
-                    <div class="invalid-feedback">Por favor, seleccione un día.</div>
-                </div>
+                        <!-- Seleccionar Doctor (se actualiza dinámicamente) -->
+                        <div class="form-floating mb-4">
+                            <select asp-for="CedulaDoctor" id="CedulaDoctor" class="form-select" required>
+                                <option value="">-- Seleccione un doctor --</option>
+                            </select>
+                            <label asp-for="CedulaDoctor"><i class="fas fa-user-md me-1"></i>Doctor</label>
+                            <span asp-validation-for="CedulaDoctor" class="text-danger small"></span>
+                            <div class="invalid-feedback">Por favor, seleccione un doctor.</div>
+                        </div>
 
-                <!-- Seleccionar Hora de la Cita (se actualiza dinámicamente) -->
-                <div class="mb-3">
-                    <label asp-for="Hora" class="form-label">Hora de la Cita</label>
-                    <select asp-for="Hora" id="Hora" class="form-control" required>
-                        <option value="">-- Seleccione una hora --</option>
-                    </select>
-                    <span asp-validation-for="Hora" class="text-danger"></span>
-                    <div class="invalid-feedback">Por favor, seleccione una hora.</div>
-                </div>
+                        <!-- Seleccionar Día de la Cita (se actualiza dinámicamente) -->
+                        <div class="form-floating mb-4">
+                            <input asp-for="Dia" id="Dia" type="date" class="form-control" required />
+                            <label asp-for="Dia"><i class="fas fa-calendar-day me-1"></i>Día de la Cita</label>
+                            <span asp-validation-for="Dia" class="text-danger small"></span>
+                            <div class="invalid-feedback">Por favor, seleccione un día.</div>
+                        </div>
 
-                <!-- Botón para enviar el formulario -->
-                <div class="d-flex justify-content-end gap-2 mt-4">
-                    @if (userRole == "Admin")
-                    {
-                        <a asp-action="Index" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i> Volver a la lista
-                        </a>
-                    }else 
-                    {
-                        <a asp-controller="Home" asp-action="PatientHome" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i> Volver a inicio
-                        </a>
-                    }
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i> Crear Cita
-                    </button>
+                        <!-- Seleccionar Hora de la Cita (se actualiza dinámicamente) -->
+                        <div class="form-floating mb-4">
+                            <select asp-for="Hora" id="Hora" class="form-select" required>
+                                <option value="">-- Seleccione una hora --</option>
+                            </select>
+                            <label asp-for="Hora"><i class="fas fa-clock me-1"></i>Hora de la Cita</label>
+                            <span asp-validation-for="Hora" class="text-danger small"></span>
+                            <div class="invalid-feedback">Por favor, seleccione una hora.</div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Crear Cita
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -206,7 +227,6 @@
                 }
             });
 
-            // Establecer la fecha mínima para el campo de fecha
             var today = new Date().toISOString().split('T')[0];
             document.getElementById("Dia").setAttribute("min", today);
         });

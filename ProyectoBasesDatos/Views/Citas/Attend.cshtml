@@ -3,50 +3,55 @@
 @{
     ViewData["Title"] = "Atender Cita";
     var idCita = ViewBag.IdCita;
-    var errorMessage = TempData["ErrorMessage"] as string; // Obtener el mensaje de error
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
-<div class="container mt-5">
-    <div class="card shadow-lg">
-        <div class="card-header bg-gradient-primary text-black">
-            <h1 class="h4 mb-0">Atender Cita</h1>
-            <p class="mb-0">Complete los detalles del tratamiento para la cita.</p>
+<div class="container py-4">
+    <div class="card shadow border-0 rounded-lg">
+        <div class="card-header bg-gradient-primary p-4">
+            <h1 class="h3 text-primary mb-1">Atender Cita</h1>
+            <p class="text-muted mb-0">Complete los detalles del tratamiento para la cita #@idCita</p>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
             @if (!string.IsNullOrEmpty(errorMessage))
             {
-                <div class="alert alert-danger">
-                    @errorMessage
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i> @errorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
+
             <form asp-controller="Tratamientos" asp-action="Create" method="post" class="needs-validation" novalidate onsubmit="return validarFormulario()">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                 <input type="hidden" name="IdCita" value="@idCita" />
 
-                <!-- Contenedor para los grupos de medicamentos -->
-                <div id="medicamentosContainer">
-                    <div class="form-group mb-4 medicamento-group">
-                        <div class="input-group gap-4">
-                            <div class="flex-grow-1">
-                                <label class="form-label">Medicamento</label>
-                                <select name="TratamientosMeds[0]" class="form-select" required>
+                <!-- Contenedor de medicamentos con estilo mejorado -->
+                <div id="medicamentosContainer" class="mb-4">
+                    <div class="medicamento-group mb-3 p-3 border rounded bg-light">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Medicamento</label>
+                                <select name="TratamientosMeds[0]" class="form-select shadow-sm" required>
                                     <option value="">-- Seleccione un medicamento --</option>
                                 </select>
+                                <div class="invalid-feedback">Por favor seleccione un medicamento</div>
                             </div>
 
-                            <div class="flex-grow-1">
-                                <label class="form-label">Cantidad</label>
-                                <input type="number" name="Cantidad[0]" class="form-control" min="1" required>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Cantidad</label>
+                                <input type="number" name="Cantidad[0]" class="form-control shadow-sm" min="1" required placeholder="Ej: 2">
+                                <div class="invalid-feedback">Ingrese una cantidad válida</div>
                             </div>
 
-                            <div class="flex-grow-1">
-                                <label class="form-label">Frecuencia</label>
-                                <input type="text" name="Frecuencia[0]" class="form-control" required>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Frecuencia</label>
+                                <input type="text" name="Frecuencia[0]" class="form-control shadow-sm" required placeholder="Ej: Cada 8 horas">
+                                <div class="invalid-feedback">Especifique la frecuencia</div>
                             </div>
 
-                            <div class="flex-grow-0 d-flex align-items-end">
-                                <button type="button" class="btn btn-danger btn-eliminar">
+                            <div class="col-md-1 d-flex align-items-end">
+                                <button type="button" class="btn btn-outline-danger btn-eliminar w-100">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -54,19 +59,25 @@
                     </div>
                 </div>
 
-                <div id="mensajeSinTratamientos" class="alert alert-info" style="display: none;">
-                    No se han incluido tratamientos.
+                <div id="mensajeSinTratamientos" class="alert alert-info d-flex align-items-center" style="display: none;">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <div>No se han incluido tratamientos.</div>
                 </div>
 
                 <div class="form-group mb-4">
-                    <button type="button" id="agregarMedicamento" class="btn btn-secondary">
-                        <i class="fas fa-plus me-2"></i>Agregar Medicamento
+                    <button type="button" id="agregarMedicamento" class="btn btn-outline-primary">
+                        <i class="fas fa-plus-circle me-2"></i>Agregar Medicamento
                     </button>
                 </div>
 
-                <div class="form-group text-end">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="fas fa-check-circle me-2"></i>Atender
+                <hr class="my-4">
+
+                <div class="form-group d-flex justify-content-between align-items-center">
+                    <a href="/Citas" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-check-circle me-2"></i>Atender Cita
                     </button>
                 </div>
             </form>
@@ -79,35 +90,73 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let idCita = "@idCita";
-            let medicamentosContainer = document.getElementById("medicamentosContainer");
-            let mensajeSinTratamientos = document.getElementById("mensajeSinTratamientos");
+            // Habilitar validación Bootstrap
+            (() => {
+                'use strict'
+                const forms = document.querySelectorAll('.needs-validation')
+                Array.from(forms).forEach(form => {
+                    form.addEventListener('submit', event => {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+            })()
 
+            const idCita = "@idCita";
+            const medicamentosContainer = document.getElementById("medicamentosContainer");
+            const mensajeSinTratamientos = document.getElementById("mensajeSinTratamientos");
+            const btnAgregarMedicamento = document.getElementById("agregarMedicamento");
+
+            // Función para cargar medicamentos
             function cargarMedicamentos(select) {
-                let url = `/Citas/Attend/${idCita}/GetMeds`;
+                const url = `/Citas/Attend/${idCita}/GetMeds`;
+                select.disabled = true;
+
                 fetch(url)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la respuesta del servidor');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         select.innerHTML = '<option value="">-- Seleccione un medicamento --</option>';
                         data.forEach(med => {
-                            let option = document.createElement("option");
+                            const option = document.createElement("option");
                             option.value = med.id;
                             option.textContent = med.nombre;
                             select.appendChild(option);
                         });
+                        select.disabled = false;
                     })
                     .catch(error => {
                         console.error("Error al cargar los medicamentos:", error);
                         select.innerHTML = '<option value="">Error al cargar medicamentos</option>';
+                        select.disabled = false;
+
+                        // Mostrar alerta de error
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-danger mt-3';
+                        alertDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> Error al cargar medicamentos: ${error.message}`;
+                        medicamentosContainer.parentNode.insertBefore(alertDiv, medicamentosContainer);
+
+                        setTimeout(() => {
+                            alertDiv.remove();
+                        }, 5000);
                     });
             }
 
-            let primerSelect = medicamentosContainer.querySelector("select");
+            // Cargar medicamentos en el primer select
+            const primerSelect = medicamentosContainer.querySelector("select");
             cargarMedicamentos(primerSelect);
 
-            document.getElementById("agregarMedicamento").addEventListener("click", function() {
-                let nuevoGrupo = medicamentosContainer.firstElementChild.cloneNode(true);
-                let index = medicamentosContainer.querySelectorAll(".medicamento-group").length;
+            // Función para agregar nuevo medicamento
+            btnAgregarMedicamento.addEventListener("click", function() {
+                const nuevoGrupo = medicamentosContainer.firstElementChild.cloneNode(true);
+                const index = medicamentosContainer.querySelectorAll(".medicamento-group").length;
 
                 nuevoGrupo.querySelector("select").name = `TratamientosMeds[${index}]`;
                 nuevoGrupo.querySelector("input[type='number']").name = `Cantidad[${index}]`;
@@ -117,55 +166,101 @@
                 nuevoGrupo.querySelector("input[type='number']").value = "";
                 nuevoGrupo.querySelector("input[type='text']").value = "";
 
-                cargarMedicamentos(nuevoGrupo.querySelector("select"));
+                // Remover clase was-validated si existe
+                nuevoGrupo.classList.remove('was-validated');
+
+                // Efecto de aparecer gradualmente
+                nuevoGrupo.style.opacity = '0';
                 medicamentosContainer.appendChild(nuevoGrupo);
+
+                // Animación de entrada
+                setTimeout(() => {
+                    nuevoGrupo.style.transition = 'opacity 0.3s ease';
+                    nuevoGrupo.style.opacity = '1';
+                }, 10);
+
+                cargarMedicamentos(nuevoGrupo.querySelector("select"));
                 mensajeSinTratamientos.style.display = "none";
             });
 
+            // Función para eliminar medicamento
             medicamentosContainer.addEventListener("click", function(e) {
                 if (e.target.closest(".btn-eliminar")) {
-                    e.target.closest(".medicamento-group").remove();
-                    let grupos = medicamentosContainer.querySelectorAll(".medicamento-group");
+                    const grupoEliminar = e.target.closest(".medicamento-group");
 
-                    grupos.forEach((grupo, index) => {
-                        grupo.querySelector("select").name = `TratamientosMeds[${index}]`;
-                        grupo.querySelector("input[type='number']").name = `Cantidad[${index}]`;
-                        grupo.querySelector("input[type='text']").name = `Frecuencia[${index}]`;
-                    });
+                    // Animación de salida
+                    grupoEliminar.style.transition = 'all 0.3s ease';
+                    grupoEliminar.style.opacity = '0';
+                    grupoEliminar.style.maxHeight = '0';
 
-                    if (grupos.length === 0) {
-                        mensajeSinTratamientos.style.display = "block";
-                    }
+                    // Eliminar después de la animación
+                    setTimeout(() => {
+                        grupoEliminar.remove();
+
+                        // Reindexar los nombres de los campos
+                        const grupos = medicamentosContainer.querySelectorAll(".medicamento-group");
+                        grupos.forEach((grupo, index) => {
+                            grupo.querySelector("select").name = `TratamientosMeds[${index}]`;
+                            grupo.querySelector("input[type='number']").name = `Cantidad[${index}]`;
+                            grupo.querySelector("input[type='text']").name = `Frecuencia[${index}]`;
+                        });
+
+                        // Mostrar mensaje si no hay grupos
+                        if (grupos.length === 0) {
+                            mensajeSinTratamientos.style.display = "block";
+                        }
+                    }, 300);
                 }
             });
         });
 
+        // Función de validación
         function validarFormulario() {
-            let grupos = document.querySelectorAll(".medicamento-group");
+            const grupos = document.querySelectorAll(".medicamento-group");
+            if (grupos.length === 0) {
+                document.getElementById("mensajeSinTratamientos").style.display = "block";
+                return false;
+            }
+
+            let esValido = true;
+
             for (let grupo of grupos) {
-                let select = grupo.querySelector("select");
-                let cantidad = grupo.querySelector("input[type='number']");
-                let frecuencia = grupo.querySelector("input[type='text']");
+                const select = grupo.querySelector("select");
+                const cantidad = grupo.querySelector("input[type='number']");
+                const frecuencia = grupo.querySelector("input[type='text']");
 
                 if (!select.value) {
-                    alert("Seleccione un medicamento.");
-                    select.focus();
-                    return false;
+                    select.classList.add("is-invalid");
+                    esValido = false;
+                } else {
+                    select.classList.remove("is-invalid");
                 }
 
-                if (!cantidad.value) {
-                    alert("Ingrese la cantidad.");
-                    cantidad.focus();
-                    return false;
+                if (!cantidad.value || cantidad.value < 1) {
+                    cantidad.classList.add("is-invalid");
+                    esValido = false;
+                } else {
+                    cantidad.classList.remove("is-invalid");
                 }
 
-                if (!frecuencia.value) {
-                    alert("Ingrese la frecuencia.");
-                    frecuencia.focus();
-                    return false;
+                if (!frecuencia.value.trim()) {
+                    frecuencia.classList.add("is-invalid");
+                    esValido = false;
+                } else {
+                    frecuencia.classList.remove("is-invalid");
                 }
             }
-            return true;
+
+            if (!esValido) {
+                // Scroll to first error
+                const firstInvalid = document.querySelector(".is-invalid");
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.focus();
+                }
+            }
+
+            return esValido;
         }
     </script>
 }

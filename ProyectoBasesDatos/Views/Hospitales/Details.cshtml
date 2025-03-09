@@ -4,49 +4,114 @@
     ViewData["Title"] = "Detalles del Hospital";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h2 class="card-title mb-0">
-                <i class="fas fa-hospital me-2"></i>Detalles del Hospital
-            </h2>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-2">Detalles del Hospital</h1>
+                            <p class="text-muted mb-0">Información detallada del hospital registrado en el sistema.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <div class="btn-group">
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Volver
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <dl class="row">
-                <!-- Nombre -->
-                <dt class="col-sm-3">
-                    <i class="fas fa-building me-1"></i> Nombre
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Nombre)
-                </dd>
+    </div>
 
-                <!-- Dirección -->
-                <dt class="col-sm-3">
-                    <i class="fas fa-map-marker-alt me-1"></i> Dirección
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Direccion)
-                </dd>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white p-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-container me-4">
+                            <div class="avatar bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 1.8rem;">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="h3 fw-bold mb-1">@Model.Nombre</h2>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-map-marker-alt text-primary me-1 small"></i>
+                                @Model.Direccion
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Teléfono -->
-                <dt class="col-sm-3">
-                    <i class="fas fa-phone me-1"></i> Teléfono
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Telefono)
-                </dd>
-            </dl>
-        </div>
-        <div class="card-footer bg-light">
-            <div class="d-flex justify-content-between">
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Volver a la lista
-                </a>
-                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
-                    <i class="fas fa-edit me-1"></i> Editar
-                </a>
+                <div class="card-body p-4">
+                    <div class="info-section mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-info-circle text-primary me-2"></i>Información General
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-building text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Nombre</p>
+                                        <p class="fw-medium mb-0">@Model.Nombre</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-map-marker-alt text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Dirección</p>
+                                        <p class="fw-medium mb-0">@Model.Direccion</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-phone text-muted me-3"></i>
+                                    <div>
+                                        <p class="text-muted mb-0 small">Teléfono</p>
+                                        <p class="fw-medium mb-0">@Model.Telefono</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white p-4 border-top">
+                    <div class="d-flex justify-content-end">
+                        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Editar Información
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Estilos para la transición de la tarjeta */
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    /* Estilos para el avatar */
+    .avatar-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar {
+        background-color: #0d6efd;
+        color: white;
+        font-weight: bold;
+    }
+</style>
